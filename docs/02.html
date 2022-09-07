@@ -147,11 +147,222 @@
           </ul>
           </li>
           <li>Limitan o encapsulan los <strong>efectos laterales</strong>.</li>
-          <li>Utilizan <strong>recursión</strong>, en lugar de bucles.
+          <li>Utilizan <strong>recursión</strong> en lugar de bucles.
         </ul>
       </section>
       
+      <section>
+        <h3>Recursión</h3>
+        <ul>
+          <li>Una función <strong>recursiva</strong> es una función que se invoca a sí misma.          
+          </li>
+          <li>La recursión permite expresar cómputos de manera alternativa a los bucles, pero sin mutar variables.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun factorial(n: Int): Int =
+                if (n == 0) 1 else n * factorial(n - 1)
+                
+            println(factorial(5))  <span class="fragment"> // &rarr; 120</span>
+          </code></pre>
+          </li>
+          <li>En Kotlin, es necesario indicar el <strong>tipo de retorno</strong> de una función recursiva.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: <code>factorial(3)</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun factorial(n: Int): Int =
+              if (n == 0) 1 else n * factorial(n - 1)
+        </code></pre>
+        <pre><code class="no-highlight" data-trim data-noescape>
+          factorial(3)
+          
+          <span class="fragment">&rarr; 3 * factorial(2)</span>
+          
+          <span class="fragment">&rarr; 3 * (2 * factorial(1))</span>
+          
+          <span class="fragment">&rarr; 3 * (2 * (1 * factorial(0)))</span>   <span class="arrow_box_left fragment"> Caso base </span>
+          
+          <span class="fragment">&rarr; 3 * (2 * (1 * 1))</span>
+          
+          <span class="fragment">&rarr; 3 * (2 * 1)</span>
+          
+          <span class="fragment">&rarr; 3 * 2</span>
+          
+          <span class="fragment">&rarr; 6</span>
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Funciones recursivas sobre listas</h3>
+        <p>Calcular la suma de los elementos de una lista:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        // Suma los elementos de la lista `xs` pasada como parámetro
+        // desde el situado en el índice `i` hasta el final de la lista
+        
+        fun sumaElemsRec(xs: List&lt;Int&gt;, i: Int): Int =
+          if (i == xs.size) 0 else xs[i] + sumaElemsRec(xs, i + 1)
+          
+        // Suma todos los elementos de la lista `xs` pasada como parámetro
 
+        fun sumaElems(xs: List&lt;Int&gt;) = sumaElemsRec(xs, 0) <span class="arrow_box_left fragment">Llamada inicial</span>
+        </code></pre>
+        <p>A menudo son necesarias funciones auxiliares con parámetros extra.</p>
+      </section>
+      
+      <section>
+        <h3>Funciones recursivas sobre listas</h3>
+        <p>Estas funciones auxiliares pueden declararse localmente, para que no sean visibles desde el exterior.</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun sumaElems(xs: List&lt;Int&gt;): Int {
+              // Función auxiliar
+              fun sumaElemsRec(xs: List&lt;Int&gt;, i: Int): Int =
+                  if (i == xs.size) 0 else xs[i] + sumaElemsRec(xs, i + 1)
+              
+              // Llamada inicial
+              return sumaElemsRec(xs, 0)
+          }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Funciones recursivas sobre listas</h3>
+        <p>El parámetro <code>xs</code> puede eliminarse de la función auxiliar, ya que está accesible en un contexto superior y se mantiene constante a lo largo de las llamadas recursivas.</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun sumaElems(xs: List&lt;Int&gt;): Int {
+              // Función auxiliar
+              fun sumaElemsRec(i: Int): Int =
+                  if (i == xs.size) 0 else xs[i] + sumaElemsRec(i + 1)
+              
+              // Llamada inicial
+              return sumaElemsRec(xs, 0)
+          }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: <code>sumaElems([5, 10, 4])</code></h3>
+        <pre><code class="no-highlight" data-trim data-noescape>
+          sumaElems([5, 10, 4])
+          
+          <span class="fragment">&rarr; sumaElemsRec(0)</span>
+
+          <span class="fragment">&rarr; 5 + sumaElemsRec(1)</span>
+          
+          <span class="fragment">&rarr; 5 + (10 + sumaElemsRec(2))</span>
+          
+          <span class="fragment">&rarr; 5 + (10 + (4 + sumaElemsRec(3)))</span>
+
+          <span class="fragment">&rarr; 5 + (10 + (4 + 0))</span>
+          
+          <span class="fragment">&rarr; 5 + (10 + 4)</span>
+          
+          <span class="fragment">&rarr; 5 + 14</span>
+          
+          <span class="fragment">&rarr; 19</span>          
+        </code></pre>        
+      </section>
+      
+      <section>
+        <h3>El método <code>subList</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.subList(fromIndex: Int, toIndex: Int): List&lt;T&gt;
+        </code></pre>
+        <ul>
+        <li>Obtiene una sublista de <code>this</code> con los elementos comprendidos entre <code>fromIndex</code> (incluido) y <code>toIndex</code> (excluído).
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          listOf(6, 3, 1, 5, 10, 3).subList(2, 4) // &rarr; [1, 5]
+        </code></pre></li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El método <code>subList</code></h3>
+        <ul>
+        <li>Permite implementar recorridos sobre listas sin necesidad de pasar índices como parámetros.</li>
+        </ul>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun sumaElems(xs: List<Int>): Int =
+            if (xs.isEmpty()) 0 else xs[0] + sumaElems(xs.subList(1, xs.size))
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>El método <code>subList</code></h3>
+        <ul>
+        <li>Tiene coste <em class="rojo">O(1)</em>, porque no se realiza ninguna copia del segmento obtenido; se genera una <strong>vista</strong> de la lista original.</li>
+        </ul>
+        <p><img src="02/subList.svg" width="40%"/></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Dada una lista de enteros <code>xs</code>, obtener otra lista con los elementos de <code>xs</code> que no sean pares:</li>
+        </ul>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun quitarPares(xs: List<Int>): List<Int> = when {
+            // Lista vacía
+              xs.isEmpty() -> listOf()
+            // Lista cuyo primer elemento es par
+              xs[0] % 2 == 0 -> quitarPares(xs.subList(1, xs.size))
+            // Lista cuyo primer elemento es impar
+              else -> listOf(xs[0]) + quitarPares(xs.subList(1, xs.size))
+        }          
+        </code></pre>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo: <code>quitarPares([3, 4, 7, 6])</code></h3>
+        <pre><code class="no-highlight" data-trim data-noescape>
+          quitarPares([3, 4, 7, 6])
+          
+          <span class="fragment">&rarr; [3] + quitarPares([4, 7, 6])</span>
+          
+          <span class="fragment">&rarr; [3] + quitarPares([7, 6])</span>
+          
+          <span class="fragment">&rarr; [3] + ([7] + quitarPares([6]))</span>
+          
+          <span class="fragment">&rarr; [3] + ([7] + quitarPares([]))</span>
+          
+          <span class="fragment">&rarr; [3] + ([7] + [])</span>
+          
+          <span class="fragment">&rarr; [3] + [7]</span>
+          
+          <span class="fragment">&rarr; [3, 7]</span>
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+          <p>Búsqueda lineal de un elemento en una lista:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        
+        tailrec fun &lt;T&gt; buscarElem(xs: List&lt;T&gt;, x: T): Boolean = when {
+            // Lista vacía
+              xs.isEmpty() -> false
+            // El elemento a buscar está al principio
+              xs[0] == x -> true
+            // El elemento a buscar no está al principio
+              else -> buscarElem(xs.subList(1, xs.size), x)
+        }
+        </code></pre>
+      </section>
+
+      
+      <section>
+        <h3>Ejemplo: <code>buscarElem([3, 4, 7, 6], 7)</code></h3>
+        <pre><code class="no-highlight" data-trim data-noescape>
+          buscarElem([3, 4, 7, 6], 7)
+          
+          &rarr; buscarElem([4, 7, 6], 7)
+          
+          &rarr; buscarElem([7, 6], 7)
+          
+          &rarr; true
+        </code></pre>
+      </section>      
       
       
 			</div>
