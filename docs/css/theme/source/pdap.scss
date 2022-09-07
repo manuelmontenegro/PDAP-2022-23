@@ -1,0 +1,194 @@
+/**
+ * Tema de Aplicaciones Web - Manuel Montenegro
+ * 
+ * Adaptación de tema 'white', de Hakim El Hattab, http://hakim.se
+ */
+ 
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+
+// Include theme-specific fonts
+@import url(./fonts/source-sans-pro/source-sans-pro.css);
+
+
+// Override theme settings (see ../template/settings.scss)
+$backgroundColor: #fff;
+
+$mainColor: #222;
+$headingColor: #B71234;
+
+$mainFontSize: 35px;
+$mainFont: 'Raleway', Helvetica, sans-serif;
+$headingFont: 'Raleway ExtraBold', Helvetica, sans-serif;
+$headingTextShadow: none;
+$headingLetterSpacing: normal;
+$headingTextTransform: uppercase;
+$headingFontWeight: 600;
+$linkColor: #2a76dd;
+$linkColorHover: lighten( $linkColor, 15% );
+$selectionBackgroundColor: lighten( $linkColor, 25% );
+
+$heading1Size: 2.5em;
+$heading2Size: 1.3em;
+$heading3Size: 1.0em;
+$heading4Size: 0.7em;
+
+// Change text colors against dark slide backgrounds
+@include dark-bg-text-color(#fff);
+
+
+ul.no_bolos {
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+li.hands_up {
+  padding-left: 1rem;
+  text-indent: -0.75rem;
+}
+li.hands_up::before {
+  content: '👍 '
+}
+li.hands_down {
+  padding-left: 1rem;
+  text-indent: -0.75rem;
+}
+li.love {
+  padding-left: 1rem;
+  text-indent: -0.75rem;
+}
+li.hands_down::before {
+  content: '👎 '
+}      
+li.check::before {
+  content: '✅ '
+}      
+li.monito::before {
+  content: '🙈 '
+}
+li.love::before {
+  content: '😍 '
+}
+
+
+.rojo { color: #B71234; }
+
+p > code { color: #752ec7; font-size: 30px; border: 1px dashed #f7f0ff; }
+li > code { color: #752ec7; font-size: 30px; border: 1px dashed #f7f0ff; }
+
+li > ul > li { margin-top: 0.5em }
+li { margin-bottom: 0.5em; }
+li li { font-size: 30px; }
+
+h2 {
+  background-color: #B71234;
+  color: white !important;
+  padding: 15px;
+}
+
+.info_box {
+  background-color: #054780;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.arrow_box_left {
+	position: relative;
+	background: #4802d5;
+  font-family: 'Raleway';
+  font-weight: bold;
+  color: white;
+  margin-left: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 10px;
+}
+
+.caja_codigo {
+  font-family:'Raleway', sans-serif !important;
+  font-weight:bold !important;
+  padding:2px 12px !important ;
+  border-radius:10px !important;
+}
+
+.arrow_box_left:after, .arrow_box_left:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box_left:after {
+	border-color: rgba(72, 2, 213, 0);
+	border-right-color: #4802d5;
+	border-width: 0.4em;
+	margin-top: -0.4em;
+}
+
+
+.arrow_box_down {
+	position: relative;
+	background: #4802d5;
+  font-family: 'Raleway';
+  font-weight: bold;
+  color: white;
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 10px;  
+}
+
+.arrow_box_down:after, .arrow_box_down:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box_down:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: #4802d5;
+	border-width: 0.4em;
+	margin-left: -0.4em;
+}
+.arrow_box_down:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-top-color: #4802d5;
+	border-width: 0.4em;
+	margin-left: -0.4em;
+}
+
+.hl {
+  background-color: rgb(254, 255, 191)
+}
+
+
+ol.contenidos {
+    color:white;
+    font-family: "Source Sans Pro", Helvetica, sans-serif;
+    font-size: 1.3em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------

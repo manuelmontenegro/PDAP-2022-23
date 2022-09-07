@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white">Introducción a Kotlin</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li></li>
+          </ol>
+      </section>
+      
+      <section>
+        <h3>¿Qué es la programación funcional?</h3>
+        <ul>
+          <li>Es el paradigma de programación basado en la definición y aplicación de funciones.</li>
+          <li>En la programación funcional <em>pura</em>, las funciones se consideran en el estricto sentido matemático:
+          <ul>
+            <li>Una función <em class="rojo">f: X &rarr; Y</em> asigna a cada elemento de <em>X</em> un único valor de <em>Y</em>.</li>
+            <li>Es decir, la aplicación de función <em>f(x)</em> depende exclusivamente de <em>x</em>.</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplos</h3>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun suma(x: Int, y: Int) = x + y    <span class="arrow_box_left fragment">Función pura</span>
+        <span class="fragment">// El valor devuelto depende únicamente de los parámetros</span>
+
+        var x: Int = 0;
+        fun incrementar(y: Int): Int {      <span class="arrow_box_left fragment">No es función pura</span>
+            x += y            <span class="fragment">// &larr; Produce un efecto lateral</span>
+            return x
+        }
+
+        fun obtenerLista(nombreFich: String): List<String> =   <span class="arrow_box_left fragment">No es función pura</span>
+            File(nombreFich).readLines()  <span class="fragment">// No solo depende del nombre del
+                                          // fichero sino también del contenido</span>
+        </code></pre>
+      </section>
+      
+      <section data-transition="none-out">
+        <h3>¿Qué ventaja tienen las funciones puras?</h3>
+        <ul>
+          <li><strong>Transparencia referencial:</strong> Toda expresión depende únicamente de los valores de las variables que contiene.</li>          
+          <li>Es más fácil razonar sobre el comportamiento de una función en ausencia de efectos laterales.</li>
+        </ul>
+        <p class="fragment"><strong>Son equivalentes:</strong></p>
+          <div style="float:left;width:50%">
+            <pre><code class="language-kotlin" style="font-size:large" data-trim data-noescape>
+              val z = 5
+              print("${suma(z, 1)} = ${suma(z, 1)}")
+            </code></pre>
+          </div>
+          <div style="float:right;width:50%"  >
+            <pre><code class="language-kotlin" style="font-size:large" data-trim data-noescape>
+              val z = 5
+              val s = suma(z, 1)
+              print("$s = $s")
+            </code></pre>
+          </div>        
+      </section>
+
+      <section data-transition="none-in">
+        <h3>¿Qué ventaja tienen las funciones puras?</h3>
+        <ul>
+          <li><strong>Transparencia referencial:</strong> Toda expresión depende únicamente de los valores de las variables que contiene.</li>          
+          <li>Es más fácil razonar sobre el comportamiento de una función en ausencia de efectos laterales.</li>
+        </ul>
+        <p><strong>No son equivalentes:</strong></p>
+          <div style="float:left;width:50%">
+            <pre><code class="language-kotlin" style="font-size:large" data-trim data-noescape>
+              print(
+                "${incrementar(3)} = ${incrementar(3)}"
+              )
+            </code></pre>
+          </div>
+          <div style="float:right;width:50%"  >
+            <pre><code class="language-kotlin" style="font-size:large" data-trim data-noescape>
+              val s = incrementar(3)
+              print("$s = $s")
+            </code></pre>
+          </div>        
+      </section>
+      
+      <section>
+        <h3>¿Qué ventaja tienen las funciones puras?</h3>
+        <ul>
+          <li>Es más fácil razonar sobre ellas.</li>
+          <li>Son más fáciles de testear.</li>
+          <li>Son más fáciles de reutilizar.</li>
+          <li>Son más fáciles de paralelizar.</li>
+        </ul>
+        <p class="rojo fragment" style="font-style:italic">¡Muchos menos <em>bugs</em>!</p>
+      </section>
+      
+      <section>
+        <h3>Características de los lenguajes funcionales</h3>
+        <ul>
+          <li>Las funciones son <strong>ciudadanas de primera clase</strong>.
+          <ul>
+            <li>Se comportan como cualquier otro valor del lenguaje.</li>
+            <li>Podemos pasar funciones como parámetro, almacenarlas en variables, devolver funciones como resultado, etc.</li>
+          </ul></li>
+          <li>Fomentan o imponen la <strong>inmutabilidad</strong>.
+          <ul>
+            <li>No es posible cambiar el valor de una variable o de una estructura de datos.</li>
+            <li>Permite compartición de estructuras de datos sin riesgo de <em>bugs</em></li>
+          </ul>
+          </li>
+          <li>Limitan o encapsulan los <strong>efectos laterales</strong>.</li>
+          <li>Utilizan <strong>recursión</strong>, en lugar de bucles.
+        </ul>
+      </section>
+      
+
+      
+      
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>

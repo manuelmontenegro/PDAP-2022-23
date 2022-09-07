@@ -1,0 +1,2126 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white">Introducción a Kotlin</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Introducción a Kotlin</li>
+            <li>Variables y tipos</li>
+            <li>Sentencias y expresiones</li>
+            <li>Colecciones</li>
+            <li>Funciones</li>
+          </ol>
+      </section>
+      
+      <section>
+        <section>
+          <h2>Introducción a Kotlin</h2>
+        </section>
+        <section>
+          <h3>¿Qué es Kotlin?</h3>
+          <ul>
+            <li class="fragment">Lenguaje de programación creado por JetBrains en 2011.</li>
+            <li class="fragment">Versión actual: 1.7 (junio de 2022)</li>
+            <li class="fragment">Filosofía de diseño:
+            <ul style="list-style:none;padding:0;margin:0">
+              <li class="check">Pragmático: no impone un paradigma concreto.</li>
+              <li class="check">Conciso: evitar código <em>boilerplate</em> <a href="https://en.wikipedia.org/wiki/Boilerplate_code">[+]</a>.</li>
+              <li class="check">Seguro: evitar los accesos a punteros nulos.</li>
+              <li class="check">Interoperable con Java y sus librerías.</li>
+            </ul>
+            </li>
+            <li class="fragment">Desde 2019 es el lenguaje de preferencia para la creación de aplicaciones en Android.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Principales características de Kotlin</h3>
+          
+          <ol>
+            <li class="fragment"><strong>Multiparadigma</strong>
+              <ul>
+                <li>Mezcla características de programación funcional y de programación orientada a objetos.</li>
+              </ul>
+            </li>            
+            <li class="fragment"><strong>Estáticamente tipado</strong>
+              <ul>
+                <li>Toda variable y expresión tiene un tipo, determinado en tiempo de compilación.</li>
+                <li>Las discrepancias de tipo se detectan al compilar el programa.</li>
+              </ul>
+            </li>            
+            <li class="fragment"><strong>Multiplataforma</strong>
+              <ul>
+                <li>Inicialmente pensado para ser compilado a <em>bytecode</em> de la JVM, pero ahora puede ser compilado a código Javascript o a código nativo</li>
+              </ul>
+            </li>              </ol>
+        </section>
+
+      
+        <section>
+          <h3>Primer programa en Kotlin</h3>
+          <pre><code data-trim data-noescape>
+          /*
+           *  PrimerPrograma.kt
+           */
+          
+          fun main() {
+              println("¡Hola, mundo!")
+          }
+          </code></pre>
+        </section>
+        <section>
+          <h3>Aspectos generales</h3>
+          <ul>
+            <li class="fragment">Comentarios similares a los de Java/C++:
+            <pre><code data-trim data-noescape>
+            // Comentario de una línea
+            /* Comentario de varias
+               líneas */
+            </code></pre>
+            </li>
+            <li class="fragment">Declaración de funciones/métodos mediante <code>fun</code>.
+              <ul>
+                <li>Por defecto son públicos (<code>public</code>)</li>
+              </ul>
+            </li>
+            <li class="fragment">
+              La función principal del programa se llama <code>main</code> y puede recibir parámetros:
+            <pre><code data-trim data-noescape>
+            fun main(args: Array&lt;String&gt;) {
+              // ...
+            }
+            </code></pre>            </li>
+          </ul>
+        </section>
+        
+        <section>
+        <h3>Funciones definidas fuera de clases</h3>
+        <ul>
+          <li class="fragment">
+            <strong>Java:</strong> funciones siempre definidas dentro de clases.
+          </li>
+          <li class="fragment">
+            <strong>Kotlin:</strong> esto no es necesario. Si tenemos:
+            
+            <pre><code data-trim data-noescape>
+             // Fichero PrimerPrograma.kt
+             fun f() { ... }
+            </code></pre>
+            la función <code>f</code> pertenece a una clase cuyo nombre es el del fichero en el que está definida:
+            <pre><code data-trim data-noescape>
+              class PrimerProgramaKt {
+                public static void f() {
+                  // ...
+                }
+              }
+            </code></pre>
+          </li>
+        </ul>
+        </section>
+      </section>
+        
+        
+      <section>
+        <section>
+          <h2>Variables y tipos</h2>
+        </section>
+        
+        <section>
+          <h3>Declaración de variables</h3>
+          <ul>
+            <li><code>val</code> y <code>var</code> sirven para declarar e inicializar variables.</li>
+            <li class="fragment"><code>val</code> no permite reasignación:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val x: Int = 1            // OK
+              val s: String = "Hola"    // OK
+              val y: Int = x + 3        // OK
+              println(y)                // Imprime: 4
+              x = x + 3                 // Error
+            </code></pre>
+            </li>
+            <li class="fragment"><code>var</code> sí permite reasignación:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              var x: Int = 1            // OK
+              x = x + 3                 // OK
+              println(x)                // Imprime: 4
+            </code></pre></li>
+          </ul>
+        </section>
+        
+        <section>
+          <div class="info_box">
+            Utilizaremos <code>val</code> en el 99% de los casos
+          </div>
+        </section>
+        
+        <section>
+          <h3>Declaración de variables</h3>
+          <ul>
+            <li>El tipo de la variable es opcional si puede inferirse del valor asignado.
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val x = 1
+              val s = "Hola"
+              val y = x + 3
+              var z = 1
+            </code></pre>
+            </li>
+          </ul>          
+        </section>
+        
+        <section>
+          <h3>Mutabilidad de variables</h3>
+          <ul>
+            <li>Aunque una variable esté definida mediante <code>val</code>, el valor apuntado por ella sí podría cambiar, en caso de ser mutable.</li>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val x: Array&lt;Int&gt; = arrayOf(1, 5, 6)   <span class="arrow_box_left fragment">Los arrays son mutables</span>
+              x[1] = 4        // OK
+            </code></pre>
+          </ul>
+          <div class="fragment">
+<svg
+   width="122.7955mm"
+   height="37.321476mm"
+   viewBox="0 0 122.7955 37.321476"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="array1.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.3932941"
+     inkscape:cx="206.34552"
+     inkscape:cy="9.3304063"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="TriangleStart"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : -111.17853 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="210 : -111.17853 : 1"
+       inkscape:persp3d-origin="105 : -160.67853 : 1"
+       id="perspective512" />
+    <rect
+       x="98.575348"
+       y="215.70644"
+       width="126.30982"
+       height="52.007595"
+       id="rect398" />
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-28.243479,-25.311392)">
+    <rect
+       style="fill:#cfe3f0;stroke-width:0.302204"
+       id="rect234"
+       width="26.499962"
+       height="18.552385"
+       x="28.243479"
+       y="25.311392"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text396"
+       style="font-size:48px;font-family:ocrb10;-inkscape-font-specification:ocrb10;text-align:center;white-space:pre;shape-inside:url(#rect398);display:inline;fill:#000000;stroke-width:1.00157" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;stroke-width:0.264999"
+       x="34.474812"
+       y="37.483482"
+       id="text1328"><tspan
+         sodipodi:role="line"
+         id="tspan1326"
+         style="stroke-width:0.265"
+         x="34.474812"
+         y="37.483482">x</tspan></text>
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056"
+       width="14.034144"
+       height="15.084239"
+       x="103.56921"
+       y="26.356245" />
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056-3"
+       width="14.034144"
+       height="15.084239"
+       x="117.4995"
+       y="26.394005" />
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056-3-6"
+       width="14.034144"
+       height="15.084239"
+       x="131.60269"
+       y="26.380955" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+       x="125.24068"
+       y="38.371761"
+       id="text2166"><tspan
+         sodipodi:role="line"
+         id="tspan2164"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#000000;stroke:none;stroke-width:0.665"
+         x="125.24068"
+         y="38.371761">1  5  6</tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#838383;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot);marker-end:url(#TriangleStart)"
+       d="m 47.24447,34.461241 h 55.15564"
+       id="path2319" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+       x="125.66405"
+       y="52.85387"
+       id="text6168"
+       class="fragment"><tspan
+         sodipodi:role="line"
+         id="tspan6166"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Raleway;-inkscape-font-specification:Raleway;fill:#008000;stroke:none;stroke-width:0.665"
+         x="125.66405"
+         y="52.85387">El valor puede</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Raleway;-inkscape-font-specification:Raleway;fill:#008000;stroke:none;stroke-width:0.665"
+         x="125.66405"
+         y="62.555256"
+         id="tspan6170">cambiar</tspan></text>
+    <g
+       id="g6343"
+       transform="translate(57.534552,-37.548561)"
+       style="display:inline"
+       class="fragment">
+      <rect
+         style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2056-3-7"
+         width="14.034144"
+         height="15.084239"
+         x="59.917408"
+         y="63.962524" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+         x="67.176971"
+         y="76.296722"
+         id="text2166-5"><tspan
+           sodipodi:role="line"
+           id="tspan2164-3"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#d40000;stroke:none;stroke-width:0.665"
+           x="67.176971"
+           y="76.296722">4</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.7611px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:none;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+       x="63.172138"
+       y="74.902779"
+       id="text6253"><tspan
+         sodipodi:role="line"
+         id="tspan6251"
+         style="stroke-width:0.665"
+         x="63.172138"
+         y="74.902779" /></text>
+  </g>
+</svg>
+
+          </div>
+        </section>
+
+        <section>
+          <ul>
+            <li>Lo que no puede modificarse es la referencia en sí.</li>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val x: Array&lt;Int&gt; = arrayOf(1, 5, 6)
+              x = arrayOf(4, 2)   // ERROR
+            </code></pre>
+          </ul>
+          <div class="fragment">
+<svg
+   width="132.53015mm"
+   height="48.01458mm"
+   viewBox="0 0 132.53015 48.01458"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="array2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.3932941"
+     inkscape:cx="403.36064"
+     inkscape:cy="9.3304063"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="marker9523"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path9521" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : -100.48542 : 1"
+       inkscape:vp_y="0 : 999.99998 : 0"
+       inkscape:vp_z="210 : -100.48542 : 1"
+       inkscape:persp3d-origin="105 : -149.98542 : 1"
+       id="perspective512" />
+    <rect
+       x="98.575348"
+       y="215.70644"
+       width="126.30982"
+       height="52.007595"
+       id="rect398" />
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-13.43919,-25.311392)">
+    <rect
+       style="fill:#cfe3f0;stroke-width:0.302204"
+       id="rect234"
+       width="26.499962"
+       height="18.552385"
+       x="28.243479"
+       y="25.311392"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text396"
+       style="font-size:48px;font-family:ocrb10;-inkscape-font-specification:ocrb10;text-align:center;white-space:pre;shape-inside:url(#rect398);display:inline;fill:#000000;stroke-width:1.00157" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;stroke-width:0.264999"
+       x="34.474812"
+       y="37.483482"
+       id="text1328"><tspan
+         sodipodi:role="line"
+         id="tspan1326"
+         style="stroke-width:0.265"
+         x="34.474812"
+         y="37.483482">x</tspan></text>
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056"
+       width="14.034144"
+       height="15.084239"
+       x="103.56921"
+       y="26.356245" />
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056-3"
+       width="14.034144"
+       height="15.084239"
+       x="117.4995"
+       y="26.394005" />
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056-3-6"
+       width="14.034144"
+       height="15.084239"
+       x="131.60269"
+       y="26.380955" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+       x="125.24068"
+       y="38.371761"
+       id="text2166"><tspan
+         sodipodi:role="line"
+         id="tspan2164"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#000000;stroke:none;stroke-width:0.665"
+         x="125.24068"
+         y="38.371761">1  5  6</tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#808080;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot);marker-end:url(#TriangleStart)"
+       d="m 47.24447,34.461241 h 55.15564"
+       id="path2319" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+       x="45.605106"
+       y="50.875523"
+       id="text6168"
+       class="fragment"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Raleway;-inkscape-font-specification:Raleway;fill:#d40000;stroke:none;stroke-width:0.665"
+         x="45.605106"
+         y="50.875523"
+         id="tspan6170">La referencia</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Raleway;-inkscape-font-specification:Raleway;fill:#d40000;stroke:none;stroke-width:0.665"
+         x="45.605106"
+         y="60.576908"
+         id="tspan7441">no puede cambiar</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.7611px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:none;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+       x="63.172138"
+       y="74.902779"
+       id="text6253"><tspan
+         sodipodi:role="line"
+         id="tspan6251"
+         style="stroke-width:0.665"
+         x="63.172138"
+         y="74.902779" /></text>
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056-5"
+       width="14.034144"
+       height="15.084239"
+       x="111.45364"
+       y="57.871475" />
+    <rect
+       style="fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2056-3-62"
+       width="14.034144"
+       height="15.084239"
+       x="125.38396"
+       y="57.909233" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#f5ecbe;fill-opacity:1;stroke:#ffa01d;stroke-width:0.665001;stroke-dasharray:none;stroke-opacity:1"
+       x="126.246"
+       y="69.886993"
+       id="text2166-1"><tspan
+         sodipodi:role="line"
+         id="tspan2164-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#000000;stroke:none;stroke-width:0.665"
+         x="126.246"
+         y="69.886993">4  2</tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#999999;stroke-width:0.665001;stroke-dasharray:1.995, 0.665001;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#Dot);marker-end:url(#marker9523)"
+       d="m 47.35416,34.241034 c 46.154782,11.312265 63.0082,29.090697 63.0082,29.090697"
+       id="path7704"
+       class="fragment" />
+  </g>
+</svg>
+          </div>
+        </section>
+        
+        <section>
+          <div class="info_box">
+            Utilizaremos tipos de datos inmutables en el 99% de los casos
+          </div>
+          
+          <p class="fragment">Además, los tipos básicos (<code>Int</code>, <code>String</code>, etc.) son inmutables.</p>
+        </section>
+        
+        <section>
+          <h3>Tipos de datos básicos</h3>
+          <ul>
+            <li>En Java existe distinción entre tipos primitivos y tipos objeto.
+            <ul>
+              <li>Tipos primitivos: <code>int</code>, <code>boolean</code>, <code>char</code>, <code>double</code>.</li>
+              <li>Tipos objeto: <code>Integer</code>, <code>Boolean</code>, <code>Character</code>, <code>Double</code>.</li>
+            </ul>
+            </li>
+            <li class="fragment">En Kotlin <strong>todos los tipos se consideran objetos</strong>.
+            <ul>
+              <li class="fragment">El tipo <code>Int</code> en Kotlin equivale a los tipos <code>int</code> e <code>Integer</code> en Java.</li>
+              <li class="fragment">El compilador determina si una variable <code>Int</code> se representa internamente como un tipo primitivo o como un tipo objeto.</li>
+            </ul>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Tipos de datos básicos</h3>
+          <ul>
+            <li>Numéricos: <code>Int</code>, <code>Byte</code>, <code>Short</code>, <code>Long</code>, <code>Double</code>, <code>Float</code>.
+            <div>
+              <div style="float:left;width:50%">
+                <table>
+                  <tr><td><code>Byte</code></td><td>8 bits</td></tr>
+                  <tr><td><code>Short</code></td><td>16 bits</td></tr>
+                  <tr><td><code>Int</code></td><td>32 bits</td></tr>
+                  <tr><td><code>Long</code></td><td>64 bits</td></tr>
+                </table>
+              </div>
+              <div style="float:right;width:50%">
+                <table>
+                  <tr><td><code>Float</code></td><td>32 bits</td></tr>
+                  <tr><td><code>Double</code></td><td>64 bits</td></tr>
+                </table>
+              </div>
+            </div>
+            <p style="clear:both">&nbsp;</p>
+            <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+              val x = 4.04        // Tipo Double
+              val y = 34          // Tipo Int
+              val z = 2034L       // Tipo Long
+            </code></pre>
+              </li>
+            </ul>
+        </section>
+        
+        <section>
+          <h3>Tipos de datos básicos</h3>
+          <ul style="width:95%">
+            <li>Caracteres: <code>Char</code>
+            <pre><code data-trim data-noescape>
+              val c1 = '7'
+              val c2 = '\n'
+              val n: Int = c1.digitToInt()      // n toma el valor 7
+            </code></pre>
+            </li>
+            <li class="fragment">Booleanos: <code>Boolean</code>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val b1 = true
+              val b2 = false
+              val b3 = b1 && b2     <span class="arrow_box_left fragment">&& es el operador AND</span>
+              val b4 = !b3          <span class="arrow_box_left fragment">! es el operador NOT</span>
+              val b5 = b1 || b2     <span class="arrow_box_left fragment">|| es el operador OR</span>
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Tipos de datos básicos</h3>
+          <ul style="width:95%">
+            <li class="fragment">Cadenas de caracteres: <code>String</code>
+            <pre><code data-trim data-noescape>
+              val nombre = "Diana"
+              val vacia = ""
+            </code></pre>
+            </li>            
+            <li class="fragment">Mediante la sintaxis <code>${..}</code> es posible evaluar expresiones dentro de cadenas.
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val nombre = "Diana"
+              val edad = 38
+              println("Me llamo $nombre y tengo $edad años")
+              println("Pero el año que viene tendré ${edad + 1} años")
+            </code></pre>
+            </li>
+            <li class="fragment">Acceso a caracteres de una cadena:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val nombre = "Diana"
+              val c: Char = nombre[0]     // c = 'D'
+              nombre[0] = 'X'             // ERROR: las cadenas son inmutables
+            </code></pre></li>
+          </ul>
+        </section>
+        
+        
+        
+        <section>
+          <h3>Tipos de datos básicos</h3>
+          <ul>
+            <li class="fragment">El tipo <code>Array&lt;T&gt;</code> representa los arrays cuyos elementos son de tipo <code>T</code>.
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              // Construcción de un array
+              val a: Array&lt;Int&gt; = arrayOf(1, 6, 3, 5)  // a = [1, 6, 3, 5]
+              val b = Array(5) { 0 }                   // b = [0, 0, 0, 0, 0]
+              
+              println(a[0])           // 1
+              println(a.size)         // 4
+              println(a.indices)      // 0..3 (de tipo IntRange, utilizado en bucles)
+            </code></pre>
+            </li>
+            <li class="fragment">Los arrays son mutables:
+            <pre><code class="language-kotlin" data-trim data-noescape>              
+              val a: Array&lt;Int&gt; = Array(4) { 0 }
+              a[2] = 10
+              println(a[2])           // 10              
+            </code></pre></li>
+            
+          </ul>
+        </section>
+        
+        <section>
+          <h3>El tipo <code>Pair&lt;A, B&gt;</code></h3>
+          <ul>
+            <li>Representa una tupla de dos componentes (un par).
+            <ul>
+              <li>Útil para devolver varios resultados desde una función.</li>
+            </ul></li>
+            <li class="fragment">La primera componente tiene tipo <code>A</code> y la segunda tiene tipo <code>B</code>.</li>
+          </ul>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            val p = Pair(1, 'b')      <span class="fragment">// p: Pair&lt;Int, Char&gt;</span>
+            println(p.first)          <span class="fragment">// Imprime: 1</span>
+            println(p.second)         <span class="fragment">// Imprime: b</span>
+            
+            // Sintaxis alternativa para obtener las componentes de un par
+            val (x1, x2) = p          
+            println("($x1, $x2)")     <span class="fragment">// Imprime: (1, b)</span>
+          </code></pre>
+        </section>
+        
+        <section>
+          <h3>Otros tipos especiales</h3>
+          <ul>
+            <li><strong><code>Any</code></strong>. Es la raíz de la jerarquía de tipos. Todos los tipos de Kotlin son subtipos de <code>Any</code>.
+            <p style="text-align:center"><img src="01/Any.svg" width="50%"/></p>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Otros tipos especiales</h3>
+          <ul>
+            <li><strong><code>Unit</code></strong>. Solamente tiene un elemento, del mismo nombre. Equivale al tipo <code>void</code> en otros lenguajes:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun saludar(nombre: String): <span class="hl">Unit</span> {   <span class="arrow_box_left fragment">La función no devuelve nada</span>
+                println("Hola, $nombre")
+                return Unit
+              }
+            </code></pre>
+            <div class="fragment">
+            equivale a
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun saludar(nombre: String) {
+                println("Hola, $nombre")
+              }
+            </code></pre></div>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Otros tipos especiales</h3>
+          <ul>
+            <li><strong><code>Nothing</code></strong>. Indica la ausencia de valores. Si el tipo de retorno de una función es <code>Nothing</code>, esa función nunca termina correctamente.
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun fail(mensaje: String): <span class="hl">Nothing</span> {
+                throw IllegalStateException(mensaje)
+              }
+            </code></pre>
+            </li>
+            <li>El tipo <code>Nothing</code> es subtipo de cualquier otro.</li>
+            <li>Función predefinida:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun TODO(): Nothing
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Conversiones entre tipos de datos</h3>
+          <ul>
+            <li>Existen métodos de conversión entre los distintos tipos de datos:</li>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val i = 23               <span class="fragment">// i: Int = 23</span>
+              val d = i.toDouble()     <span class="fragment">// d: Double = 23.0</span>
+              val s = i.toString()     <span class="fragment">// s: String = "23"</span>
+              val j = "45".toInt()     <span class="fragment">// j: Int = 45</span>
+            </code></pre>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Igualdad (<code>==</code>) vs Identidad (<code>===</code>)</h3>
+          <ul>
+            <li class="fragment">El operador <code>==</code> comprueba si dos elementos son iguales.
+            <ul>
+              <li>similar al método <code>.equals()</code> de Java</li>
+            </ul></li>
+            <li class="fragment">El operador <code>===</code> comprueba si dos elementos apuntan al mismo objeto.
+            <ul>
+              <li>similar al operador <code>==</code> de Java</li>
+            </ul></li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Igualdad (<code>==</code>) vs Identidad (<code>===</code>)</h3>
+          <div>
+          <div style="float:left;width:50%">
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val p1 = Pair(4, 5)
+            val p2 = Pair(4, 5)
+            val p3 = p1
+            val p4 = Pair(6, 7)
+            
+            println(p1 == p2)   <span class="fragment">// true</span>
+            println(p1 === p2)  <span class="fragment">// false</span>
+            println(p1 === p3)  <span class="fragment">// true</span>
+            println(p1 == p4)   <span class="fragment">// false</span>
+          </code></pre>
+          </div>
+          <div style="float:left;width:50%">
+            <img src="01/pares.svg" style="width:70%"/>
+          </div>
+          </div>
+        </section>
+      </section>
+        
+      <section>
+        <section>
+          <h2>Sentencias y expresiones</h2>
+        </section>
+        
+        <section>
+          <h3>Sentencias y expresiones</h3>
+          <p>En un lenguaje de programación, ¿cuál es la diferencia entre <strong>sentencias</strong> y <strong>expresiones</strong>?</p>
+          <ul class="fragment">
+            <li>Las expresiones son construcciones sintácticas que se evalúan a valores.
+            <ul>
+              <li>Estos valores pueden asignarse a variables, pasarse como parámetros, etc.</li>
+            </ul></li>
+            <li>Las sentencias son las instrucciones que ejecuta un programa.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Condicionales: <code>if</code></h3>
+          <ul>
+            <li>Aparentemente son similares a los de cualquier otro lenguaje:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              if (edad >= 18) {
+                println("Eres mayor de edad")
+              } else {
+                println("No eres mayor de edad")
+              }
+            </code></pre></li>
+            <li class="fragment">Pero, en Kotlin, <code>if</code> también puede usarse como expresión:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val mensaje = if (edad >= 18) "Mayor" else "Menor"
+            </code></pre>
+            Es similar al operador <code>?:</code> en otros lenguajes.
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Condicionales: <code>if</code></h3>
+          <p>Cuando un <code>if</code> se utiliza como expresión:</p>
+          <ul>
+            <li>Es obligatorio el uso de <code>else</code>.
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val x = if (y > 0) 5  // Incorrecto.
+                                    // ¿Qué valor tomaría x si no se cumple y > 0?
+            </code></pre>
+            </li>
+            <li class="fragment">Cada rama puede tener un bloque delimitado por <code>{</code> ... <code>}</code>, con una expresión al final.
+            <pre><code class="language-kotlin" data-trim data-noescape>
+                val nuevaPos = if (direccion == "Este") {
+                                    println("Voy en dirección este")
+                                    pos + 10 <span class="arrow_box_left fragment">Expresión</span>
+                                } else {
+                                    println("Voy en dirección oeste")
+                                    pos - 10 <span class="arrow_box_left fragment">Expresión</span>
+                                }
+            </code></pre></li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Condicionales: <code>when</code></h3>
+          <ul>
+            <li>Permite comparar el resultado de una expresión con distintos valores:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              when (diaActual) {
+                "Lunes" -> println("Ugh")
+                "Viernes" -> println("¡Viva!")
+                else -> println("Meh")
+              }
+            </code></pre>
+            <span class="fragment">Es similar al <code>switch</code> de otros lenguajes de programación.</span>
+            </li>
+            <li class="fragment">También se puede utilizar como expresión:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+            println(when (diaActual) {   <span class="arrow_box_left fragment">En este caso la distinción ha de ser excluyente...</span>
+              "Lunes" -> "Ugh"
+              "Viernes" -> "¡Viva!"
+              else -> "Meh"             <span class="arrow_box_left fragment">...o tener una rama <span style="background-color:white;font-family:courier">else</span></span>
+            })              
+            </code></pre>
+            </li>            
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Condicionales: <code>when</code></h3>
+          <ul>
+            <li>Es posible utilizar cualquier objeto como discriminante de <code>when</code>, aunque no sea de tipo básico:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val mezcla = when (setOf(color1, color2)) {
+                setOf("amarillo", "azul") -> "verde"
+                setOf("rojo", "amarillo") -> "naranja"
+                setOf("rojo", "azul") -> "violeta"
+                else -> "ni idea"                
+              }
+            </code></pre>
+            Kotlin utiliza el operador de igualdad (<code>==</code>) para comparar el discriminante con cada una de las alternativas.
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Condicionales: <code>when</code></h3>
+          <ul>
+            <li>Es posible utilizar <code>when</code> sin discriminante para hacer distinciones de casos múltiples:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val cuadrante = when {
+                x > 0 && y > 0 -> "I"
+                x < 0 && y > 0 -> "II"
+                x < 0 && y < 0 -> "III"
+                x > 0 && y < 0 -> "IV"
+                else -> "Ninguno"
+              }
+            </code></pre>
+            <p><span class="fragment">Alternativa a encadenar <code>if...else if...else if...</code></span></p>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Bucles: <code>while</code> y <code>do...while</code></h3>
+          Similares a los de cualquier lenguaje de programación:
+          
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            while (condicion) {
+              // ....
+            }
+          </code></pre>
+          
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            do {
+              // ....
+            } while (condicion)
+          </code></pre>
+          
+          <div class="info_box fragment">
+            No los vamos a utilizar 😮
+          </div>          
+        </section>
+
+        <section>
+          <h3>Bucles: <code>for</code></h3>
+          <ul>
+            <li>Siempre tienen la forma <code>for (x in xs)</code>, donde <code>x</code> es una variable y <code>xs</code> es una colección o un rango:</li>
+            <li class="fragment">Ejemplos con rangos:
+            <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+              for (x in 1..10) { println(x) } 
+                // 'x' toma los valores 1, 2, ..., 10
+            </code></pre>
+            <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+              for (x in 1 until 10) { println(x) }
+                // 'x' toma los valores 1, 2, ..., 9
+            </code></pre>
+            <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+              for (x in 10 downTo 1) { println(x) }
+                // 'x' toma los valores 10, 9, ..., 1
+            </code></pre>
+            <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+              for (x in 1..10 step 2) { println(x) } 
+                // 'x' toma los valores 1, 3, 5, 7, 9
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Bucles: <code>for</code></h3>
+            <p>Ejemplos con colecciones:</p>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val dias = listOf("Lunes", "Martes", "Miércoles", ...)
+              for (d in dias) {
+                println(d)
+              }
+            </code></pre>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val xs: Array&lt;Int&gt; = ...
+              
+              val (x in xs) {
+                println(x)
+              }
+              
+              val (i in xs.indices) { // equivale a "i in 0 until xs.size"
+                println("xs[$i] = ${xs[i]}")
+              }
+            </code></pre>
+        </section>
+        
+        <section>
+            <div class="info_box">
+              Tampoco vamos a utilizar los bucles <code>for</code> 😧
+            </div>          
+        </section>
+        
+        
+        <section>
+          <h3>Excepciones</h3>
+          <ul>
+            <li>Son similares a las de Java y C++.
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              try {
+                val x = Integer.parseInt(cadena)
+                println(x)
+              } catch (e: NumberFormatException) {
+                println("No es un número")
+              }
+            </code></pre>
+            </li>
+            <li>A diferencia de Java, no es necesario declarar las excepciones que puede lanzar un método (<code>throws</code>).</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Excepciones</h3>
+          <ul>
+            <li>Diferencia con Java y C++: los bloques <code>try...catch</code> también pueden ser expresiones:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              println(
+                try { 
+                  Integer.parseInt(cadena)
+                } catch (e: NumberFormatException) {
+                  "No es un número"
+                }
+              )
+            </code></pre>
+            </li>
+          </ul>
+            <div class="info_box fragment">
+              Aun así, tampoco vamos a utilizar excepciones en esta asignatura 😅
+            </div>              
+        </section>
+      </section>
+        
+        
+      <section>
+        <section>
+          <h2>Colecciones</h2>
+        </section>
+        
+        <section>
+          <h3>Colecciones</h3>
+          <ul>
+            <li>Interfaces definidas en el paquete <code>kotlin.collections</code>:
+            <p style="text-align:center">
+              <img src="01/Colecciones1.svg"/>
+            </p>
+            </li>
+            <li class="fragment">Para utilizarlas, hay que importar las interfaces del respectivo paquete:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              import kotlin.collections.List
+            </code></pre>
+            o bien,
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              import kotlin.collections.*
+            </code></pre>
+            </li>            
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Colecciones</h3>
+          <ul>
+            <li>Estos tres tipos de colecciones son <strong>inmutables</strong>. Una vez creadas, no es posible añadir o eliminar elementos.</li>
+          </ul>
+            <p style="text-align:center">
+              <img src="01/Colecciones1.svg"/>
+            </p>
+        </section>
+        
+        <section>
+          <h3>Listas</h3>
+          <ul>
+            <li>El tipo <code>List&lt;T&gt;</code> denota las listas cuyos elementos son de tipo <code>T</code>.</li>
+            <li class="fragment">Creación de listas:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val l: List&lt;Int&gt; = listOf(10, 43, 2, 25)
+              val l2: List&lt;Any&gt; = listOf("Pepe", 5.6, Pair(1, 4))
+            </code></pre>
+            </li>
+            <li class="fragment">Algunos métodos sobre listas <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/">[+]</a>:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              l[1]             <span class="fragment">// &rarr; 43</span>
+              l.size           <span class="fragment">// &rarr; 4</span>
+              l.contains(5)    <span class="fragment">// &rarr; false</span>
+              l.indexOf(25)    <span class="fragment">// &rarr; 3</span>
+              l.subList(1, 4)  <span class="fragment">// &rarr; [43, 2, 25]</span>
+            </code></pre>
+            </li>   
+          </ul>
+        </section>
+        
+        
+        <section>
+          <h3>Conjuntos</h3>
+          <ul>
+            <li class="fragment">El tipo <code>Set&lt;T&gt;</code> denota los conjuntos cuyos elementos son de tipo <code>T</code>.</li>
+            <li class="fragment">Creación de conjuntos:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val s: Set&lt;String&gt; = setOf("Daniel", "Clara", "Francisco", "Clara")
+            </code></pre>
+            </li>
+            <li class="fragment">Algunos métodos sobre conjuntos <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/">[+]</a>:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              s.isEmpty()           <span class="fragment">// &rarr; false</span>
+              s.contains("Clara")   <span class="fragment">// &rarr; true</span>
+              s.size                <span class="fragment">// &rarr; 3</span>
+            </code></pre>
+            </li>            
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Diccionarios</h3>
+          <ul>
+            <li>El tipo <code>Map&lt;K, V&gt;</code> denota los diccionarios cuyas claves tienen tipo <code>K</code> y cuyos valores tienen tipo <code>V</code>.</li>
+            <li class="fragment">Creación de diccionarios:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val d: Map&lt;String, Int&gt; =
+                mapOf(Pair("Javier", 23), Pair("Estela", 21), Pair("Juan", 23))</code></pre>
+                o bien
+              <pre><code class="language-kotlin" data-trim data-noescape>
+              val d: Map&lt;String, Int&gt; =
+                mapOf("Javier" to 23, "Estela" to 21, "Juan" to 23)
+              </code></pre>
+            </li>
+          </ul>
+        </section>              
+        
+        <section>
+          <h3>Diccionarios</h3>
+          <p>Algunas operaciones sobre diccionarios <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/">[+]</a>:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            d.size                    <span class="fragment">// &rarr; 3</span>
+            d["Estela"]               <span class="fragment">// &rarr; 21</span>
+            d["Nadie"]                <span class="fragment">// &rarr; null</span>
+            d.containsKey("Susana")   <span class="fragment">// &rarr; false</span>
+            d.keys                    <span class="fragment">// &rarr; {Javier, Estela, Juan}</span>
+          </code></pre>
+        </section>
+        
+        
+        <section>
+          <h3>Colecciones inmutables</h3>
+          <ul>
+            <li>Los tres tipos vistos ahora representan colecciones <strong>inmutables</strong>.</li>
+            <li>Existen operaciones para añadir y eliminar elementos, pero devuelven una colección nueva, en lugar de modificar la ya existente:
+            <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            val l = listOf(10, 43, 2, 25)
+            val l2 = l + 23
+            println(l2)     // &rarr; [10, 43, 2, 25, 23]
+            println(l)      // &rarr; [10, 43, 2, 25]
+            </code></pre>
+            </li>            
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Colecciones inmutables</h3>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            val s = setOf("Daniel", "Clara", "Francisco", "Clara")
+            
+            val s2 = s - "Francisco"
+            println(s2)     // &rarr; {"Daniel", "Clara"}
+          </code></pre>
+          
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+          val d = mapOf("Javier" to 23, "Estela" to 21, "Juan" to 23)
+           
+          val d2 = d + ("Ana" to 31) 
+          println(d2) // &rarr; {Javier=23, Estela=21, Juan=23, Ana=31}
+            
+          val d3 = d2 - "Estela"
+          println(d3) // &rarr; {Javier=23, Juan=23, Ana=31}
+          </code></pre>
+        </section>
+        
+        <section>
+          <h3>Colecciones mutables</h3>
+          <p>
+          Existen interfaces con variantes mutables de las anteriores:
+          </p>
+          <p style="text-align:center">
+<svg
+   width="209.15363mm"
+   height="74.17334mm"
+   viewBox="0 0 209.15363 74.173337"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="Colecciones2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     showguides="true"
+     inkscape:zoom="1.3932941"
+     inkscape:cx="349.53137"
+     inkscape:cy="148.56878"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1387"
+       originx="12.0467"
+       originy="-43.870076" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(12.046697,-43.87009)">
+    <g
+       id="g1267"
+       transform="translate(-22.142732,-8.1217179)">
+      <rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         id="rect234"
+         width="38.456993"
+         height="16.629484"
+         x="22.022633"
+         y="52.141808" />
+      <text
+         xml:space="preserve"
+         style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         x="40.779583"
+         y="63.687611"
+         id="text1160"><tspan
+           sodipodi:role="line"
+           id="tspan1158"
+           style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="40.779583"
+           y="63.687611">List</tspan></text>
+    </g>
+    <g
+       id="g1267-3"
+       transform="translate(51.050288,-8.1217179)">
+      <rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         id="rect234-6"
+         width="38.456993"
+         height="16.629484"
+         x="22.022633"
+         y="52.141808" />
+      <text
+         xml:space="preserve"
+         style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         x="40.779583"
+         y="63.687611"
+         id="text1160-7"><tspan
+           sodipodi:role="line"
+           id="tspan1158-5"
+           style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="40.779583"
+           y="63.687611">Set</tspan></text>
+    </g>
+    <g
+       id="g1267-35"
+       transform="translate(124.7007,-8.1217179)">
+      <rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         id="rect234-62"
+         width="38.456993"
+         height="16.629484"
+         x="22.022633"
+         y="52.141808" />
+      <text
+         xml:space="preserve"
+         style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         x="40.779583"
+         y="63.687611"
+         id="text1160-9"><tspan
+           sodipodi:role="line"
+           id="tspan1158-1"
+           style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="40.779583"
+           y="63.687611">Map</tspan></text>
+    </g>
+    <g
+       id="g1267-31-4-6"
+       transform="translate(125.12661,48.676293)" />
+    <g
+       id="g3326"
+       class="fragment">
+      <g
+         id="g1267-31"
+         transform="translate(-21.716821,48.676293)">
+        <rect
+           style="fill:#e9caaf;stroke:#000000;stroke-width:0.384797;stroke-opacity:1;fill-opacity:1"
+           id="rect234-9"
+           width="61.925392"
+           height="16.990532"
+           x="9.8625221"
+           y="52.184208" />
+        <text
+           xml:space="preserve"
+           style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+           x="40.779583"
+           y="63.687611"
+           id="text1160-4"><tspan
+             sodipodi:role="line"
+             id="tspan1158-7"
+             style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="40.779583"
+             y="63.687611">MutableList</tspan></text>
+      </g>
+      <g
+         id="g1267-31-4"
+         transform="translate(51.476199,48.676293)">
+        <rect
+           style="fill:#e9caaf;stroke:#000000;stroke-width:0.384797;stroke-opacity:1;fill-opacity:1"
+           id="rect234-9-5"
+           width="61.925392"
+           height="16.990532"
+           x="9.8625221"
+           y="52.184208" />
+        <text
+           xml:space="preserve"
+           style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+           x="40.779583"
+           y="63.687611"
+           id="text1160-4-0"><tspan
+             sodipodi:role="line"
+             id="tspan1158-7-3"
+             style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="40.779583"
+             y="63.687611">MutableSet</tspan></text>
+      </g>
+      <rect
+         style="fill:#e9caaf;stroke:#000000;stroke-width:0.384797;stroke-opacity:1;fill-opacity:1"
+         id="rect234-9-5-1"
+         width="61.925392"
+         height="16.990532"
+         x="9.8625221"
+         y="52.184208"
+         transform="translate(125.12661,48.676293)" />
+      <text
+         xml:space="preserve"
+         style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         x="40.779583"
+         y="63.687611"
+         id="text1160-4-0-0"
+         transform="translate(125.12661,48.676293)"><tspan
+           sodipodi:role="line"
+           id="tspan1158-7-3-6"
+           style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="40.779583"
+           y="63.687611">MutableMap</tspan></text>
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.270593;stroke-opacity:1"
+         d="M 19.506524,100.81255 V 68.14454"
+         id="path1755" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.270593;stroke-opacity:1"
+         d="M 92.672646,100.67875 V 68.01076"
+         id="path1755-3" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.270593;stroke-opacity:1"
+         d="M 166.95105,100.96916 V 68.301156"
+         id="path1755-2" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         d="m 19.498835,61.182511 -4.20248,7.485995 h 8.020975 z"
+         id="path2014"
+         sodipodi:nodetypes="cccc" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         d="m 92.493068,60.87938 -4.20248,7.485995 h 8.020975 z"
+         id="path2014-0"
+         sodipodi:nodetypes="cccc" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         d="m 167.09096,60.834877 -4.20248,7.48599 h 8.02098 z"
+         id="path2014-6"
+         sodipodi:nodetypes="cccc" />
+    </g>
+  </g>
+</svg>
+          
+          </p>
+        </section>
+        
+        <section>
+          <h3>Colecciones mutables</h3>
+          <p>Ejemplos de uso:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val ml = mutableListOf(10, 54, 32, 55)
+            ml.add(23)
+                // ml = [10, 54, 32, 55, 23]
+            ml[2] = 13
+                // ml = [10, 54, 13, 55, 23]
+            ml.clear()
+                // ml = []
+          </code></pre>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            val md = mutableMapOf(1 to "Lunes", 2 to "Martes")
+            md.put(3, "Miércoles")
+            md[7] = "Domingo"
+                // md = {1=Lunes, 2=Martes, 3=Miércoles, 7=Domingo}
+          </code></pre>
+        </section>
+        
+        <section>
+            <div class="info_box">
+              Vamos a utilizar colecciones inmutables en el 99% de los casos
+            </div>              
+        </section>
+        
+        <section>
+          <h3><code>Collection</code> / <code>Iterable</code></h3>
+          <p>Son interfaces de las que provienen <code>List</code> y <code>Set</code>:</p>
+          <p style="text-align:center">
+<svg
+   width="111.95001mm"
+   height="100.59446mm"
+   viewBox="0 0 111.95001 100.59446"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="Colecciones3.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     showguides="true"
+     inkscape:zoom="0.98520767"
+     inkscape:cx="326.83465"
+     inkscape:cy="251.72358"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g3228-9">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1387"
+       originx="0.27010202"
+       originy="39.794897" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0.27009941,39.794882)">
+    <g
+       id="g1267"
+       transform="translate(-22.142732,-8.1217179)">
+      <rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         id="rect234"
+         width="38.456993"
+         height="16.629484"
+         x="22.022633"
+         y="52.141808" />
+      <text
+         xml:space="preserve"
+         style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         x="40.779583"
+         y="63.687611"
+         id="text1160"><tspan
+           sodipodi:role="line"
+           id="tspan1158"
+           style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="40.779583"
+           y="63.687611">List&lt;T&gt;</tspan></text>
+    </g>
+    <g
+       id="g1267-3"
+       transform="translate(51.050288,-8.1217179)">
+      <rect
+         style="fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         id="rect234-6"
+         width="38.456993"
+         height="16.629484"
+         x="22.022633"
+         y="52.141808" />
+      <text
+         xml:space="preserve"
+         style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+         x="40.779583"
+         y="63.687611"
+         id="text1160-7"><tspan
+           sodipodi:role="line"
+           id="tspan1158-5"
+           style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="40.779583"
+           y="63.687611">Set&lt;T&gt;</tspan></text>
+    </g>
+    <g
+       id="g3228-9"
+       transform="translate(39.248818,-83.734607)">
+      <g
+         id="g3511"
+         class="fragment">
+        <g
+           id="g1267-1"
+           transform="translate(-23.369732,33.010327)">
+          <rect
+             style="fill:#afe9dd;stroke:#000000;stroke-width:0.421448;stroke-opacity:1"
+             id="rect234-5"
+             width="76.454544"
+             height="16.508036"
+             x="3.0238585"
+             y="52.20253" />
+          <text
+             xml:space="preserve"
+             style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+             x="40.779583"
+             y="63.687611"
+             id="text1160-5"><tspan
+               sodipodi:role="line"
+               id="tspan1158-4"
+               style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="40.779583"
+               y="63.687611">Collection&lt;T&gt;</tspan></text>
+        </g>
+        <g
+           id="g1267-1-7"
+           transform="translate(-23.116784,-8.05208)">
+          <rect
+             style="fill:#afe9dd;stroke:#000000;stroke-width:0.379883;stroke-opacity:1"
+             id="rect234-5-6"
+             width="61.961517"
+             height="16.549601"
+             x="10.270371"
+             y="52.181747" />
+          <text
+             xml:space="preserve"
+             style="font-size:9.87777px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#afe9dd;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+             x="42.367085"
+             y="63.687611"
+             id="text1160-5-5"><tspan
+               sodipodi:role="line"
+               id="tspan1158-4-6"
+               style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="42.367085"
+               y="63.687611">Iterable&lt;T&gt;</tspan></text>
+        </g>
+        <path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.193278;stroke-opacity:1"
+           d="M 19.506524,85.191244 V 68.524336"
+           id="path1755-37" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+           d="m 19.498835,61.182511 -4.20248,7.485995 h 8.020975 z"
+           id="path2014-4"
+           sodipodi:nodetypes="cccc" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.131588;stroke-opacity:1"
+           d="m 20.315815,117.08182 v -3.91664 -3.80876"
+           id="path1755-37-5"
+           sodipodi:nodetypes="ccc" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+           d="m 20.308126,102.01459 -4.20248,7.486 h 8.020975 z"
+           id="path2014-4-2"
+           sodipodi:nodetypes="cccc" />
+        <path
+           style="fill:#e9caaf;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+           d="M -20.766493,117.02708 H 53.416002"
+           id="path3356" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.154729;stroke-opacity:1"
+           d="m -20.678219,127.6368 v -5.41529 -5.26613"
+           id="path1755-37-5-5"
+           sodipodi:nodetypes="ccc" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.154729;stroke-opacity:1"
+           d="m 53.355573,127.69701 v -5.41529 -5.26613"
+           id="path1755-37-5-5-4"
+           sodipodi:nodetypes="ccc" />
+      </g>
+    </g>
+  </g>
+</svg>            
+          </p>
+        </section>
+        
+        <section>
+          <h3><code>Collection</code> / <code>Iterable</code></h3>
+          <ul>
+            <li><code>Collection</code> contiene propiedades y métodos básicos sobre colecciones <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/">[+]</a>.
+            <ul>
+              <li><code>size</code>, <code>contains()</code>, <code>isEmpty()</code>, ... </li>
+            </ul></li>
+            <li class="fragment"><code>Iterable</code> permite producir objetos <code>Iterator&lt;T&gt;</code> para realizar recorridos <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/">[+]</a>:
+            <ul>
+              <li>Métodos de <code>Iterator</code>: <code>hasNext()</code> y <code>next()</code></li>
+              <li>Los objetos que implementan la interfaz <code>Iterable</code> pueden ser recorridos mediante bucles <code>for</code>:
+              <pre><code class="language-kotlin" data-trim data-noescape>
+                for (x in xs) { ... }     
+              </code></pre>
+              </li>              
+            </ul>
+            </li>
+          </ul>
+        </section>
+      </section>
+        
+        
+      <section>
+        <section>
+          <h2>Funciones</h2>
+        </section>
+        
+        <section>
+          <h3>Definición de funciones</h3>
+          <ul>
+            <li>Las definiciones de funciones tienen la siguiente estructura:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun nombre(x<sub>1</sub>: T<sub>1</sub>, ..., x<sub>n</sub>: T<sub>n</sub>): T {
+                // ...
+              }
+            </code></pre>
+            donde <code>T<sub>1</sub></code>, ..., <code>T<sub>n</sub></code> son los tipos de los parámetros y <code>T</code> es el tipo del valor devuelto por la función.
+            </li>
+            <li class="fragment">Ejemplo:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun maximo(x: Int, y: Int): Int {
+                  if (x &gt;= y) {
+                      return x
+                  } else {
+                      return y
+                  }
+              }
+              
+              println(maximo(4, 3))
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Definición de funciones</h3>
+          <ul>
+            <li>Como <code>if</code> es una expresión, la definición anterior puede reescribirse del siguiente modo:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun maximo(x: Int, y: Int): Int {
+                  return if (x &gt;= y) x else y
+              }
+            </code></pre>
+            </li>
+            <li class="fragment">Si el cuerpo de una función es de la forma <code>return exp</code>, puede simplificarse del siguiente modo:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun maximo(x: Int, y: Int): Int = if (x &gt;= y) x else y
+            </code></pre>
+            </li>
+            <li class="fragment">En este último caso, puede omitirse el tipo del resultado:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun maximo(x: Int, y: Int) = if (x &gt;= y) x else y
+            </code></pre></li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Definición de funciones</h3>
+          <p>Otros ejemplos:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun cuadrado(x: Int) = x * x
+          </code></pre>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            fun sumaDeCuadrados(x: Int): Int {
+                val x2 = cuadrado(x)
+                return x2 + x2
+            }            
+          </code></pre>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            fun abs(x: Int) = if (x >= 0) x else -x
+          </code></pre>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            fun signo(x: Int) = when {
+                x > 0 -> 1
+                x < 0 -> -1
+                else -> 0
+            }            
+          </code></pre>
+        </section>
+        
+        <section>
+          <h3>Funciones paramétricas</h3>
+          <ul>
+            <li>Son funciones que pueden tratar parámetros de distintos tipos.</li>
+            <li>Equivalen a los <em>generics</em> en Java y a los <em>templates</em> de C++.</li>
+            <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+          <span class="arrow_box_down fragment" style="position:relative;top:-0.2em">Parámetros de tipo</span>
+              fun &lt;T&gt; contar(arr: Array&lt;T&gt;, elem: T): Int {
+                // Devuelve el número de veces que aparece `elem` en `arr`
+                var numVeces = 0
+                for (x in arr) {
+                  if (x == elem) {
+                    numVeces++
+                  }
+                }
+                return numVeces
+              }
+            </code></pre>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Funciones paramétricas</h3>
+          <ul>
+            <li>Cuando llamamos a una función genérica, podemos indicar los parámetros de tipo con los que queremos aplicarla:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              println(contar<span class="hl">&lt;Int&gt;</span>(arrayOf(5, 1, 7, 7, 1), 1))       // Imprime: 2
+              println(contar<span class="hl">&lt;Double&gt;</span>(arrayOf(4.3, 1.2, 0.0), 1.0))  // Imprime: 0
+            </code></pre>
+            <div class="fragment">
+            aunque, en la mayoría de los casos, este parámetro se infiere automáticamente:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              println(contar(arrayOf(5, 1, 7, 7, 1), 1))    // Imprime: 2
+              println(contar(arrayOf(4.3, 1.2, 0.0), 1.0))  // Imprime: 0
+            </code></pre>
+            </div>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Parámetros por defecto</h3>
+          <ul>
+            <li>Supongamos la siguiente función:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun delimitar(s: String, antes: String, despues: String) =
+                  antes + s + despues
+
+              delimitar("Manuel", "(", ")")   // &rarr; (Manuel)
+              delimitar("Manuel", "[", "]")   // &rarr; [Manuel]
+            </code></pre>            
+            </li>
+            <li class="fragment">
+            Es posible especificar valores por defecto para los parámetros:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun delimitar(s: String, antes: String <span class="hl">= "("</span>, despues: String <span class="hl">= ")"</span>) =
+                  antes + s + despues
+
+              delimitar("Hola")                   // &rarr; (Hola)
+              delimitar("Hola", "[")              // &rarr; [Hola)
+              delimitar("Hola", "&lt;", "&gt;")         // &rarr; &lt;Hola&gt;
+            </code></pre>            
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Parámetros con nombre</h3>
+          <ul>
+            <li>También es posible indicar explícitamente el nombre de los parámetros en las llamadas a función:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              delimitar(<span class="hl">s =</span> "Manuel", <span class="hl">antes =</span> "(", <span class="hl">despues =</span> ")")
+            </code></pre>            
+            </li>
+            <li>Esto permite alterar el orden de los parámetros en la llamada:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              delimitar(despues = "]", s = "Manuel")
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Número variable de argumentos</h3>
+          <ul>
+            <li>Mediante <code>vararg</code> podemos conseguir que una función acepte un número variable de argumentos:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun imprimirTodos(<span class="hl">vararg</span> elems: Any) {
+                  // Dentro de la función, 'elems' tiene tipo
+                  // Array&lt;String&gt;
+                  for (e in elems) {
+                      println("Imprimiendo $e")
+                  }
+              }
+              
+              imprimirTodos(5, "Juana", 34.2, Pair(2, 3))
+            </code></pre>
+            </li>
+            <li class="fragment">Esto se ve, por ejemplo, en la librería estándar:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val l = listOf(1, 5, 7, 22)
+              // fun &lt;T&gt; listOf(vararg elements: T): List&lt;T>
+              
+              val d = mapOf(Pair("A", 2), Pair("B", 4))
+              // fun &lt;K, V&gt; mapOf(vararg pairs: Pair&lt;K, V&gt;): Map&lt;K, V&gt;
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Funciones de extensión</h3>
+          <ul>
+            <li>En Kotlin, todo valor es un objeto, y dispone de métodos:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val ls: List&lt;Int&gt; = listOf(1, 2, 4)
+              println(ls.contains(3))          // &rarr; false
+              
+              println(4.toDouble())            // &rarr; 4.0
+              
+              println("  Mi cadena  ".trim())  // &rarr; Mi cadena
+            </code></pre></li>
+            <li class="fragment">Los métodos de un objeto suelen estar definidos dentro de la clase correspondiente al objeto.</li>
+            <li class="fragment">Sin embargo, Kotlin permite definir métodos de una clase <strong>fuera</strong> de la definición de la misma.
+            <ul>
+              <li>&laquo;Extendemos&raquo; la clase añadiendo nuevos métodos.</li>
+            </ul>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Funciones de extensión</h3>
+          <ul>
+            <li>Para añadir un método a una clase, basta con indicar el nombre de la clase antes del nombre de la función a definir:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun <span class="hl">String.</span>delimitar(antes: String = "(", despues: String = ")") =
+                  antes + <span class="hl">this</span> + despues
+            </code></pre>
+            
+            <p class="fragment">Dentro del método se utiliza <code>this</code> para hacer referencia al objeto que recibe la llamada.</p>
+            </li>
+            <li class="fragment">Ejemplo de uso:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              "Gerardo".delimitar("[", "]")   // &rarr; "[Gerardo]"
+              "Adios".delimitar()             // &rarr; "(Adios)"
+            </code></pre></li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>¿Cómo funcionan las extensiones?</h3>
+          <p class="rojo">¿Realmente se extiende la clase con nuevos métodos?</p>
+          <ul>
+            <li class="fragment">No. En Java (y en Kotlin) no es posible alterar una clase una vez definida.</li>
+            <li class="fragment">Las funciones extensión son azúcar sintáctico para funciones &laquo;normales&raquo; que reciben <code>this</code> como primer parámetro.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>¿Cómo funcionan las extensiones?</h3>
+          <ul>
+            <li>Por ejemplo:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun Int.incrementar() = this + 1
+            </code></pre>
+            equivale a:
+            <pre><code class="language-java" data-trim data-noescape>
+              public static int _incrementar(int _this) {
+                return _this + 1
+              }
+            </code></pre>
+            </li>
+            <li class="fragment">La llamada a la función de extensión <code>incrementar:</code>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              6.incrementar()
+            </code></pre>
+            
+            sería equivalente a la llamada <code>_incrementar(6)</code> del método estático anterior.
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Definiciones locales de funciones</h3>
+          <p>Es posible definir funciones dentro de otras funciones, cuyo ámbito será local a la función en la que se definen:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun validarDatos(nombre: String, apellidos: String, direccion: String) {
+                fun comprobarNoVacia(cadena: String, parametro: String) {
+                    if (cadena.isEmpty()) {
+                        throw IllegalArgumentException("$parametro no válido")
+                    }
+                }
+                comprobarNoVacia(nombre, "nombre")
+                comprobarNoVacia(apellidos, "apellidos")
+                comprobarNoVacia(direccion, "direccion")
+            }
+          </code></pre>
+          <p class="fragment">La función <code>comprobarNoVacia</code> no es visible fuera de <code>validarDatos</code></p>
+        </section>
+        
+        <section>
+          <h3>Definiciones locales de funciones</h3>
+          <p>También se pueden definir funciones de extensión locales a otra:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun validarDatos(nombre: String, apellidos: String, direccion: String) {
+                fun String.comprobarNoVacia(parametro: String) {
+                    if (this.isEmpty()) {
+                        throw IllegalArgumentException("$parametro no válido")
+                    }
+                }
+                nombre.comprobarNoVacia("nombre")
+                apellidos.comprobarNoVacia("apellidos")
+                direccion.comprobarNoVacia("direccion")
+            }
+          </code></pre>
+          
+        </section>
+        
+        <section>
+          <h3>El modificador <code>infix</code></h3>
+          <ul>
+            <li>Supongamos una función de extensión con un parámetro:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun Int.suma(otro: Int) = this + otro
+              
+              println(6.suma(7)) // &rarr; 13
+            </code></pre></li>
+            <li class="fragment">Mediante el modificador <code>infix</code> es posible llamar a la función como si fuera un operador infijo:
+            <ul>
+              <li>A la izquierda del nombre de la función se coloca el argumento <code>this</code> y a la derecha el parámetro que recibe la función.</li>
+            </ul>            
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              <span class="hl">infix</span> fun Int.suma(otro: Int) = this + otro
+              
+              println(6 suma 7) // &rarr; 13
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>El modificador <code>infix</code></h3>
+          <ul>
+            <li>Por ejemplo, el operador <code>to</code> utilizado para definir diccionarios,
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val d = mapOf(1 to "Uno", 2 to "Dos")
+            </code></pre>
+            <div class="fragment">en realidad es una función de extensión con el modificador <code>infix</code>:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              infix fun &lt;A, B&gt; A.to(other: B): Pair&lt;A, B&gt; = Pair(this, other)
+            </code></pre></div>   
+            </li>
+            <li class="fragment">La expresión <code>1 to "Uno"</code> equivale a <code>1.to("Uno")</code></li>
+          </ul>
+        </section>
+      </section>
+      
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:60%">
+                <ul>
+                    <li>D. Jemerov, S. Isakova
+                        <br>
+                        Kotlin in Action
+                        <br> Manning Publications (2017)
+                    </li>
+                    <li style="margin-top:3em">
+                        <a href="https://kotlinlang.org/api/latest/jvm/stdlib/">Kotlin Standard Library</a>
+                        <br> https://kotlinlang.org/api/latest/jvm/stdlib/
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://images.manning.com/720/960/resize/book/3/9458a37-9793-4e67-a23f-585da31dff55/Jemerov-Kotlin-HI.png" style="width:50%; border:none"><br/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Kotlin_Icon.svg/512px-Kotlin_Icon.svg.png?20171012085709" style="width:30%; border:none">
+            </div>
+        </section>
+        
+                
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,833 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <section data-background-image="img/RedBackground.jpg">
+          <div style="background-color:white;height:1em"></div>
+          <h1 style="color:white">Programación Declarativa Aplicada</h1>
+          <div style="background-color:white;height:1em"></div>
+
+          <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+            <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+            <span>Manuel Montenegro Montes</span><br>
+            <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+            
+            <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+            <span><b>Máster en Ingeniería Informática</b></span><br>
+            <span>Facultad de Informática</span><br>
+            <span>Universidad Complutense de Madrid</span><br>
+            </div>            
+          </div>
+
+        </section>
+        
+        <section>
+        <section>
+          <h3>¿Qué es la programación declarativa?</h3>
+          <p>Es un paradigma (estilo) de programación en el que el programador/a expresa el resultado esperado de un programa sin indicar cómo calcularlo.</p>
+          <div class="info_box" style="font-weight:normal">Se centra en <strong>qué</strong> calcular en lugar de <strong>cómo</strong> calcularlo</div>
+        </section>
+
+        <section>
+          <h3>Ejemplo</h3>
+          <ul>
+            <li>Dada una lista de personas, queremos devolver el nombre de la que tenga mayor estatura, siempre que tenga la edad mínima pasada como parámetro.</li>
+            <li>Si hay empate entre varias personas, se devuelven todas ellas.</li>
+            <li>Si no hay ninguna persona que supere la edad mínima, se devuelve una lista vacía.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Ejemplo: solución imperativa</h3>
+          <pre style="font-size:0.5em"><code class="language-kotlin" data-trim data-noescape>
+          fun mayorAltura(personas: List&lt;Persona&gt;, edadMinima: Int): List&lt;String&gt; {
+              var elegidos = mutableListOf&lt;String&gt;()
+              var alturaMaxima: Int = Integer.MIN_VALUE
+
+              for (p in personas) {
+                  if (p.edad >= edadMinima) {
+                      if (p.altura > alturaMaxima) {
+                          elegidos = mutableListOf(p.nombre)
+                          alturaMaxima = p.altura
+                      } else if (p.altura == alturaMaxima) {
+                          elegidos.add(p.nombre)
+                      }
+                  }
+              }
+
+              return elegidos
+          }            
+          </code></pre>
+        </section>
+        
+        <section>
+          <h3>Ejemplo: solución declarativa</h3>
+          <pre style="font-size:0.5em"><code class="language-kotlin" data-trim data-noescape>
+          fun mayorAltura(personas: List&lt;Persona&gt;, edadMinima: Int) =
+              personas.filter { it.edad >= edadMinima }
+                  .groupBy { it.altura }
+                  .maxByOrNull { it.key } ?.value
+                  ?.map { it.nombre } ?: emptyList()        
+          </code></pre>
+          
+          <ul style="list-style:none;padding:0;margin:0">
+            <li class="hands_up fragment">Enfoque de más alto nivel</li>
+            <li class="hands_up fragment">Más fácil de entender <span class="fragment">(si conoces el lenguaje 😅)</span></li>
+            <li class="hands_down fragment">(A veces) más ineficiente</li>
+          </ul>
+        </section>
+        
+        
+        <section>
+          <h3>Paradigmas declarativos</h3>
+          <ul>
+            <li><strong>Programación funcional</strong> (Haskell, Erlang, Elixir, Scala)
+            <ul>
+              <li>Los programas se definen mediante funciones &laquo;matemáticas&raquo;.</li>
+            </ul>
+            </li>
+            <li><strong>Programación lógica</strong> (Prolog)
+            <ul>
+              <li>Los programas se definen mediante predicados lógicos.</li>
+            </ul>
+            </li>
+            <li><strong>Programación basada en restricciones</strong> (MiniZinc)
+            <ul>
+              <li>Se especifican las condiciones que ha de cumplir la solución a un determinado problema.</li>
+            </ul>
+            </li>
+            <li><strong>Lenguajes específicos de dominio</strong> (SQL, XQuery, HTML)
+            </li>
+          </ul>
+        </section>
+        </section>
+        
+        <!------------------------------------------------------------------- -->
+        <!------------------------------------------------------------------- -->
+        <!------------------------------------------------------------------- -->
+
+                
+      <section>
+        <section>
+          <h3>Programación Declarativa &laquo;pura&raquo;</h3>
+<svg
+   width="80%"
+   viewBox="0 0 106.29035 39.561924"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="Paradigmas2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.7652076"
+     inkscape:cx="206.85608"
+     inkscape:cy="107.40604"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77-3"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77-7"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-32.373737,-5.9405699)">
+    <path
+       style="fill:#86cfda;fill-opacity:0.588461;fill-rule:evenodd;stroke-width:0.264583"
+       id="rect75"
+       width="66.311302"
+       height="29.483068"
+       x="34.430923"
+       y="16.019424"
+       inkscape:path-effect="#path-effect77"
+       d="m 39.72259,16.019424 h 55.727969 a 5.2916667,5.2916667 45 0 1 5.291671,5.291667 v 18.899735 a 5.2916667,5.2916667 135 0 1 -5.291671,5.291667 l -55.727969,0 A 5.2916667,5.2916667 45 0 1 34.430923,40.210826 V 21.311091 a 5.2916667,5.2916667 135 0 1 5.291667,-5.291667 z"
+       sodipodi:type="rect" />
+    <path
+       style="fill:#f0b6d3;fill-opacity:0.619506;fill-rule:evenodd;stroke-width:0.264583"
+       id="rect75-6"
+       width="56.986694"
+       height="22.036987"
+       x="81.677391"
+       y="5.9405699"
+       inkscape:path-effect="#path-effect77-3"
+       sodipodi:type="rect"
+       d="m 86.969058,5.9405699 h 46.403362 a 5.2916667,5.2916667 45 0 1 5.29167,5.2916671 V 22.68589 a 5.2916667,5.2916667 135 0 1 -5.29167,5.291667 H 86.969058 A 5.2916667,5.2916667 45 0 1 81.677391,22.68589 V 11.232237 a 5.2916667,5.2916667 135 0 1 5.291667,-5.2916671 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="36.039597"
+       y="43.442318"
+       id="text4925"><tspan
+         sodipodi:role="line"
+         id="tspan4923"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#13889b;stroke-width:0.264583"
+         x="36.039597"
+         y="43.442318">P. Funcional</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#e374ab;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="84.762337"
+       y="10.999565"
+       id="text4925-2"><tspan
+         sodipodi:role="line"
+         id="tspan4923-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#e374ab;stroke-width:0.264583"
+         x="84.762337"
+         y="10.999565">P. Lógica</tspan></text>
+    <g
+       id="g68352"
+       class="fragment">
+      <rect
+         style="fill:#05285b;fill-opacity:0.99261;stroke-width:0.264583"
+         id="rect47539"
+         width="41.699093"
+         height="2.6395049"
+         x="32.373737"
+         y="30.815157" />
+      <rect
+         style="fill:#05285b;fill-opacity:0.99261;stroke-width:0.239147"
+         id="rect47539-3"
+         width="34.066879"
+         height="2.6395049"
+         x="87.366043"
+         y="20.229107" />
+      <rect
+         style="fill:#05285b;fill-opacity:0.99261;stroke-width:0.176998"
+         id="rect47539-3-6"
+         width="17.251789"
+         height="2.8551304"
+         x="82.066841"
+         y="80.99144"
+         transform="matrix(0.79402722,-0.60788221,0.10639558,0.99432388,0,0)" />
+      <rect
+         style="fill:#05285b;fill-opacity:0.99261;stroke-width:0.264583"
+         id="rect47753"
+         width="2.6738911"
+         height="3.2307959"
+         x="52.294861"
+         y="28.958681" />
+      <rect
+         style="fill:#05285b;fill-opacity:0.99261;stroke-width:0.264583"
+         id="rect47753-1"
+         width="2.6738911"
+         height="3.2307959"
+         x="107.90014"
+         y="18.569229" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="29.536051"
+         y="53.166492"
+         id="text53994"
+         transform="rotate(-33.05681)"><tspan
+           sodipodi:role="line"
+           id="tspan53992"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';stroke-width:0.264583"
+           x="29.536051"
+           y="53.166492">Haskell</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="81.975174"
+         y="74.836891"
+         id="text53994-3"
+         transform="rotate(-33.05681)"><tspan
+           sodipodi:role="line"
+           id="tspan53992-1"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';stroke-width:0.264583"
+           x="81.975174"
+           y="74.836891">Prolog</tspan></text>
+    </g>
+  </g>
+</svg>
+          
+          <ul style="list-style:none;padding:0;margin:0">
+            <li class="hands_up fragment">La mejor manera de aprender qué es la PD</li>
+            <li class="hands_down fragment" style="margin-top:0.5em"><em>Pack</em> completo, o nada</li>
+            <li class="hands_down fragment">Lenguajes de uso reducido</li>
+          </ul>            
+        </section>
+        
+        <section>
+          <blockquote style="background-color:#FFC;font-size:80%;padding:1em">It has often been predicted that one day functional programming languages will rule
+the world, but it hasn’t happened yet. Famous functional languages such as Haskell and
+Lisp still aren’t on the top-10 lists of the most popular programming languages. Those
+lists are reserved for traditionally imperative languages including C, Java, and C++.
+          </blockquote>
+          <p>Ivan Čukić</p>
+        </section>
+        
+        <section>
+          <h3>TIOBE Index (abril 2022)</h3>
+          <img src="00/tiobe.png" width="90%"/>
+        </section>
+
+        <section>
+          <h3>TIOBE Index (abril 2022)</h3>
+          <img src="00/tiobe2.png" width="90%"/>
+        </section>
+        
+        <section>
+          <blockquote style="background-color:#FFC;font-size:80%;padding:1em">Instead of functional programming languages becoming the most popular, something
+else is happening: the most popular programming languages have started introducing
+features inspired by functional programming languages.</blockquote>
+          <p>Ivan Čukić</p>
+        </section>
+      </section>
+        
+      <section>
+        <section>
+          <h3>Programación Declarativa aplicada</h3>
+          
+<svg
+   width="80%"
+   viewBox="0 0 102.64187 45.025574"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="Paradigmas.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.7652076"
+     inkscape:cx="193.11389"
+     inkscape:cy="69.434208"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77-3"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77-7"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77-7-4"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect77-7-8"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1 @ F,0,0,1,0,5.2916667,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="20"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-34.430923,-16.019424)">
+    <path
+       style="fill:#86cfda;fill-opacity:0.588461;fill-rule:evenodd;stroke-width:0.264583"
+       id="rect75"
+       width="82.77961"
+       height="29.483068"
+       x="34.430923"
+       y="16.019424"
+       inkscape:path-effect="#path-effect77"
+       d="m 39.72259,16.019424 h 72.19628 a 5.2916667,5.2916667 45 0 1 5.29166,5.291667 v 18.899735 a 5.2916667,5.2916667 135 0 1 -5.29166,5.291667 H 39.72259 A 5.2916667,5.2916667 45 0 1 34.430923,40.210826 V 21.311091 a 5.2916667,5.2916667 135 0 1 5.291667,-5.291667 z"
+       sodipodi:type="rect" />
+    <path
+       style="fill:#ffc107;fill-opacity:0.588461;fill-rule:evenodd;stroke-width:0.264583"
+       id="rect75-5"
+       width="57.316723"
+       height="26.326277"
+       x="57.272999"
+       y="34.718723"
+       inkscape:path-effect="#path-effect77-7"
+       sodipodi:type="rect"
+       d="m 62.564666,34.718723 h 46.733384 a 5.2916667,5.2916667 45 0 1 5.29167,5.291667 V 55.753333 A 5.2916667,5.2916667 135 0 1 109.29805,61.045 H 62.564666 a 5.2916667,5.2916667 45 0 1 -5.291667,-5.291667 l 0,-15.742943 a 5.2916667,5.2916667 135 0 1 5.291667,-5.291667 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="37.252079"
+       y="22.393557"
+       id="text4925"><tspan
+         sodipodi:role="line"
+         id="tspan4923"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#13889b;stroke-width:0.264583"
+         x="37.252079"
+         y="22.393557">P. Funcional</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="61.577797"
+       y="57.925758"
+       id="text4925-9"><tspan
+         sodipodi:role="line"
+         id="tspan4923-7"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#d6a206;stroke-width:0.264583"
+         x="61.577797"
+         y="57.925758">P. Imperativa / P.O.O.</tspan></text>
+    <path
+       style="fill:#8fd19e;fill-opacity:0.588461;fill-rule:evenodd;stroke-width:0.264583"
+       id="rect75-5-4"
+       width="33.613075"
+       height="25.690763"
+       x="103.45972"
+       y="31.51309"
+       inkscape:path-effect="#path-effect77-7-8"
+       sodipodi:type="rect"
+       d="m 108.75138,31.51309 h 23.02975 a 5.2916667,5.2916667 45 0 1 5.29166,5.291667 v 15.10743 a 5.2916667,5.2916667 135 0 1 -5.29166,5.291667 h -23.02975 a 5.2916667,5.2916667 45 0 1 -5.29166,-5.291667 v -15.10743 a 5.2916667,5.2916667 135 0 1 5.29166,-5.291667 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#228c3a;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="115.36095"
+       y="55.405392"
+       id="text4925-9-5"><tspan
+         sodipodi:role="line"
+         id="tspan4923-7-0"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';fill:#228c3a;stroke-width:0.264583"
+         x="115.36095"
+         y="55.405392">P. Reactiva</tspan></text>
+    <g
+       id="g110086"
+       class="fragment">
+      <rect
+         style="fill:#35087e;fill-opacity:1;stroke-width:0.225756"
+         id="rect79457"
+         width="63.949875"
+         height="2.0134542"
+         x="47.161243"
+         y="39.196018" />
+      <rect
+         style="fill:#35087e;fill-opacity:1;stroke-width:0.114067"
+         id="rect79457-3"
+         width="16.325909"
+         height="2.0134542"
+         x="-10.796366"
+         y="61.073193"
+         transform="rotate(-45.096376)" />
+      <rect
+         style="fill:#35087e;fill-opacity:1;stroke-width:0.264583"
+         id="rect79810"
+         width="2.4212279"
+         height="3.2016425"
+         x="67.115257"
+         y="36.813816" />
+      <rect
+         style="fill:#35087e;fill-opacity:1;stroke-width:0.264583"
+         id="rect79810-6"
+         width="2.4212279"
+         height="3.2016425"
+         x="77.977356"
+         y="36.913628" />
+      <rect
+         style="fill:#35087e;fill-opacity:1;stroke-width:0.264583"
+         id="rect79810-1"
+         width="2.4212279"
+         height="3.2016425"
+         x="86.820938"
+         y="36.683151" />
+      <rect
+         style="fill:#35087e;fill-opacity:1;stroke-width:0.264583"
+         id="rect79810-0"
+         width="2.4212279"
+         height="3.2016425"
+         x="107.94268"
+         y="36.823765" />
+      <rect
+         style="fill:#35087e;fill-opacity:1;stroke-width:0.264583"
+         id="rect79810-0-6"
+         width="2.4212279"
+         height="3.2016425"
+         x="96.611038"
+         y="36.750122" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="37.783398"
+         y="67.127914"
+         id="text53994"
+         transform="rotate(-33.05681)"><tspan
+           sodipodi:role="line"
+           id="tspan53992"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';stroke-width:0.264583"
+           x="37.783398"
+           y="67.127914">Kotlin</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="47.526783"
+         y="73.364532"
+         id="text53994-3"
+         transform="rotate(-33.05681)"><tspan
+           sodipodi:role="line"
+           id="tspan53992-2"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';stroke-width:0.264583"
+           x="47.526783"
+           y="73.364532">Javascript</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="54.824497"
+         y="77.728271"
+         id="text53994-0"
+         transform="rotate(-33.05681)"><tspan
+           sodipodi:role="line"
+           id="tspan53992-6"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';stroke-width:0.264583"
+           x="54.824497"
+           y="77.728271">C++</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="62.964878"
+         y="83.338448"
+         id="text53994-0-1"
+         transform="rotate(-33.05681)"><tspan
+           sodipodi:role="line"
+           id="tspan53992-6-5"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';stroke-width:0.264583"
+           x="62.964878"
+           y="83.338448">Java</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:3.52778px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="72.306877"
+         y="90.162071"
+         id="text53994-0-1-5"
+         transform="rotate(-33.05681)"><tspan
+           sodipodi:role="line"
+           id="tspan53992-6-5-4"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';stroke-width:0.264583"
+           x="72.306877"
+           y="90.162071">ReactiveX</tspan></text>
+    </g>
+  </g>
+</svg>
+          
+        </section>
+        <section>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li class="hands_up">Aplicable en ámbitos industriales</li>
+            <li class="hands_up">Más interoperable con código existente</li>
+            <li class="hands_up">Aplicable total o parcialmente</li>
+            <li class="hands_down fragment" style="margin-top:0.5em">¿Frontera entre declarativa e imperativa?</li>
+          </ul>            
+        </section>
+      </section>
+        
+        
+      <section>
+        <section>
+          <h3>Objetivos</h3>
+          <ol>
+            <li style="background-color:#99ff99;padding:0.5em" class="fragment">Aplicar técnicas de <strong>programación funcional</strong> a lenguajes imperativos.</li>
+            <li style="background-color:#ffcc99;padding:0.5em;margin-top:0.2em" class="fragment">Introducción a la <strong>programación reactiva</strong>.</li>
+            
+            <li style="background-color:#99ccff;padding:0.5em;margin-top:0.2em" class="fragment">
+Arquitecturas funcionales en sistemas <strong>web</strong>.
+            </li>            
+          </ol>
+        
+        </section>
+        
+        <section>
+          <h3>Contenidos</h3>
+          <div style="background-color:#99ff99;padding:0.5em">Aplicar técnicas de <strong>programación funcional</strong> a lenguajes imperativos <em>mainstream</em>.</div>
+          <ul style="margin-top:0.5em">
+            <li>Funciones de orden superior</li>
+            <li>Tipos de datos algebraicos</li>
+            <li>Estructuras de datos persistentes</li>
+            <li>Evaluación perezosa</li>
+            <li>Propagación del estado</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Contenidos</h3>
+          <div style="background-color:#ffcc99;padding:0.5em;margin-top:0.2em">Introducción a la <strong>programación reactiva</strong>.</div>
+          <ul style="margin-top:0.5em">
+            <li>Actores</li>
+            <li>Observables y observadores</li>
+            <li><em>Promises</em></li>
+            <li>Interfaces gráficas reactivas</li>
+          </ul>
+          
+        </section>
+        
+        <section>
+          <h3>Contenidos</h3>
+          <div style="background-color:#99ccff;padding:0.5em;margin-top:0.2em">
+Arquitecturas funcionales en sistemas <strong>web</strong>.
+          </div>            
+          <ul style="margin-top:0.5em">
+            <li>MVC funcional (<em>React</em>)</li>
+            <li><em>State reducers</em> (<em>Redux</em>)</li>
+          </ul>
+        </section>
+      </section>
+
+
+      <section>
+        <section>
+          <h3>Requisitos</h3>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li class="check">Programación orientada a objetos <span style="font-size:0.7em">(si es Java, mejor)</span></li>
+            <li class="check">HTML</li>
+            <li class="check"><span style="font-size:0.7em">Javascript (o lenguaje con sintaxis similar)</span></li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>PDAP te gustará si...</h3>
+          <ul style="list-style:none;padding:0;margin:0" class="fragment">
+            <li class="love">Te gustan los lenguajes de programación</li>
+            <li class="love">Has cursado PD <em class="fragment">(y te gustó 💃)</em></li>
+            <li class="love">Quieres aprender nuevas maneras de programar</li>
+          </ul>
+          <h3 style="margin-top:1em" class="fragment">PDAP no te gustará si...</h3>
+          <ul style="list-style:none;padding:0;margin:0" class="fragment">
+            <li class="monito">No puedes salir del &laquo;bajo nivel&raquo;</li>
+            <li class="monito">Adicto/a a las micro-optimizaciones</li>
+          </ul>
+        </section>
+      </section>
+        
+      <section>
+        <section>
+          <h3>Evaluación</h3>
+          <div style="display:grid;gap:1em 1em;justify-items:stretch;align-items:start">
+            <div style="grid-row:1; grid-column:1" class="fragment">
+              <p style="background-color:black;color:white;padding:0px 1em;">Modalidad <strong>A</strong></p>
+              <ul>
+                <li>Ejercicios (40%)</li>
+                <li>Mini-proyecto (40%)<br/>
+                con presentación (20%)
+                </li>
+              </ul>
+            </div>
+            <div style="grid-row:1; grid-column:2" class="fragment">
+              <p style="background-color:black;color:white;padding:0px 1em">Modalidad <strong>B</strong></p>
+              <ul>
+                <li>Examen (80%)</li>
+                <li>Mini-proyecto (20%)
+                </li>
+              </ul>
+            </div>
+          </div>
+          </ul>
+        </section>
+
+        <section>
+          <h3 style="margin-top:0.5em">Sobre los ejercicios</h3>
+          <ul>
+            <li>Hoja de ejercicios cada semana, algunos de ellos para ser entregados al profesor.</li>
+            <li>Dedicaremos parte del horario del laboratorio a realizarlos.</li>
+            <li>No es necesario entregarlos en la misma sesión de laboratorio.</li>
+          </ul>
+
+        </section>
+        
+        <section>
+                  <h3 style="margin-top:0.5em">Sobre el mini-proyecto</h3>
+          <p>
+            Aplicar lo estudiado en la asignatura:
+            <ul>
+            <li>Utilizando un lenguaje imperativo de tu elección,<br/>
+            <span style="color:#69F;font-style:italic">(Java, JavaScript, Python, Rust, C++, C#, ...)</span></li>
+            <li>o un lenguaje funcional<br/>
+            <span style="color:#69F;font-style:italic">(Scala, Erlang, Elixir, Elm, ...)</span>
+            </li>
+            </ul>
+          </p>
+
+        </section>
+      </section>
+        
+        
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ],
+        dependencies: [
+          {src: "plugin/inline_svg.js", async: true}
+        ]
+			})
+      
+      Reveal.configure({ pdfSeparateFragments: false })
+
+		</script>
+	</body>
+</html>
