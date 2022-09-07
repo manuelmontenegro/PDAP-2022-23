@@ -20,7 +20,7 @@
       
       <section data-background-image="img/RedBackground.jpg">
         <div style="background-color:white;height:1em"></div>
-        <h1 style="color:white">Introducción a Kotlin</h1>
+        <h1 style="color:white">Introducción a la programación funcional</h1>
         <div style="background-color:white;height:1em"></div>
 
         <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
@@ -38,11 +38,21 @@
 
       </section>
 
+        
       
       <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
           <ol class="contenidos">
-            <li></li>
+            <li>¿Qué es la programación funcional?</li>
+            <li>Funciones recursivas</li>
+            <li>Recursión sobre listas</li>
+            <li>Recursión de cola</li>
+            <li>Bucles y recursión</li>
           </ol>
+      </section>
+
+    <section>
+      <section>
+        <h2>¿Qué es la programación funcional?</h2>
       </section>
       
       <section>
@@ -150,7 +160,11 @@
           <li>Utilizan <strong>recursión</strong> en lugar de bucles.
         </ul>
       </section>
-      
+    </section>
+    <section>
+      <section>
+        <h2>Funciones recursivas</h2>
+      </section>
       <section>
         <h3>Recursión</h3>
         <ul>
@@ -193,6 +207,11 @@
         </code></pre>
       </section>
       
+    </section>
+    <section>
+      <section>
+        <h2>Recursión sobre listas</h2>
+      </section>
       <section>
         <h3>Funciones recursivas sobre listas</h3>
         <p>Calcular la suma de los elementos de una lista:</p>
@@ -339,7 +358,7 @@
           <p>Búsqueda lineal de un elemento en una lista:</p>
         <pre><code class="language-kotlin" data-trim data-noescape>
         
-        tailrec fun &lt;T&gt; buscarElem(xs: List&lt;T&gt;, x: T): Boolean = when {
+        fun &lt;T&gt; buscarElem(xs: List&lt;T&gt;, x: T): Boolean = when {
             // Lista vacía
               xs.isEmpty() -> false
             // El elemento a buscar está al principio
@@ -362,8 +381,376 @@
           
           &rarr; true
         </code></pre>
+      </section>
+      
+      <section>
+        <h3>¿Qué pasa si...?</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          val l1 = (1..10000).toList()  // l1 = [1, 2, ..., 10000]
+          println(buscarElem(l1, -3))
+          
+          val l2 = List(20000) { 2 }    // l2 = [2, 2, ..., 2]
+          println(sumaElems(l2))
+        </code></pre>
+        
+        <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
+          Exception in thread "main" java.lang.StackOverflowError
+              at buscarElem(...)
+              ...
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>El precio de la recursión</h3>
+        <ul>
+          <li>Durante la ejecución se almacena una pila de llamadas a función (<em>call stack</em>).
+          <p>
+          <table>
+            <tr>
+              <td style="width:5em;border-left:2px solid black;border-right:2px solid black">&nbsp;</td>
+              <td style="border:none"></td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#afdde9;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">f()</code></td>
+              <td style="border:none">Función ejecutándose actualmente</td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#5fbcd3;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">g()</code></td>
+              <td style="border:none">Función que llamó a <code>f</code></td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#2c89a0;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">h()</code></td>
+              <td style="border:none">Función que llamó a <code>g</code></td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#216778;border-left:2px solid black;border-right:2px solid black;border-bottom:2px solid black"><code style="font-size:80%">main()</code></td>
+              <td style="border:none">Función principal</td>
+            </tr>
+          </table>
+          </p>
+          <ul>
+            <li>Cada vez que se llama a una función se inserta un nuevo <em>frame</em> en la pila.</li>
+            <li>Cuando una función finaliza, se elimina su <em>frame</em> de la pila.</li>
+          </ul>
+          </li>
+        </ul>        
       </section>      
       
+      <section>
+        <h3>El precio de la recursión</h3>
+        <ul>
+          <li>Cada <em>frame</em> de la pila contiene información relativa a esa llamada (variables locales, etc.)</li>
+          <li>El tamaño de la pila de llamadas esta limitado.</li>
+          <li>Si la cadena de llamadas es muy grande, se supera ese límite de tamaño, provocando un desbordamiento de pila (<em>Stack Overflow</em>).</li>
+          <li>¿Cómo evitarlo? <span class="fragment">&#10142;</span> <strong class="rojo fragment">Recursión de cola</strong></li>
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      <section>
+        <h2>Recursión de cola</h2>
+      </section>
+      
+      <section>
+        <h3>Recursión de cola (o final)</h3>
+        <ul>
+          <li>Decimos que una llamada recursiva es <strong>final</strong> si no se realiza ninguna operación tras esa llamada
+          <ul>
+            <li>...salvo devolver el valor devuelto por la llamada recursiva.</li>
+          </ul>
+          <li>Decimos que una función tiene <strong>recursión de cola</strong> si todas sus llamadas recursivas son finales.</li>
+        </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplos</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun factorial(n: Int): Int =
+            if (n == 0) 1 else n * factorial(n - 1)  <span class="arrow_box_left fragment">Llamada no f&#8203inal</span>
+        </code></pre>
+        <p class="fragment"><span class="rojo">No</span> tiene recursión de cola</p>
+        <pre style="font-size:45%"><code class="language-kotlin" data-trim data-noescape>
+          fun quitarPares(xs: List<Int>): List<Int> = when {
+              xs.isEmpty() -> listOf()
+              xs[0] % 2 == 0 -> quitarPares(xs.subList(1, xs.size)) <span class="arrow_box_left fragment">Llamada f&#8203inal</span>
+              else -> listOf(xs[0]) + quitarPares(xs.subList(1, xs.size)) <span class="arrow_box_left fragment">Llamada no f&#8203inal</span>
+          }          
+        </code></pre>
+        <p class="fragment"><span class="rojo">No</span> tiene recursión de cola</p>
+      </section>
+      
+      <section>
+        <h3>Ejemplos</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun sumaElems(xs: List<Int>): Int {
+              fun sumaElemsRec(i: Int): Int =
+                  if (i == xs.size) 0 
+                    else xs[i] + sumaElemsRec(i + 1) <span class="arrow_box_left fragment">Llamada no f&#8203inal</span>
+
+              return sumaElemsRec(0)
+          }          
+        </code></pre>
+        <p class="fragment"><span class="rojo">No</span> tiene recursión de cola</p>        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; buscarElem(xs: List&lt;T&gt;, x: T): Boolean = when {
+              xs.isEmpty() -> false
+              xs[0] == x -> true
+              else -> buscarElem(xs.subList(1, xs.size), x) <span class="arrow_box_left fragment">Llamada f&#8203inal</span>
+          }                    
+        </code></pre>
+        <p class="fragment"><span style="color:#00A000">Sí</span> tiene recursión de cola</p>      
+        </section>
+        
+        <section>
+          <h3>Optimización de recursión de cola</h3>
+          <p>Cuando una función realiza una llamada recursiva, se apila un marco nuevo en la pila de llamadas:</p>
+                    <table>
+            <tr>
+              <td style="width:5em;border-left:2px solid black;border-right:2px solid black">&nbsp;</td>
+              <td style="border:none"></td>
+            </tr>
+            <tr class="fragment">
+              <td style="width:5em;background-color:#5fbcd3;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">f(x<sub>2</sub>)</code></td>
+              <td style="border:none">Llamada recursiva a <code>f</code></td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#2c89a0;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">f(x<sub>1</sub>)</code></td>
+              <td style="border:none"></td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#216778;border-left:2px solid black;border-right:2px solid black;border-bottom:2px solid black"><code style="font-size:80%">main()</code></td>
+              <td style="border:none"></td>
+            </tr>
+          </table>
+          
+
+
+        </section>
+        
+        <section>
+          <h3>Optimización de recursión de cola</h3>
+          <p>Pero si la función tiene recursión de cola, el marco de la llamada recursiva puede <strong>sustituir</strong> al anterior:</p>
+          <div style="display:flex;justify-content:center;align-items:center">
+          <table>
+            <tr>
+              <td style="width:5em;border-left:2px solid black;border-right:2px solid black">&nbsp;</td>
+            </tr>
+            <tr>
+              <td style="width:5em;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">&nbsp;</td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#2c89a0;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">f(x<sub>1</sub>)</code></td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#216778;border-left:2px solid black;border-right:2px solid black;border-bottom:2px solid black"><code style="font-size:80%">main()</code></td>
+            </tr>
+          </table>
+          <div class="fragment">&rarr;</div>
+          <table class="fragment">
+            <tr>
+              <td style="width:5em;border-left:2px solid black;border-right:2px solid black">&nbsp;</td>
+            </tr>
+            <tr>
+              <td style="width:5em;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">&nbsp;</td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#5fbcd3;border-left:2px solid black;border-right:2px solid black"><code style="font-size:80%">f(x<sub>2</sub>)</code></td>
+            </tr>
+            <tr>
+              <td style="width:5em;background-color:#216778;border-left:2px solid black;border-right:2px solid black;border-bottom:2px solid black"><code style="font-size:80%">main()</code></td>
+            </tr>
+          </table>     
+          </div>
+          <p class="fragment">El espacio ocupado por la pila de llamadas es <strong>constante</strong>, independientemente del número de llamadas recursivas.</p>
+        </section>        
+        
+        <section>
+          <h3>Recursión de cola en Kotlin</h3>
+          <ul>
+            <li>Para aplicar la optimización de recursión de cola en Kotlin, ha de indicarse explícitamente:
+            
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              <span class="hl">tailrec</span> fun &lt;T&gt; buscarElem(xs: List&lt;T&gt;, x: T): Boolean = when {
+                  xs.isEmpty() -> false
+                  xs[0] == x -> true
+                  else -> buscarElem(xs.subList(1, xs.size), x)
+              }              
+            </code></pre>
+            </li>
+            <li>De este modo, ya no hay desbordamiento de pila:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              val l1 = (1..10000).toList()  // l1 = [1, 2, ..., 10000]
+              println(buscarElem(l1, -3))   // Imprime 'false'
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>¿Y si la función no tiene recursión de cola?</h3>
+          <ul>
+            <li>En muchos casos, es posible transformar la función en otra con recursión de cola utilizando <strong>parámetros acumuladores</strong>.</li>
+            <li>Un parámetro acumulador es un parámetro en el que se va construyendo el resultado de la función.</li>
+            <li>Cuando se llega al caso base, se devuelve el valor del parámetro acumulador.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <p>Sin parámetro acumulador:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun factorial(n: Int): Int =
+            if (n == 0) 1 else n * factorial(n - 1)
+          </code></pre>
+          <p>Con parámetro acumulador:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          tailrec fun factorialRec(n: Int, ac: Int): Int =
+            if (n == 0) <span class="hl">ac</span>
+            else factorialRec(n - 1, <span class="hl">ac * i</span>)
+          </code></pre>
+          
+          <p>Llamada inicial: <code>factorial(n, 1)</code></p>          
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <p>De este modo:</p>
+          <div style="display:flex;justify-content:space-around">
+            <div>Antes:</div>
+            <div>Después:</div>
+          </div>
+          <div style="display:flex;justify-content:space-around">
+            <pre style="width:40%"  class="fragment"><code class="no-highlight" data-trim data-noescape>
+              factorial(3)
+              &rarr; 3 * factorial(2)
+              &rarr; 3 * (2 * factorial(1))
+              &rarr; 3 * (2 * (1 * factorial(0)))
+              &rarr; 3 * (2 * 1)
+              &rarr; 3 * 2
+              &rarr; 6
+            </code></pre>
+            <pre style="width:50%" class="fragment"><code class="no-highlight" data-trim data-noescape>
+              factorial(3)
+              &rarr; factorialRec(3, 1)
+              &rarr; factorialRec(2, 3)  <span class="arrow_box_left fragment" style="font-family:monospace">3 = 1 * 3</span>
+              &rarr; factorialRec(1, 6)  <span class="arrow_box_left fragment" style="font-family:monospace">6 = 3 * 2</span>
+              &rarr; factorialRec(0, 6)  <span class="arrow_box_left fragment" style="font-family:monospace">6 = 6 * 1</span>
+              &rarr; 6              
+            </code></pre>
+          </div>
+        </section>
+        
+        <section>
+          <h3>Resultado</h3>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun factorial(n: Int): Int {
+                tailrec fun factorialRec(i: Int, ac: Int): Int =
+                    if (i == 0) ac else factorialRec(i - 1, ac * i)
+
+                return factorialRec(n, 1) // Llamada inicial
+            }            
+          </code></pre>
+        </section>
+        
+        <section>
+          <h3>Ejemplo: <code>quitarPares</code></h3>
+          <p>Sin parámetro acumulador:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun quitarPares(xs: List<Int>): List<Int> = when {
+              xs.isEmpty() -> listOf()
+              xs[0] % 2 == 0 -> quitarPares(xs.subList(1, xs.size))
+              else -> listOf(xs[0]) + quitarPares(xs.subList(1, xs.size))
+          }            
+          </code></pre>
+          <p>Con parámetro acumulador:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          tailrec fun quitarParesRec(xs: List<Int>, ac: List<Int>): List<Int> = when {
+              xs.isEmpty() -> ac
+              xs[0] % 2 == 0 -> quitarParesRec(xs.subList(1, xs.size), ac)
+              else -> quitarParesRec(xs.subList(1, xs.size), ac + xs[0])
+          }            
+          </code></pre>
+          <p>Llamada inicial: <code>quitarParesRec(xs, listOf())</code>
+        </section>
+        
+        <section>
+          <h3>Ejemplo: <code>quitarPares</code></h3>
+          <pre><code class="no-highlight" data-trim data-noescape>
+          quitarPares([1, 4, 6, 9, 11])
+          &rarr; quitarParesRec([1, 4, 6, 9, 11], [])
+          &rarr; quitarParesRec([4, 6, 9, 11], [1])
+          &rarr; quitarParesRec([6, 9, 11], [1])
+          &rarr; quitarParesRec([9, 11], [1])
+          &rarr; quitarParesRec([9, 11], [1, 9])
+          &rarr; quitarParesRec([11], [1, 9, 11])
+          &rarr; [1, 9, 11]
+          </code></pre>
+        </section>
+
+    </section>
+    <section>
+        <section>
+          <h2>Bucles y recursión</h2>
+        </section>
+        <section>
+          <h3>Bucles y recursión</h3>
+          <ul>
+            <li>Todo bucle puede expresarse mediante una o varias funciones recursivas de cola.</li>
+            <li>Los <strong>parámetros</strong> de la función recursiva son las variables que se modifican en el bucle.</li>
+            <li>La condición de salida del bucle determina el <strong>caso base</strong> de la recursión.</li>
+            <li>Las <strong>llamadas recursivas</strong> indican cómo evolucionan las variables en una iteración del bucle.</li>
+            <li>La <strong>llamada inicial</strong> se corresponde con la inicialización de las variables en el bucle.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <div style="display:flex;gap:1em">
+          <div style="width:35%">Versión iterativa:</div>
+          <div style="width:60%">Versión recursiva:</div>
+          </div>
+          <div style="display:flex;gap:1em">
+          <pre style="width:35%"><code class="language-kotlin" data-trim data-noescape>
+            fun exp(n: Int): Int {
+                var i = n
+                var result = 1
+                while (i > 0) {
+                    result = result * 2
+                    i = i - 1
+                }
+                return result
+            }            
+          </code></pre>
+          <pre style="width:60%" class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            fun exp(n: Int): Int {
+                fun expRec(i: Int, result: Int): Int = when {
+                    i > 0 -> expRec(i - 1, result * 2)
+                    else -> result
+                }
+                return expRec(n, 1)
+            }
+          </code></pre>          </div>
+        </section>
+      </section>
+      
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:60%">
+                <ul>
+                    <li>Pierre-Yves Saumont
+                        <br>
+                        <em>The Joy of Kotlin</em>
+                        <br> Manning Publications (2019)
+                        <br> Capítulo 4
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://kbimages1-a.akamaihd.net/daea93eb-bc71-4778-aa85-b8b5c38aa9e3/353/569/90/False/the-joy-of-kotlin.jpg" style="width:50%; border:none"><br/>
+                
+            </div>
+        </section>
       
 			</div>
 		</div>
