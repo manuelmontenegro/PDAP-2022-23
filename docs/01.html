@@ -994,7 +994,7 @@
             println(when (diaActual) {   <span class="arrow_box_left fragment">En este caso la distinción ha de ser excluyente...</span>
               "Lunes" -> "Ugh"
               "Viernes" -> "¡Viva!"
-              else -> "Meh"             <span class="arrow_box_left fragment">...o tener una rama <span style="background-color:white;font-family:courier">else</span></span>
+              else -> "Meh"             <span class="arrow_box_left fragment">...o tener una rama e&#8203;lse</span>
             })              
             </code></pre>
             </li>            
@@ -1275,7 +1275,7 @@
         <section>
           <h3>Colecciones inmutables</h3>
           <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
-            val s = setOf("Daniel", "Clara", "Francisco", "Clara")
+            val s = setOf("Daniel", "Clara", "Francisco")
             
             val s2 = s - "Francisco"
             println(s2)     // &rarr; {"Daniel", "Clara"}
@@ -1990,7 +1990,7 @@
             <pre><code class="language-kotlin" data-trim data-noescape>
               fun Int.incrementar() = this + 1
             </code></pre>
-            equivale a:
+            equivale, en Java, a:
             <pre><code class="language-java" data-trim data-noescape>
               public static int _incrementar(int _this) {
                 return _this + 1
