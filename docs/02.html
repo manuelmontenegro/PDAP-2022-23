@@ -81,7 +81,7 @@
             return x
         }
 
-        fun obtenerLista(nombreFich: String): List<String> =   <span class="arrow_box_left fragment">No es función pura</span>
+        fun obtenerLista(nombreFich: String): List&lt;String&gt; =   <span class="arrow_box_left fragment">No es función pura</span>
             File(nombreFich).readLines()  <span class="fragment">// No solo depende del nombre del
                                           // fichero sino también del contenido</span>
         </code></pre>
@@ -254,7 +254,7 @@
                   if (i == xs.size) 0 else xs[i] + sumaElemsRec(i + 1)
               
               // Llamada inicial
-              return sumaElemsRec(xs, 0)
+              return sumaElemsRec(0)
           }
         </code></pre>
       </section>
