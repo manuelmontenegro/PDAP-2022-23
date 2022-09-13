@@ -1,0 +1,966 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Clases y objetos en Kotlin</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white">Clases y objetos en Kotlin</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Propiedades y métodos</li>
+            <li>Constructores</li>
+            <li>Data classes</li>
+            <li>Herencia e interfaces</li>
+            <li>El operador <code style="color:white;border:none">is</code> y <em>smart casts</em></li>
+            <li>Objetos <em>singleton</em></li>
+            <li>Tipos genéricos y varianza</li>            
+          </ol>
+      </section>
+      
+
+    <section>
+      <section>
+        <h2>Propiedades y métodos</h2>
+      </section>
+      
+      <section>
+        <h3>Definición de clases</h3>
+        <p>Propiedades inmutables: <code>val</code></p>
+        <div style="display:flex">
+        <pre style="width:45%"><code class="language-kotlin" data-trim data-noescape>
+          // En Kotlin
+          class Rectangulo {
+          
+                  <span class="arrow_box_down" style="position:relative;top:-5px">Tipo opcional</span>
+            val ancho: Int = 0 
+            val altura: Int = 0
+          }
+          
+          
+        </code></pre>
+        <pre style="width:45%"><code class="language-java" data-trim data-noescape>
+          // Traducción a Java
+          public class Rectangulo {
+            private int ancho = 0;
+            private int altura = 0;
+            
+            public int getAncho() {
+              return ancho;
+            }
+            
+            public int getAltura() {
+              return altura;
+            }
+          }          
+        </code></pre>
+        </div>
+      </section>
+
+      
+      <section>
+        <h3>Definición de clases</h3>
+        <p>Propiedades mutables: <code>var</code></p>
+        <div style="display:flex">
+        <pre style="width:45%"><code class="language-kotlin" data-trim data-noescape>
+          // En Kotlin
+          class Rectangulo {
+            <span class="hl">var</span> ancho: Int = 0
+            <span class="hl">var</span> altura: Int = 0
+          }          
+        </code></pre>
+        <pre style="width:45%"><code class="language-java" data-trim data-noescape>
+          // Traducción a Java
+          public class Rectangulo {
+            private int ancho = 0;
+            private int altura = 0;
+            
+            public int getAncho() {
+              return ancho;
+            }
+            
+            public void setAncho(int ancho) {
+              this.ancho = ancho;
+            }
+            
+            // ...
+            // getAltura()
+            // setAltura()
+          }          
+        </code></pre>
+        </div>
+      </section>
+      
+      <section>
+        <h3>Uso de clases</h3>
+        <div style="display:flex">
+        <pre style="width:45%"><code class="language-kotlin" data-trim data-noescape>
+          // Kotlin
+          class Rectangulo {
+            var ancho: Int = 0
+            var altura: Int = 0
+          }
+          
+          val r = Rectangulo(); <span class="arrow_box_left">Sin `new`</span>
+          println(r.ancho + r.altura)
+          
+          
+          r.altura = 23
+          
+        </code></pre>
+        <pre style="width:45%"><code class="language-java" data-trim data-noescape>
+          // Traducción a Java
+          public class Rectangulo { ... }
+          
+          
+          
+          
+          Rectangulo r = new Rectangulo();
+          System.out.println(
+            r.getAncho() + r.getAltura()
+          );
+          r.setAltura(23);
+          
+        </code></pre>
+        </div>
+        
+      </section>
+      
+      
+      <section>
+        <h3>Aspectos generales</h3>
+        <ul>
+          <li>Clases y métodos son públicos por defecto.
+          <ul>
+            <li>Otros modificadores: <code>private</code>, <code>protected</code> e <code>internal</code>.</li>
+            <li><code>internal</code> = solo visible dentro del módulo.</li>
+          </ul>
+          </li>
+          <li>Los atributos están automáticamente encapsulados mediante métodos de acceso y modificación.
+          <ul>
+            <li>Aunque parezca que se está accediendo directamente a los atributos, se están utilizando estos métodos <em>get</em> y <em>set</em>.</li>
+            <li>Para los atributos definidos mediante <code>val</code> solamente se generan métodos <em>get</em>.</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Métodos de acceso personalizados</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          class Rectangulo {
+              val ancho: Int = 0
+              val altura: Int = 0
+
+              val area: Int
+                  <span class="hl">get()</span> = ancho * altura
+          }
+        </code></pre>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          val r = Rectangulo()
+          r.ancho = 10
+          r.altura = 23
+
+          println(r.area)     // &rarr; 230      
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Métodos de modificación personalizados</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        class Rectangulo {
+            var ancho: Int = 0
+            var altura: Int = 0
+                <span class="hl">set</span>(nuevaAltura: Int) {
+                    if (nuevaAltura &gt;= 0) {
+                        <span class="hl">field</span> = nuevaAltura
+                    } else {
+                        throw IllegalArgumentException()
+                    }
+                }
+        }    
+        </code></pre>
+      
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          val r = Rectangulo()
+          r.ancho = -4   <span class="arrow_box_left">Lanza excepción</span>        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Métodos</h3>
+        <p>Se declaran como funciones dentro de la clase:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        class Rectangulo {
+          // ...
+          
+          fun pintar() {
+              println("Dibujando rectángulo de $ancho x $altura")
+          }
+        }
+        </code></pre>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          val r = Rectangulo();
+          r.ancho = 10
+          r.altura = 20
+          r.pintar()       <span class="arrow_box_left">Llamada a método</span>
+        </code></pre>
+      </section>
+      
+    </section>
+    <section>
+      
+      <section>
+        <h2>Constructores</h2>
+      </section>
+      
+      <section>
+        <h3>Constructores básicos</h3>
+        <p>Sus parámetros se declaran junto al nombre de la clase</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        class Rectangulo(ancho: Int, altura: Int) {        
+            // Inicializamos los atributos con los valores
+            // pasados como parámetro:
+            val ancho: Int = ancho
+            val altura: Int = altura
+            val esCuadrado: Boolean = ancho == altura
+        }
+        </code></pre>
+        <p>Ejemplo de uso:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        val r = Rectangulo(10, 20)
+        println(r.ancho)        // &rarr; 10
+        println(r.altura)       // &rarr; 20
+        println(r.esCuadrado)   // &rarr; false
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>¿Cuál es la diferencia?</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        class Rectangulo(ancho: Int, altura: Int) {        
+            val ancho: Int = ancho
+            val altura: Int = altura
+            val esCuadrado: Boolean = ancho == altura
+        }
+        </code></pre>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        class Rectangulo(ancho: Int, altura: Int) {        
+            val ancho: Int = ancho
+            val altura: Int = altura
+            
+            val esCuadrado: Boolean 
+                get() = ancho == altura
+        }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Atajo para los constructores</h3>
+        <p>Si el valor inicial de una propiedad coincide con el valor del parámetro del constructor, puede declararse la propiedad directamente en la lista de parámetros:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        class Rectangulo(<span class="hl">val</span> ancho: Int, <span class="hl">val</span> altura: Int) {
+            
+            // Resto de propiedades y métodos
+        }          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre style="font-size:50%"><code class="language-kotlin" data-trim data-noescape>
+        class Punto(val x: Int, val y: Int) { }
+
+        class Rectangulo(val posicion: Punto, val ancho: Int, val alto: Int) { }
+        </code></pre>
+        <pre style="font-size:50%"><code class="language-kotlin" data-trim data-noescape>
+        val r = Rectangulo(Punto(10, 0), 20, 30)
+        println("Creado rectángulo en posición ${r.posicion.x}, ${r.posicion.y}")  
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Más sobre constructores</h3>
+        <ul>
+          <li>Crear más de un constructor.</li>
+          <li>Constructores que realicen acciones adicionales.</li>
+          <li>Constructores privados.</li>
+        </ul>
+        <p>Ver documentación de Kotlin <a href="https://kotlinlang.org/docs/classes.html#constructors">[+]</a>
+      </section>
+
+    </section>
+    <section>
+
+      <section>
+        <h2>Data classes</h2>
+      </section>
+      
+      <section>
+        <h3>Data classes</h3>
+        <ul>
+          <li>Son clases cuya única utilidad es el almacenar datos en sus atributos.
+          <ul>
+            <li>En lenguaje C y C++: <code>struct</code>.
+          </ul>
+          </li>
+          <li>Por ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            <span class="hl">data class</span> Punto(val x: Int, val y: Int) { }
+
+            <span class="hl">data class</span> Rectangulo(
+              val posicion: Punto, 
+              val ancho: Int, 
+              val alto: Int) { }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Qué requisitos tiene un <code>data class</code>?</h3>
+        <ul>
+          <li>Todos los parámetros del constructor son propiedades marcadas con <code>var</code> o <code>val</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Punto(<span class="hl">val</span> x: Int, <span class="hl">val</span> y: Int) { }
+          </code></pre></li>
+          <li>No son clases abstractas, ni es posible heredar de ellas.</li>
+            
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Qué ventajas tiene un <code>data class</code>?</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+data class Punto(val x: Int, val y: Int) {}
+data class Rectangulo(val posicion: Punto, 
+                      val ancho: Int, 
+                      val alto: Int) {}
+        </code></pre>
+        
+        <ul>
+          <li>Definen automáticamente los métodos <code>equals()</code> y <code>hashCode()</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val p1 = Punto(5, 30)
+            val p2 = Punto(5, 30)
+            println(p1 == p2) // &rarr; true
+
+            val r1 = Rectangulo(Punto(0, 0), 10, 30)
+            val r2 = Rectangulo(Punto(0, 0), 10, 30)
+            println(r1 == r2) // &rarr; true            
+          </code></pre>
+          </li>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Qué ventajas tiene un <code>data class</code>?</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+data class Punto(val x: Int, val y: Int) {}
+data class Rectangulo(val posicion: Punto, 
+                      val ancho: Int, 
+                      val alto: Int) {}
+        </code></pre>
+        
+        <ul style="width:90%">
+          <li>Definen automáticamente el método <code>toString()</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val r = Rectangulo(Punto(5, 1), 10, 30)
+            println(r) 
+              // &rarr; Rectangulo(posicion=Punto(x=5, y=1), ancho=10, alto=30)
+          </code></pre>
+          </li>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Qué ventajas tiene un <code>data class</code>?</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+data class Punto(val x: Int, val y: Int) {}
+data class Rectangulo(val posicion: Punto, 
+                      val ancho: Int, 
+                      val alto: Int) {}
+        </code></pre>
+        <ul>
+          <li>Podemos descomponer un objeto mediante el operador asignación:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+            fun sumar(p1: Punto, p2: Punto): Punto {
+              val <span class="hl">(x1, y1)</span> = p1
+              val <span class="hl">(x2, y2)</span> = p2
+              return Punto(x1 + x2, y1 + y2)
+            }  
+            </code></pre>
+            equivale a:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun sumar(p1: Punto, p2: Punto): Punto =
+                Punto(p1.x + p2.x, p1.y + p2.y)
+            </code></pre>
+          </li>
+          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Qué ventajas tiene un <code>data class</code>?</h3>
+        <ul>
+          <li>Genera automáticamente un método <code>copy()</code> para realizar copias de una instancia.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val p1 = Punto(3, 5)
+            val p2 = p1.copy(x = 2)
+            val p3 = p1.copy(y = 4, x = 6)
+            
+            println(p1)  // &rarr; Punto(x=3, y=5)
+            println(p2)  // &rarr; Punto(x=2, y=5)
+            println(p3)  // &rarr; Punto(x=6, y=4)
+          </code></pre>          
+          </li>
+        </ul>
+      </section>
+
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Herencia e interfaces</h2>
+      </section>
+      
+      <section>
+        <h3>Herencia en Kotlin</h3>
+        <ul>
+          <li>Por defecto, cuando se declara una clase, no se permite heredar de ella.</li>
+          <li>Una clase <code>B</code> puede heredar de <code>A</code> solo si se cumple una de estas condiciones:
+          <ul>
+            <li><code>A</code> es una interfaz.</li>
+            <li>La clase <code>A</code> es abstracta.</li>
+            <li>La clase <code>A</code> se define explícitamente como abierta (<code>open</code>)</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo 1: Interfaces</h3>
+        <p>Son clases que solamente tienen métodos.</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        interface Dibujable {
+            fun dibujar()   // Método abstracto            
+        }
+        </code></pre>
+        <p>Ejemplo de implementación:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          data class Rectangulo(val posicion: Punto,
+                                val ancho: Int, 
+                                val alto: Int) <span class="hl">: Dibujable</span> { <span class="arrow_box_left">Implementa `Dibujable`</span>
+              
+              <span class="hl">override</span> fun dibujar() =
+                  println("Pintando rectángulo de $ancho x $alto")
+          }          
+        </code></pre>          
+      </section>
+
+      <section>
+        <h3>Ejemplo 2: Clases abstractas</h3>
+        <p>Son clases que tienen, al menos, un método abstracto.</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        abstract class Figura(val posicion: Punto) {
+          abstract fun area(): Double
+          abstract fun perimetro(): Double
+        }
+        </code></pre>
+        <p>Clase <code>Rectángulo</code>:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        class Rectangulo(
+                posicion: Punto,   
+                val ancho: Int,
+                val alto: Int) <span class="hl">: Figura(posicion)</span>, Dibujable {
+
+            override fun area() = (ancho * alto).toDouble()
+
+            override fun perimetro() = 2.0 * ancho + 2.0 * alto
+
+            override fun dibujar() =
+                println("Pintando rectángulo de $ancho x $alto en $posicion")
+        }
+        </code></pre>          
+      </section>
+      
+      <section>
+        <h3>Ejemplo 2: Clases abstractas</h3>
+        <p>Clase <code>Circulo</code>:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          class Circulo(
+                posicion: Punto, 
+                val radio: Int) <span class="hl">: Figura(posicion)</span>, Dibujable {
+                
+              override fun area() = PI * radio * radio
+
+              override fun perimetro() = 2 * PI * radio
+
+              override fun dibujar() {
+                  println("Pintando rectángulo de radio: $radio en $posicion")
+              }
+          }          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo 3: Clases abiertas</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+<span class="hl">open</span> class Rectangulo(
+    posicion: Punto, 
+    val ancho: Int, 
+    val alto: Int) : Figura(posicion), Dibujable {
+  // ...
+}
+        </code></pre>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+class Cuadrado(posicion: Punto, lado: Int) 
+            <span class="hl">: Rectangulo(posicion, lado, lado)</span> {
+    
+    override fun dibujar() =
+        println("Pintando cuadrado de lado $ancho en $posicion")
+}          
+        </code></pre>
+      </section>
+      
+    </section>
+    <section>
+
+      <section>
+        <h2>El operador <code style="color:white;border:none">is</code> y <em>smart casts</em></h2>
+      </section>
+      
+      <section>
+        <h3>El operador <code>is</code></h3>
+        <ul>
+          <li>Permite saber si un objeto es instancia de una clase (o alguna de sus subclases)
+          <ul>
+            <li>Equivale al <code>instanceof</code> de Java.</li>
+          </ul>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val c1 = Cuadrado(Punto(0, 0), 10)
+
+            println(c1 is Cuadrado)     // &rarr; true 
+            println(c1 is Rectangulo)   // &rarr; true
+            println(c1 is Circulo)      // &rarr; false
+            println(c1 is Figura)       // &rarr; true
+            println(c1 is Any)          // &rarr; true
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Uso de <code>is</code> con <code>when</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun identificar(f: Figura) = when (f) {
+              <span class="hl">is Cuadrado</span> -> println("Es un cuadrado")
+              <span class="hl">is Rectangulo</span> -> println("Es un rectángulo")
+              <span class="hl">is Circulo</span> -> println("Es círculo")
+              else -> println("No sé qué es")
+          }          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Smart casts</h3>
+        <ul>
+          <li>Cuando se utiliza <code>is</code> en una rama de una sentencia o expresión condicional se realizan automáticamente las conversiones correspondientes:</li>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun ejemplo(f: Figura) {
+              // Aquí `f` tiene tipo Figura
+              // Solamente se puede acceder a f.posicion
+              if (f is Circulo) {
+                // Dentro de este bloque f tiene tipo `Circulo`.
+                println("Es un círculo de radio ${f.radio}")
+              }
+              // Aquí `f` vuelve a tener tipo Figura
+            }
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Smart casts</h3>
+        <p>Código equivalente en Java:</p>
+        <pre><code class="language-java" data-trim data-noescape>
+          public void ejemplo(Figura f) {
+            if (f instanceof Circulo) {
+              Circulo c = (Circulo) f; <span class="arrow_box_left">Conversión explícita</span>
+              System.out.println("Es un círculo de radio " + c.getRadio())
+            }
+          }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>¿No es eso un poco feo?</h3>
+        <ul>
+          <li>En programación <strong>orientada a objetos</strong>, el uso de <code>is</code> se considera mala práctica de programación.
+          <ul>
+            <li>En su lugar, la distinción de casos que provoca un <code>is</code> debería resolverse mediante herencia y métodos abstractos.</li>
+          </ul>
+          </li>
+          <li>Pero en programación <strong>funcional</strong>, estas distinciones de casos son muy habituales.
+          <ul>
+            <li>Nos permiten implementar tipos de datos algebraicos, que es el modelo de datos en el que se basa la programación funcional.</li>
+          </ul>
+          </li>
+        </ul>
+        <div class="info_box">Más adelante veremos las ventajas e inconvenientes de cada alternativa</div>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Objetos <em>singleton</em></h2>
+      </section>
+      
+      
+      <section>
+        <h3>Objetos <em>singleton</em></h3>
+        <ul>
+          <li>Es posible declarar directamente clases que contienen una única instancia. Por ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          <span class="hl">object</span> Biblioteca {
+              val libros: List&lt;String&gt; = /* ... */
+
+              fun numeroLibros(): Int = libros.size
+          }
+          </code></pre>
+          </li>
+          <li>Esto declara una clase <code>Biblioteca</code> y una instancia del mismo nombre:</li>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            println(Biblioteca.numeroLibros())
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Objetos de clases anónimas</h3>
+        <ul>
+          <li>También pueden crearse objetos singleton de clases anónimas:</li>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          val o = object {
+              val x = 5
+              val y = 4
+
+              fun suma() = x + y
+          }
+          
+          println(o.suma())
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Objetos de clases anónimas</h3>
+        <ul>
+          <li>Este mecanismo proporciona una alternativa a las clases anónimas de Java:
+          <pre><code class="language-java" data-trim data-noescape>
+            // Código Java
+            window.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) { ... }
+                
+                @Override
+                public void mouseEntered(MouseEvent e) { ... }
+            });
+          </code></pre>
+          
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            // Código Kotlin
+            window.addMouseListener(<span class="hl">object : MouseAdapter</span> {
+                override fun mouseClicked(e: MouseEvent) { ... }
+                
+                override fun mouseEntered(e: MouseEvent) { ... }
+            });
+          </code></pre>
+          </li>
+          
+        </ul>
+      </section>
+      
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Tipos genéricos y varianza</h2>
+      </section>
+
+      
+      <section>
+        <h3>Clases paramétricas</h3>
+        <ul>
+          <li>Al igual que en Java y C++, una clases puede ser paramétrica con respecto a uno o más tipos.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+data class Punto&lt;T&gt;(val x: T, val y: T)            
+          </code></pre>
+          </li>
+          <li>
+          Ejemplo de uso:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          val p1 = Punto&lt;Double&gt;(2.4, 5.2)
+          val p2 = Punto&lt;Int&gt;(1, 3)            
+          </code></pre>
+          </li>
+          <li>El tipo instancia es opcional si puede deducirse de los argumentos del constructor:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          val p1 = Punto(2.4, 5.2)
+          val p2 = Punto(1, 3)            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Clases paramétricas</h3>
+        <ul>
+          <li>Es posible imponer restricciones sobre los parámetros.</li>
+          <li>Por ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Punto&lt;T : Comparable&lt;T&gt;&gt;(val x: T, val y: T)
+          </code></pre>
+          La clase <code>Punto</code> solo puede ser instanciada con tipos que implementen la interfaz <code>Comparable</code>.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+    val p1 = Punto(2.4, 5.2)      // OK: Double implementa Comparable
+    val p2 = Punto(1, 5)          // OK: Int implementa Comparable
+    val p3 = Punto(Pair(1, 4), Pair(1, 5))
+                        // ERROR: Pair&lt;U, V&gt; no implementa Comparable
+          </code></pre>
+          </li>
+          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>La interfaz <code>Comparable&lt;T&gt;</code></h3>
+        <ul>
+          <li>Tiene un único método abstracto <code>compareTo()</code> que recibe un objeto <code>other</code> y compara <code>this</code> con <code>other</code>, devolviendo:
+          <ul>
+            <li><code>0</code>, si <code>this == other</code>.</li>
+            <li>Un número <code>&lt; 0</code>, si <code>this &lt; other</code>.</li>
+            <li>Un número <code>&gt; 0</code>, si <code>this &gt; other</code>.</li>
+          </ul>
+          </li>
+          <li>Es posible utilizar los operadores relacionales <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> con aquellos objetos que implementen <code>Comparable&lt;T&gt;</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <p>Hacemos que <code>Punto&lt;T&gt;</code> implemente <code>Comparable&lt;Punto&lt;T&gt;&gt;</code></p>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+data class Punto&lt;T : Comparable&lt;T&gt;&gt;(val x: T, val y: T) 
+            : Comparable&lt;Punto&lt;T&gt;&gt; {
+    
+    override fun compareTo(other: Punto&lt;T&gt;): Int {
+        // Compara las coordenadas x
+        val cmpX = x.compareTo(other.x)
+        // Si son iguales, compara las coordenadas y.
+        // Si no, devuelve el resultado de comparar la coordenada x.
+        return if (cmpX == 0) { y.compareTo(other.y) } else { cmpX }
+    }
+}          
+        </code></pre>
+        <p>Ejemplo de uso:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+    val p1 = Punto(2.4, 5.2)
+    val p2 = Punto(1.0, 5.0)
+    val p3 = Punto(1.0, 3.0)
+          
+    println(p1 <= p2)   // &rarr; false
+    println(p2 <= p3)   // &rarr; true
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Tipos genéricos y varianza</h3>
+        <ul>
+          <li>Supongamos la siguiente función:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun f(a: Array&lt;Any&gt;) {
+              // ...
+          }
+          </code></pre>
+          </li>
+          <li>¿Es correcta la siguiente llamada?
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val a1: Array&lt;Int&gt; = arrayOf(1, 4, 6, 7)
+            f(a1)
+          </code></pre>
+          </li>
+          <li>En otras palabras: el hecho de que <code>Int</code> sea un subtipo de <code>Any</code>, ¿implica que <code>Array&lt;Int&gt;</code> sea un subtipo de <code>Array&lt;Any&gt;</code>?</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos genéricos y varianza</h3>
+        <ul>
+          <li>¿Qué pasaría si <code>f</code> estuviese definida del siguiente modo?
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun f(a: Array&lt;Any&gt;) {
+                a[1] = "Hola"
+            }
+          </code></pre>
+          </li>
+          <li>Si tenemos la siguiente llamada:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val a1: Array&lt;Int&gt; = arrayOf(1, 4, 6, 7)
+            f(a1)
+          </code></pre>
+          tras la llamada, ¡ya no es cierto que <code>a1</code> sea un array de elementos de tipo <code>Int</code>!</li>
+          <li>Por tanto, <code>Array&lt;Int&gt;</code> no es subtipo de <code>Array&lt;Any&gt;</code>.</li>          
+        </ul>
+      </section>
+      
+      
+      
+      <section>
+        <h3>Tipos genéricos y varianza</h3>
+        <ul>
+          <li>Repitamos el ejemplo anterior, pero ahora con listas:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun f(a: List&lt;Any&gt;) {
+              // ...
+          }
+          </code></pre>
+          </li>
+          <li>¿Es correcta la siguiente llamada?
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val a1: List&lt;Int&gt; = arrayOf(1, 4, 6, 7)
+            f(a1)
+          </code></pre>
+          </li>
+          <li>En este caso, sí considera que <code>List&lt;Int&gt;</code> es subtipo de <code>List&lt;Any&gt;</code>.</li>
+          <li>¿Y si fuera con <code>MutableList&lt;T&gt;</code>?</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Invarianza de una clase</h3>
+        <ul>
+          <li>Supongamos una clase <code>C</code> que es paramétrica con respecto a un tipo <code>T</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            class C&lt;T&gt; { ... }
+          </code></pre></li>
+          <li>Por defecto, si <code>T<sub>1</sub></code> es subtipo de <code>T<sub>2</sub></code>, <strong>no</strong> se cumple que <code>C&lt;T<sub>1</sub>&gt;</code> sea subtipo de <code>C&lt;T<sub>2</sub>&gt;</code>, ni que <code>C&lt;T<sub>2</sub>&gt;</code> sea subtipo de <code>C&lt;T<sub>1</sub>&gt;</code>.          
+          </li>
+          <li>Decimos, en este caso, que <code>C</code> es <strong>invariante</strong> con respecto a su parámetro <code>T</code>.</li>
+          <li>Ejemplos: <code>Array</code>, <code>MutableList</code>, <code>MutableSet</code>, etc.</li>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Covarianza de una clase</h3>
+        <ul>
+          <li>Si definimos la clase <code>C</code> del siguiente modo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            class C&lt;<span class="hl">out</span> T&gt; { ... }
+          </code></pre>
+          estamos diciendo que si <code>T<sub>1</sub></code> es subtipo de <code>T<sub>2</sub></code>, entonces <code>C&lt;T<sub>1</sub>&gt;</code> es subtipo de <code>C&lt;T<sub>2</sub>&gt;</code>.
+          </li>
+          <li>En este caso, decimos que <code>C</code> es <strong>covariante </strong> con respecto a su parámetro <code>T</code>.</li>
+          <li>Ejemplos: <code>List</code>, <code>Set</code>, etc.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Contravarianza de una clase</h3>
+        <ul>
+          <li>Si definimos la clase <code>C</code> del siguiente modo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            class C&lt;<span class="hl">in</span> T&gt; { ... }
+          </code></pre>
+          estamos diciendo que si <code>T<sub>1</sub></code> es subtipo de <code>T<sub>2</sub></code>, entonces <code>C&lt;T<sub>2</sub>&gt;</code> es subtipo de <code>C&lt;T<sub>1</sub>&gt;</code>.
+          </li>
+          <li>En este caso, decimos que <code>C</code> es <strong>contravariante</strong> con respecto a su parámetro <code>T</code>.</li>
+          <li>Ejemplo: <code>Comparable</code>.</li>
+        </ul>
+      </section>
+    </section>
+      
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:60%">
+                <ul>
+                    <li>D. Jemerov, S. Isakova
+                        <br>
+                        Kotlin in Action
+                        <br> Manning Publications (2017)
+                        <br> <em>Capítulos 2 y 4</em>
+                    </li>
+                    <li style="margin-top:3em">
+                        <a href="https://kotlinlang.org/api/latest/jvm/stdlib/">Kotlin Standard Library</a>
+                        <br> https://kotlinlang.org/api/latest/jvm/stdlib/
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://images.manning.com/720/960/resize/book/3/9458a37-9793-4e67-a23f-585da31dff55/Jemerov-Kotlin-HI.png" style="width:50%; border:none"><br/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Kotlin_Icon.svg/512px-Kotlin_Icon.svg.png?20171012085709" style="width:30%; border:none">
+            </div>
+        </section>
+    
+      
+      </div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
