@@ -1,0 +1,647 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Estructuras de datos persistentes: listas</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Estructuras de datos persistentes: listas</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li></li>            
+          </ol>
+      </section>
+    
+    <section>
+      <h3>Inmutabilidad en programación funcional</h3>
+      <ul>
+        <li>Los lenguajes funcionales promueven el uso de las estructuras de datos inmutables.</li>
+        <li>Hasta ahora hemos trabajado con inmutabilidad a nivel de variables (uso de <code>val</code> frente a <code>var</code>).</li>
+        <li>También conocemos las interfaces <code>List&lt;T&gt;</code>, <code>Set&lt;T&gt;</code> y <code>Map&lt;T&gt;</code>, que representan colecciones de datos inmutables.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Inmutabilidad en programación funcional</h3>
+      <ul>
+        <li>En Kotlin se &laquo;heredan&raquo; las clases de las librerías de Java para implementar las interfaces <code>List&lt;T&gt;</code>, <code>Map&lt;T&gt;</code>, <code>Set&lt;T&gt;</code>.
+        <li>Por ejemplo, la función <code>listOf()</code> devuelve un objeto de la clase <code>ArrayList</code>.</li>
+        </li>
+        <li>Continua...</li>
+        
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Copias defensivas</h3>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: copias defensivas</h3>
+      <ul>
+        <li>Escribimos una función <code>seq()</code> que, dados dos números <code>n</code> y <code>m</code>, construye la lista con los números comprendidos entre <code>n</code> (incluido) y <code>m</code> (no incluido).
+      <pre><code class="language-kotlin" data-trim data-noescape>
+      fun seq(from: Int, to: Int): List&lt;Int&gt; =
+          if (from >= to) 
+            emptyList() 
+          else 
+            listOf(from) + seq(from + 1, to)
+      </code></pre>
+        </li>
+        <li>Ejemplo de ejecución:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          println(seq(1, 5)) // &rarr; [1, 2, 3, 4]
+        </code></pre>
+        </li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: copias defensivas</h3>
+      <pre><code class="no-highlight" data-trim data-noescape>
+      seq(1, 5)
+      &rarr; [1] + seq(2, 5)
+      &rarr; [1] + ([2] + seq(3, 5))
+      &rarr; [1] + ([2] + ([3] + seq(4, 5)))
+      &rarr; [1] + ([2] + ([3] + ([4] + seq(5, 5))))
+      &rarr; [1] + ([2] + ([3] + ([4] + [])))
+      &rarr; [1] + ([2] + ([3] + [4]))
+      &rarr; [1] + ([2] + [3, 4])
+      &rarr; [1] + [2, 3, 4]
+      &rarr; [1, 2, 3, 4]
+      </code></pre>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: copias defensivas</h3>
+      <ul>
+        <li>En la implementación de listas basada en arrays (<code>ArrayList</code>) cada vez que concatenamos dos listas, se genera un array nuevo con los elementos de ambas.
+        <p style="text-align:center"><img src="04/CopiaDefensiva.svg"></p>
+        </li>
+        <li>La ejecución de <code>seq(0, N)</code> tiene coste <em class="rojo">O(N<sup>2</sup>)</em></li>
+      </ul>
+    </section>
+    
+    
+    <section>
+      <h3>Estructuras de datos persistentes</h3>
+      <ul>
+        <li>Las <strong>estructuras de datos persistentes</strong> permiten implementar operaciones que preserven la estructura original, pero sin necesidad de realizar una copia previa de toda la estructura.</li>
+        <li>En su lugar, construyen el resultado de la operación reutilizando parte de la estructura original.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: concatenación de dos listas</h3>
+      <p><code>val zs = xs + ys</code></p>
+      <p>Utilizando arrays + copia defensiva:</p>
+      <p><img src="04/ConcatDefensiva.svg" width="40%"></p>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: concatenación de dos listas</h3>
+      <p><code>val zs = xs + ys</code></p>
+      <p>Utilizando listas persistentes:</p>
+      <p><img src="04/ConcatPersistente.svg" width="70%"></p>
+    </section>
+
+    <section>
+      <p><img src="04/ConcatPersistente.svg" width="70%"></p>
+      <ul>
+        <li>Al realizar la concatenación <code>xs + ys</code>, se realiza una copia de <code>xs</code>, la cual se &laquo;engancha&raquo; con <code>ys</code>.</li>
+        <li>La lista <code>ys</code> forma parte de <code>zs</code>, pero <code>ys</code> sigue siendo accesible de manera independiente.</li>
+      </ul>
+    </section>
+    
+    
+    <section>
+      <h3>Definición del tipo <code>List&lt;T&gt;</code></h3>
+      <ul style="width:100%">
+        <li>Definimos una clase abstracta vacía:
+        </li>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+                        <span class="arrow_box_down" style="position:relative;top:-5px">Tipo de los elementos</span>
+          abstract class List&lt;out T&gt;
+        </code></pre>
+        <li>Esta interfaz tendrá dos implementaciones:</li>
+        <div style="display:flex">
+          <div style="width:70%">
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          object Nil : List&lt;Nothing&gt;()
+          </code></pre>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          data class Cons&lt;T&gt;(
+              val head: T, 
+              val tail: List&lt;T&gt;
+            ) : List&lt;T&gt;()
+          </code></pre>
+          </div>
+          <div>
+            
+            <div><img src="04/ListaVacia.svg"></div>
+            
+            <div><img src="04/ListaNoVacia.svg"></div>
+          </div>
+        </div>
+        
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: lista <code>[1, 2, 3]</code></h3>
+      <p>¿Cómo construimos la siguiente lista?</p>
+      <p><img src="04/Lista123.svg"></p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        val xs = Cons(1, Cons(2, Cons(3, Nil)))
+      </code></pre>
+    </section>
+    
+    <section>
+      <h3>Examinando la definición</h3>
+      <ul>
+        <li>El objeto <code>Nil</code> representa la lista vacía
+        <pre><code class="language-kotlin" data-trim data-noescape>
+            object Nil : List&lt;Nothing&gt;()
+        </code></pre>
+        </li>
+        <li>Se declara como <code>object</code> porque solamente necesitamos un objeto en memoria que represente la lista vacía.
+        </li>
+        <li>El objeto tiene tipo <code>List&lt;Nothing&gt;</code>, porque <code>Nothing</code> es subtipo de cualquier otro.
+        <ul>
+          <li>Por tanto, <code>Nil</code> también puede utilizarse donde se requiera un <code>List&lt;Int&gt;</code> o un <code>List&lt;String&gt;</code>.</li>
+        </ul>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          val xs = Cons(1, Cons(2, Nil))
+          val ys = Cons("Gerardo", Cons("Alicia", Nil))
+        </code></pre>
+        </li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Examinando la definición</h3>
+      <ul>
+        <li>La clase <code>Cons</code> representa las listas con, al menos, un elemento.
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()        
+        </code></pre>
+        </li>
+        <li>El primer elemento se encuentra en el atributo <code>head</code> y recibe el nombre de <strong>cabeza</strong> de la lista.</li>
+        <li>El atributo <code>tail</code> representa la <strong>cola</strong> de la lista, y puede ser <code>Nil</code>, u otra instancia de <code>Cons</code>.</li>        
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: revisando la función <code>seq</code></h3>
+      <ul>
+        <li>Implementamos la función <code>seq</code> mediante listas persistentes:
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun seq(from: Int, to: Int): List&lt;Int&gt; =
+            if (from &gt;= to) Nil else Cons(from, seq(from + 1, to))      
+      </code></pre>
+      <pre><code class="no-highlight" data-trim data-noescape>
+      seq(1, 5)
+      &rarr; Cons(1, seq(2, 5))
+      &rarr; Cons(1, Cons(2, seq(3, 5)))
+      &rarr; Cons(1, Cons(2, Cons(3, seq(4, 5))))
+      &rarr; Cons(1, Cons(2, Cons(3, Cons(4, seq(5, 5)))))
+      &rarr; Cons(1, Cons(2, Cons(3, Cons(4, Nil))))        
+      </code></pre></li>
+      <li>La llamada <code>seq(0, N)</code> ahora tiene coste <em class="rojo">O(N)</em>.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Operaciones con <code>List&lt;T&gt;</code></h3>
+      <ul>
+        <li>La definición del tipo <code>List&lt;T&gt;</code> es recursiva:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          abstract class List&lt;out T&gt;
+          
+          object Nil : List&lt;Nothing&gt;()
+          data class Cons&lt;T&gt;(val head: T, val tail: <span class="hl">List&lt;T&gt;</span>) : List&lt;T&gt;() 
+        </code></pre>
+        </li>
+        <li>Las funciones que recorran una lista también serán recursivas.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: método <code>length()</code></h3>
+      <ul>
+        <li>Definimos una función de extensión que calcule el número de elementos de la lista:</li>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.length(): Int = when (this) { <span class="arrow_box_left">Error de compilación</span>
+              is Nil -> 0
+              is Cons -> 1 + this.tail.length()
+          }          
+        </code></pre>
+        <li>
+        La distinción de casos no es exhaustiva, y el compilador exige una rama <code>else</code>, ya que podría haber más subclases de <code>List&lt;T&gt;</code>.
+        </li>
+        <li>¿Cómo lo arreglamos? Hay dos maneras.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: método <code>length()</code></h3>
+      <ol>
+        <li>Lanzar una excepción en el caso <code>else</code>:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;T&gt; List&lt;T&gt;.length(): Int = when (this) {
+    is Nil -> 0
+    is Cons -> 1 + tail.length()
+    else -> throw UnsupportedOperationException()   <span class="arrow_box_left">¡Feo!</span>
+}
+        </code></pre></li>
+        <li>Prohibir que <code>List&lt;T&gt;</code> tenga más subclases, aparte de las ya definidas: <code>Nil</code> y <code>Cons</code>.</li>
+      </ol>
+    </section>
+    
+    <section>
+      <h3>Definición definitiva de <code>List&lt;T&gt;</code></h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+<span class="hl">sealed</span> class List&lt;out T&gt;
+
+object Nil : List&lt;Nothing&gt;()
+data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
+        
+      </code></pre>
+      <ul>
+        <li>Mediante <code>sealed</code> indicamos que la clase <code>List&lt;T&gt;</code> es abstracta, pero se prohibe heredar de ella en cualquier otro sitio que no sea el módulo en el que está definida.</li>
+        <li>De este modo, el compilador puede saber que la clase un objeto de tipo <code>List&lt;T&gt;</code> ha de ser, o bien <code>Nil</code>, o bien una instancia de <code>Cons</code>.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: método <code>length()</code></h3>
+      <p>Declarando <code>List&lt;T&gt;</code> como <code>sealed</code>, la siguiente definición ya se acepta por el compilador:</p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.length(): Int = when (this) {
+            is Nil -> 0
+            is Cons -> 1 + this.tail.length()
+        }          
+      </code></pre>
+      <p>Versión con parámetros acumuladores y recursión de cola:</p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.length(): Int {
+            tailrec fun List&lt;T&gt;.lengthRec(ac: Int): Int = when (this) {
+                is Nil -> ac
+                is Cons -> tail.lengthRec(ac + 1)
+            }
+            return this.lengthAc(0)
+        }        
+      </code></pre>
+      <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: suma de los elementos de una lista</h3>
+      <p>Sin recursión de cola:</p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+      fun List&lt;Int&gt;.sum(): Int = when (this) {
+          is Nil -> 0
+          is Cons -> this.head + this.tail.sum()
+      }        
+      </code></pre>
+      <p>Con recursión de cola y parámetro acumulador:</p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+      fun List&lt;Int&gt;.sum(): Int {
+          tailrec fun List&lt;Int&gt;.sumRec(ac: Int): Int = when (this) {
+              is Nil -> ac
+              is Cons -> tail.sumRec(ac + head)
+          }
+          return this.sumRec(0)
+      }
+      </code></pre>
+      <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: concatenar dos listas</h3>
+      <ul>
+        <li>Definimos una función <code>plus</code> que, dadas dos listas <code>xs   </code> e <code>ys</code>, devuelva el resultado de concatenar ambas:
+        <pre><code class="language-kotlin" data-trim data-noescape>          
+        fun &lt;T&gt; plus(xs: List&lt;T&gt;, ys: List&lt;T&gt;): List&lt;T&gt; = when (xs) {
+            is Nil -> ys
+            is Cons -> Cons(xs.head, plus(xs.tail, ys))
+        }
+        </code></pre></li>
+        <li>Ejemplo:
+        <pre><code class="no-highlight" data-trim data-noescape>
+          plus(<span style="background-color:#DDFFDD">Cons(1, Cons(2, Cons(3, Nil)))</span>, <span style="background-color:#FFFFDD">Cons(4, Cons(5, Nil))</span>)
+          
+          &rarr; Cons(1, plus(<span style="background-color:#DDFFDD">Cons(2, Cons(3, Nil))</span>, <span style="background-color:#FFFFDD">Cons(4, Cons(5, Nil))</span>))
+          
+          &rarr; Cons(1, Cons(2, plus(<span style="background-color:#DDFFDD">Cons(3, Nil)</span>, <span style="background-color:#FFFFDD">Cons(4, Cons(5, Nil))</span>)))
+          
+          &rarr; Cons(1, Cons(2, Cons(3, plus(<span style="background-color:#DDFFDD">Nil</span>, <span style="background-color:#FFFFDD">Cons(4, Cons(5, Nil))</span>))))
+          
+          &rarr; Cons(1, Cons(2, Cons(3, <span style="background-color:#FFFFDD">Cons(4, Cons(5, Nil))</span>)))
+          
+        </code></pre>
+        </li>
+      </ul>
+      <p>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: concatenar dos listas</h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        val xs = Cons(1, Cons(2, Cons(3, Nil)))
+        val ys = Cons(4, Cons(5, Nil))
+        val zs = plus(xs, ys)
+      </code></pre>
+      <p>
+      <img src="04/ConcatPersistente2.svg">
+      </p>
+      <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista pasada como primer parámetro.</p>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: concatenar dos listas</h3>
+      <p>Podemos hacer que <code>plus</code> sea más fácil de utilizar si lo declaramos como una función de extensión infija:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>          
+        infix fun &lt;T&gt; List&lt;T&gt;.plus(other: List&lt;T&gt;): List&lt;T&gt; = when (this) {
+            is Nil -> other
+            is Cons -> Cons(this.head, this.tail plus ys)
+        }
+        </code></pre></li>
+        <p>Ejemplo de uso:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        val zs = xs plus ys          
+        </code></pre>      
+    </section>
+    
+    <section>
+      <h3>Ejemplo: concatenar dos listas</h3>
+      <p>Incluso mejor: podemos sobrecargar el operador <code>+</code> en Kotlin, declarando la función <code>plus</code> como <code>operator</code>:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>          
+        <span class="hl">operator</span> fun &lt;T&gt; List&lt;T&gt;.plus(other: List&lt;T&gt;): List&lt;T&gt; = when (this) {
+            is Nil -> other
+            is Cons -> Cons(this.head, this.tail + ys)
+        }
+        </code></pre></li>
+        <p>Ejemplo de uso:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        val zs = xs + ys          
+        </code></pre>
+        <p>Sobrecarga de operadores en Kotlin: <a href="https://kotlinlang.org/docs/operator-overloading.html">[+]</a>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: invertir una lista</h3>
+      <ul>
+        <li>Implementamos un método <code>reverse()</code> que invierte los elementos de la lista <code>this</code>.</li>
+        <li>Por ejemplo, si <code>xs</code> denota la lista <code>[1, 2, 3]</code>, <code>xs.reverse()</code> devuelve la lista <code>[3, 2, 1]</code>.</li>
+      </ul>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.reverse(): List&lt;T&gt; = when (this) {
+            is Nil -> Nil
+            is Cons -> tail.reverse() + Cons(head, Nil)
+        }
+      </code></pre>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: invertir una lista</h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.reverse(): List&lt;T&gt; = when (this) {
+            is Nil -> Nil
+            is Cons -> tail.reverse() + Cons(head, Nil)
+        }
+      </code></pre>
+      <pre><code class="no-highlight" data-trim data-noescape>
+        Cons(1, Cons(2, Cons(3, Nil))).reverse()
+        &rarr; Cons(2, Cons(3, Nil)).reverse() + Cons(1, Nil)
+        &rarr; (Cons(3, Nil).reverse() + Cons(2, Nil)) + Cons(1, Nil)
+        &rarr; ((Nil.reverse() + Cons(3, Nil)) + Cons(2, Nil)) + Cons(1, Nil)
+        &rarr; (Nil + Cons(3, Nil)) + Cons(2, Nil)) + Cons(1, Nil)
+        &rarr; (Cons(3, Nil) + Cons(2, Nil)) + Cons(1, Nil)
+        &rarr; ...
+        &rarr; Cons(3, Cons(2, Nil)) + Cons(1, Nil)
+        &rarr; ...
+        &rarr; Cons(3, Cons(2, Cons(1, Nil)))
+      </code></pre>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: invertir una lista</h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.reverse(): List&lt;T&gt; = when (this) {
+            is Nil -> Nil
+            is Cons -> tail.reverse() + Cons(head, Nil)
+        }
+      </code></pre>
+      <pre><code class="no-highlight" data-trim data-noescape>
+        [1, 2, 3].reverse()
+        &rarr; [2, 3].reverse() + [1]
+        &rarr; ([3].reverse() + [2]) + [1]
+        &rarr; (([].reverse() + [3]) + [2]) + [1]
+        &rarr; (([] + [3]) + [2]) + [1]
+        &rarr; ([3] + [2]) + [1]
+        &rarr; ...
+        &rarr; [3, 2] + [1]
+        &rarr; ...
+        &rarr; [3, 2, 1]
+      </code></pre>
+    </section>    
+    
+    <section>
+      <h3>Ejemplo: invertir una lista</h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.reverse(): List&lt;T&gt; = when (this) {
+            is Nil -> Nil
+            is Cons -> tail.reverse() + Cons(head, Nil)
+        }
+      </code></pre>
+      <ul>
+        <li>¿Cuál es el coste del algoritmo?</li>
+        <li>Recordemos que la operación <code>xs + ys</code> tiene coste lineal con respecto a la longitud lista <code>xs</code>.</li>
+        <li>Si <code>zs</code> es una lista de tamaño <em>N</em>, la llamada a <code>zs.reverse()</code> hace <em>N</em> llamadas al operador <code>+</code>
+        <ul>
+          <li>...cada una con una lista cada vez más grande que la anterior.</li>
+        </ul>
+        </li>
+        <li>Por tanto, el coste es <em class="rojo">O(N<sup>2</sup>)</em>.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Mejorando la eficiencia de <code>reverse()</code></h3>
+      <ul>
+        <li>Es posible mejorar el coste mediante un parámetro acumulador:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.reverse(): List&lt;T&gt; {          
+              tailrec fun List&lt;T&gt;.reverseRec(ac: List&lt;T&gt;): List&lt;T&gt; = when(this) {
+                  is Nil -> ac
+                  is Cons -> tail.reverseRec(Cons(head, ac))
+              }
+              
+              // Llamada inicial:
+              return reverseRec(Nil)
+          }          
+        </code></pre>
+        </li>
+        <li>El parámetro <code>ac</code> acumula la lista invertida.</li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Mejorando la eficiencia de <code>reverse()</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.reverse(): List&lt;T&gt; {          
+              tailrec fun List&lt;T&gt;.reverseRec(ac: List&lt;T&gt;): List&lt;T&gt; = when(this) {
+                  is Nil -> ac
+                  is Cons -> tail.reverseRec(Cons(head, ac))
+              }
+              
+              // Llamada inicial:
+              return reverseRec(Nil)
+          }          
+        </code></pre>
+        <pre><code class="no-highlight" data-trim data-noescape>
+          Cons(1, Cons(2, Cons(3, Nil))).reverse()
+          &rarr; Cons(1, Cons(2, Cons(3, Nil))).reverseRec(Nil)
+          &rarr; Cons(2, Cons(3, Nil)).reverseRec(Cons(1, Nil))
+          &rarr; Cons(3, Nil).reverseRec(Cons(2, Cons(1, Nil)))
+          &rarr; Nil.reverseRec(Cons(3, Cons(2, Cons(1, Nil))))
+          &rarr; Cons(3, Cons(2, Cons(1, Nil)))
+        </code></pre>
+    </section>
+
+    <section>
+      <h3>Mejorando la eficiencia de <code>reverse()</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.reverse(): List&lt;T&gt; {          
+              tailrec fun List&lt;T&gt;.reverseRec(ac: List&lt;T&gt;): List&lt;T&gt; = when(this) {
+                  is Nil -> ac
+                  is Cons -> tail.reverseRec(Cons(head, ac))
+              }
+              
+              // Llamada inicial:
+              return reverseRec(Nil)
+          }          
+        </code></pre>
+        <pre><code class="no-highlight" data-trim data-noescape>
+          [1, 2, 3].reverse()
+          &rarr; [1, 2, 3].reverseRec([])
+          &rarr; [2, 3].reverseRec([1])
+          &rarr; [3].reverseRec([2, 1])
+          &rarr; [].reverseRec([3, 2, 1])
+          &rarr; [3, 2, 1]
+        </code></pre>
+        <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
+    </section>
+    
+    <section>
+      <h3>Ejemplo: <code>last()</code></h3>
+      <ul>
+        <li>Implementamos una función que devuelva el último elemento de una lista:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.last(): T = when(this) {
+            is Nil -> ???                 <span class="arrow_box_left">¿Qué devolvemos si la lista es vacía?</span>
+            is Cons -> when (tail) {
+              is Nil -> head
+              is Cons -> tail.last()
+            }
+          }
+        </code></pre>
+        </li>
+        <li>La función es parcial: solo puede aplicarse a listas no vacías.</li>
+        <li>¿Qué hacemos si llamamos a <code>last()</code> sobre una lista vacía.</li>
+        
+      </ul>
+    </section>
+    
+    <section>
+      <h3>¿Cómo tratar las funciones parciales?</h3>
+      <p>Hay varias posibilidades:</p>
+      <ol>
+        <li>Lanzar una excepción en el caso en el que <code>this</code> es la lista vacía.
+        <ul>
+          <li>Evitaremos las excepciones en esta asignatura.</li>
+        </ul>
+        </li>
+        <li>Devolver un tipo <code>Option&lt;T&gt;</code>, o devolver <code>null</code>.
+        <ul>
+          <li>Veremos ambas alternativas en las siguientes semanas.</li>
+        </ul></li>
+        <li>Prohibir las llamadas con listas no vacías.
+        <ul>
+          <li>Es lo que haremos a continuación.</li>
+        </ul>
+        </li>
+      </ol>
+    </section>
+    
+    <section>
+      <h3>¿Cómo tratar las funciones parciales?</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; <span class="hl">Cons&lt;T&gt;</span>.last(): T = when(this.tail) {
+              is Nil -> head
+              is Cons -> this.tail.last()
+          }
+        </code></pre>
+        <ul>
+          <li>Ya no se permite llamar a <code>last()</code> sobre la lista <code>Nil</code>.</li>
+          
+        </ul>
+    </section>
+    
+    
+    
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
