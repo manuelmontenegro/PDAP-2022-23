@@ -301,7 +301,7 @@
         <li>Permite implementar recorridos sobre listas sin necesidad de pasar índices como parámetros.</li>
         </ul>
         <pre><code class="language-kotlin" data-trim data-noescape>
-        fun sumaElems(xs: List<Int>): Int =
+        fun sumaElems(xs: List&lt;Int&gt;): Int =
             if (xs.isEmpty()) 0 else xs[0] + sumaElems(xs.subList(1, xs.size))
         </code></pre>
       </section>
@@ -320,7 +320,7 @@
           <li>Dada una lista de enteros <code>xs</code>, obtener otra lista con los elementos de <code>xs</code> que no sean pares:</li>
         </ul>
         <pre><code class="language-kotlin" data-trim data-noescape>
-        fun quitarPares(xs: List<Int>): List<Int> = when {
+        fun quitarPares(xs: List&lt;Int&gt;): List&lt;Int&gt; = when {
             // Lista vacía
               xs.isEmpty() -> listOf()
             // Lista cuyo primer elemento es par
@@ -472,7 +472,7 @@
         </code></pre>
         <p class="fragment"><span class="rojo">No</span> tiene recursión de cola</p>
         <pre style="font-size:45%"><code class="language-kotlin" data-trim data-noescape>
-          fun quitarPares(xs: List<Int>): List<Int> = when {
+          fun quitarPares(xs: List&lt;Int&gt;): List&lt;Int&gt; = when {
               xs.isEmpty() -> listOf()
               xs[0] % 2 == 0 -> quitarPares(xs.subList(1, xs.size)) <span class="arrow_box_left fragment">Llamada f&#8203inal</span>
               else -> listOf(xs[0]) + quitarPares(xs.subList(1, xs.size)) <span class="arrow_box_left fragment">Llamada no f&#8203inal</span>
@@ -484,7 +484,7 @@
       <section>
         <h3>Ejemplos</h3>
         <pre><code class="language-kotlin" data-trim data-noescape>
-          fun sumaElems(xs: List<Int>): Int {
+          fun sumaElems(xs: List&lt;Int&gt;): Int {
               fun sumaElemsRec(i: Int): Int =
                   if (i == xs.size) 0 
                     else xs[i] + sumaElemsRec(i + 1) <span class="arrow_box_left fragment">Llamada no f&#8203inal</span>
@@ -657,7 +657,7 @@
           <h3>Ejemplo: <code>quitarPares</code></h3>
           <p>Sin parámetro acumulador:</p>
           <pre><code class="language-kotlin" data-trim data-noescape>
-          fun quitarPares(xs: List<Int>): List<Int> = when {
+          fun quitarPares(xs: List&lt;Int&gt;): List&lt;Int&gt; = when {
               xs.isEmpty() -> listOf()
               xs[0] % 2 == 0 -> quitarPares(xs.subList(1, xs.size))
               else -> listOf(xs[0]) + quitarPares(xs.subList(1, xs.size))
@@ -665,7 +665,7 @@
           </code></pre>
           <p>Con parámetro acumulador:</p>
           <pre><code class="language-kotlin" data-trim data-noescape>
-          tailrec fun quitarParesRec(xs: List<Int>, ac: List<Int>): List<Int> = when {
+          tailrec fun quitarParesRec(xs: List&lt;Int&gt;, ac: List&lt;Int&gt;): List&lt;Int&gt; = when {
               xs.isEmpty() -> ac
               xs[0] % 2 == 0 -> quitarParesRec(xs.subList(1, xs.size), ac)
               else -> quitarParesRec(xs.subList(1, xs.size), ac + xs[0])
@@ -724,10 +724,11 @@
           </code></pre>
           <pre style="width:60%" class="fragment"><code class="language-kotlin" data-trim data-noescape>
             fun exp(n: Int): Int {
-                fun expRec(i: Int, result: Int): Int = when {
-                    i > 0 -> expRec(i - 1, result * 2)
-                    else -> result
-                }
+                tailrec fun expRec(i: Int, result: Int): Int 
+                  = when {
+                      i > 0 -> expRec(i - 1, result * 2)
+                      else -> result
+                  }
                 return expRec(n, 1)
             }
           </code></pre>          </div>
