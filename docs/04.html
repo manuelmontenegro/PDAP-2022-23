@@ -42,14 +42,25 @@
       
       <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
           <ol class="contenidos">
-            <li></li>            
+            <li>Inmutabilidad y estructuras de datos funcionales</li>
+            <li>Listas funcionales</li>
+            <li>Operaciones básicas</li>
+            <li>Concatenación de listas</li>
+            <li>Inversión de listas</li>
+            <li>Funciones parciales</li>
+            <li>Biblioteca <code style="color:white">collections.immutable</code></li>
           </ol>
       </section>
+    
+  <section>
+    <section>
+      <h2>Inmutabilidad y estructuras de datos funcionales</h2>
+    </section>
     
     <section>
       <h3>Inmutabilidad en programación funcional</h3>
       <ul>
-        <li>Los lenguajes funcionales promueven el uso de las estructuras de datos inmutables.</li>
+        <li>La programación funcional promueve el uso de estructuras de datos inmutables.</li>
         <li>Hasta ahora hemos trabajado con inmutabilidad a nivel de variables (uso de <code>val</code> frente a <code>var</code>).</li>
         <li>También conocemos las interfaces <code>List&lt;T&gt;</code>, <code>Set&lt;T&gt;</code> y <code>Map&lt;T&gt;</code>, que representan colecciones de datos inmutables.</li>
       </ul>
@@ -63,7 +74,7 @@
         <li>Por ejemplo, la función <code>listOf()</code> devuelve un objeto de la clase <code>ArrayList</code>.</li>
         </ul>
         </li>
-        <li>Estas clases no estaban inicialmente concebidas para realizar operaciones inmutables.</li>
+        <li class="fragment">Estas clases no estaban inicialmente concebidas para realizar operaciones inmutables.</li>
         
       </ul>
     </section>
@@ -71,8 +82,8 @@
     <section>
       <h3>Ejemplo: <code>seq()</code></h3>
       <ul>
-        <li>Escribimos una función <code>seq()</code> que, dados dos números <code>from</code> y <code>to</code>, construye la lista con los números comprendidos entre ambos (sin incluir <code>to</code>).
-      <pre><code class="language-kotlin" data-trim data-noescape>
+        <li>Escribimos una función <code>seq()</code> que, dados dos números <code>from</code> y <code>to</code>, construye una lista con la secuencia de números comprendidos entre ambos (sin incluir <code>to</code>).
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
       fun seq(from: Int, to: Int): List&lt;Int&gt; =
           if (from >= to) 
             emptyList() 
@@ -80,7 +91,7 @@
             listOf(from) + seq(from + 1, to)
       </code></pre>
         </li>
-        <li>Ejemplo de ejecución:
+        <li class="fragment">Ejemplo de ejecución:
         <pre><code class="language-kotlin" data-trim data-noescape>
           println(seq(1, 5)) // &rarr; [1, 2, 3, 4]
         </code></pre>
@@ -108,9 +119,540 @@
       <h3>Ejemplo: <code>seq()</code></h3>
       <ul>
         <li>En la implementación de listas basada en arrays (<code>ArrayList</code>) cada vez que concatenamos dos listas, se genera un array nuevo con los elementos de ambas.
-        <p style="text-align:center"><img src="04/CopiaDefensiva.svg"></p>
+        <p style="text-align:center"><svg
+   width="73.394539mm"
+   height="66.638176mm"
+   viewBox="0 0 73.394539 66.638176"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="CopiaDefensiva.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.3932941"
+     inkscape:cx="127.03707"
+     inkscape:cy="102.63447"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g3123" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="TriangleStart"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-1"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-0" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-3"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-2" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-1-0"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-0-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-5"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-4" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-1-7"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-0-65" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-47.887193,-29.723089)">
+    <g
+       id="g1682">
+      <g
+         id="g1117"
+         transform="translate(38.459476,3.0761944)">
+        <rect
+           style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+           id="rect288"
+           width="8.832468"
+           height="8.832468"
+           x="73.83979"
+           y="26.86459" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="78.256027"
+           y="33.397491"
+           id="text456"><tspan
+             sodipodi:role="line"
+             id="tspan454"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491">4</tspan></text>
+      </g>
+      <g
+         id="g1117-3"
+         transform="translate(13.154496,3.0084994)">
+        <rect
+           style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+           id="rect288-6"
+           width="8.832468"
+           height="8.832468"
+           x="73.83979"
+           y="26.86459" />
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="78.256027"
+           y="33.397491"
+           id="text456-7"><tspan
+             sodipodi:role="line"
+             id="tspan454-5"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491">3</tspan></text>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+         x="105.00155"
+         y="36.400822"
+         id="text1166"><tspan
+           sodipodi:role="line"
+           id="tspan1164"
+           style="stroke-width:0.3"
+           x="105.00155"
+           y="36.400822">+</tspan></text>
+    </g>
+    <g
+       id="g2193"
+       class="fragment">
+      <g
+         id="g1698"
+         transform="translate(0,0.8739126)">
+        <g
+           id="g1117-3-3"
+           transform="translate(22.17774,21.348285)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-5"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-6"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-2"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">3</tspan></text>
+        </g>
+        <g
+           id="g1117-9"
+           transform="translate(30.787477,21.348285)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-1"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-2"><tspan
+               sodipodi:role="line"
+               id="tspan454-7"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">4</tspan></text>
+        </g>
+        <g
+           id="g1117-3-0"
+           transform="translate(-4.8418988,21.27904)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-9"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-3"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-6"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">2</tspan></text>
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="87.00515"
+           y="54.67136"
+           id="text1166-0"><tspan
+             sodipodi:role="line"
+             id="tspan1164-6"
+             style="stroke-width:0.3"
+             x="87.00515"
+             y="54.67136">+</tspan></text>
+      </g>
+      <path
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart)"
+         d="m 91.410519,38.705559 9.314761,8.869464"
+         id="path1792"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart-1)"
+         d="m 116.7155,38.773254 -10.51972,9.132607"
+         id="path1792-6"
+         sodipodi:nodetypes="cc" />
+      <g
+         id="g3123"
+         class="fragment">
+        <g
+           id="g1718"
+           transform="translate(0,-0.1537482)">
+          <g
+             id="g1117-3-3-2"
+             transform="translate(10.488503,41.521949)">
+            <rect
+               style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+               id="rect288-6-5-6"
+               width="8.832468"
+               height="8.832468"
+               x="73.83979"
+               y="26.86459" />
+            <text
+               xml:space="preserve"
+               style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491"
+               id="text456-7-6-1"><tspan
+                 sodipodi:role="line"
+                 id="tspan454-5-2-8"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491">3</tspan></text>
+          </g>
+          <g
+             id="g1117-9-7"
+             transform="translate(19.09824,41.521949)">
+            <rect
+               style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+               id="rect288-1-9"
+               width="8.832468"
+               height="8.832468"
+               x="73.83979"
+               y="26.86459" />
+            <text
+               xml:space="preserve"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491"
+               id="text456-2-2"><tspan
+                 sodipodi:role="line"
+                 id="tspan454-7-0"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491">4</tspan></text>
+          </g>
+          <g
+             id="g1117-3-0-2"
+             transform="translate(1.6560367,41.521949)">
+            <rect
+               style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+               id="rect288-6-9-3"
+               width="8.832468"
+               height="8.832468"
+               x="73.83979"
+               y="26.86459" />
+            <text
+               xml:space="preserve"
+               style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491"
+               id="text456-7-3-7"><tspan
+                 sodipodi:role="line"
+                 id="tspan454-5-6-5"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491">2</tspan></text>
+          </g>
+          <g
+             id="g1117-3-0-9"
+             transform="translate(-25.802597,41.521949)">
+            <rect
+               style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+               id="rect288-6-9-2"
+               width="8.832468"
+               height="8.832468"
+               x="73.83979"
+               y="26.86459" />
+            <text
+               xml:space="preserve"
+               style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491"
+               id="text456-7-3-2"><tspan
+                 sodipodi:role="line"
+                 id="tspan454-5-6-8"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491">1</tspan></text>
+          </g>
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="66.044456"
+             y="74.914268"
+             id="text1166-0-9"><tspan
+               sodipodi:role="line"
+               id="tspan1164-6-7"
+               style="stroke-width:0.3"
+               x="66.044456"
+               y="74.914268">+</tspan></text>
+        </g>
+        <path
+           style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart-3)"
+           d="m 72.821829,57.855774 9.31476,8.869464"
+           id="path1792-1"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart-1-0)"
+           d="m 98.126809,57.923469 -10.51972,9.132607"
+           id="path1792-6-5"
+           sodipodi:nodetypes="cc" />
+        <g
+           id="g3978"
+           class="fragment">
+          <g
+             id="g1736">
+            <g
+               id="g1117-3-3-2-3"
+               transform="translate(-7.2537018,60.514204)">
+              <rect
+                 style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+                 id="rect288-6-5-6-6"
+                 width="8.832468"
+                 height="8.832468"
+                 x="73.83979"
+                 y="26.86459" />
+              <text
+                 xml:space="preserve"
+                 style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491"
+                 id="text456-7-6-1-1"><tspan
+                   sodipodi:role="line"
+                   id="tspan454-5-2-8-2"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                   x="78.256027"
+                   y="33.397491">3</tspan></text>
+            </g>
+            <g
+               id="g1117-9-7-9"
+               transform="translate(1.356035,60.514204)">
+              <rect
+                 style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+                 id="rect288-1-9-3"
+                 width="8.832468"
+                 height="8.832468"
+                 x="73.83979"
+                 y="26.86459" />
+              <text
+                 xml:space="preserve"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491"
+                 id="text456-2-2-1"><tspan
+                   sodipodi:role="line"
+                   id="tspan454-7-0-9"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                   x="78.256027"
+                   y="33.397491">4</tspan></text>
+            </g>
+            <g
+               id="g1117-3-0-2-4"
+               transform="translate(-16.086168,60.514204)">
+              <rect
+                 style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+                 id="rect288-6-9-3-7"
+                 width="8.832468"
+                 height="8.832468"
+                 x="73.83979"
+                 y="26.86459" />
+              <text
+                 xml:space="preserve"
+                 style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491"
+                 id="text456-7-3-7-8"><tspan
+                   sodipodi:role="line"
+                   id="tspan454-5-6-5-4"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                   x="78.256027"
+                   y="33.397491">2</tspan></text>
+            </g>
+            <g
+               id="g1117-3-0-9-5"
+               transform="translate(-24.918634,60.514204)">
+              <rect
+                 style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+                 id="rect288-6-9-2-0"
+                 width="8.832468"
+                 height="8.832468"
+                 x="73.83979"
+                 y="26.86459" />
+              <text
+                 xml:space="preserve"
+                 style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491"
+                 id="text456-7-3-2-3"><tspan
+                   sodipodi:role="line"
+                   id="tspan454-5-6-8-6"
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                   x="78.256027"
+                   y="33.397491">1</tspan></text>
+            </g>
+          </g>
+          <path
+             style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart-5)"
+             d="m 54.504861,77.042118 9.31476,8.86946"
+             id="path1792-69"
+             sodipodi:nodetypes="cc" />
+          <path
+             style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart-1-7)"
+             d="m 79.809841,77.109813 -10.51972,9.132605"
+             id="path1792-6-3"
+             sodipodi:nodetypes="cc" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+</p>
         </li>
-        <li>La ejecución de <code>seq(0, N)</code> tiene coste <em class="rojo">O(N<sup>2</sup>)</em> 😱</li>
+        <li class="fragment">La ejecución de <code>seq(0, N)</code> tiene coste <em class="rojo">O(N<sup>2</sup>)</em> <span class="fragment">😱</span></li>
       </ul>
     </section>
     
@@ -126,15 +668,1351 @@
     <section>
       <h3>Ejemplo: concatenación de dos listas</h3>
       <p><code>val zs = xs + ys</code></p>
-      <p>Utilizando arrays:</p>
-      <p><img src="04/ConcatDefensiva.svg" width="40%"></p>
+      <p class="fragment">Utilizando arrays:</p>
+      <p class="fragment"><svg
+   width="76.921471mm"
+   height="44.3167mm"
+   viewBox="0 0 76.921471 44.3167"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="ConcatDefensiva.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.3932941"
+     inkscape:cx="144.26244"
+     inkscape:cy="103.35219"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="TriangleStart"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-4"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-9" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-43.386343,-29.427443)">
+    <g
+       id="g1736"
+       transform="translate(36.129521,-50.934123)">
+      <g
+         id="g1117-3-3-2-3"
+         transform="translate(-7.2537018,60.514204)">
+        <rect
+           style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+           id="rect288-6-5-6-6"
+           width="8.832468"
+           height="8.832468"
+           x="73.83979"
+           y="26.86459" />
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="78.256027"
+           y="33.397491"
+           id="text456-7-6-1-1"><tspan
+             sodipodi:role="line"
+             id="tspan454-5-2-8-2"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491">6</tspan></text>
+      </g>
+      <g
+         id="g1117-9-7-9"
+         transform="translate(1.356035,60.514204)">
+        <rect
+           style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+           id="rect288-1-9-3"
+           width="8.832468"
+           height="8.832468"
+           x="73.83979"
+           y="26.86459" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="78.256027"
+           y="33.397491"
+           id="text456-2-2-1"><tspan
+             sodipodi:role="line"
+             id="tspan454-7-0-9"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491">7</tspan></text>
+      </g>
+      <g
+         id="g1117-3-0-2-4"
+         transform="translate(-16.086168,60.514204)">
+        <rect
+           style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+           id="rect288-6-9-3-7"
+           width="8.832468"
+           height="8.832468"
+           x="73.83979"
+           y="26.86459" />
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="78.256027"
+           y="33.397491"
+           id="text456-7-3-7-8"><tspan
+             sodipodi:role="line"
+             id="tspan454-5-6-5-4"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491">5</tspan></text>
+      </g>
+      <g
+         id="g1117-3-0-9-5"
+         transform="translate(-24.918634,60.514204)">
+        <rect
+           style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+           id="rect288-6-9-2-0"
+           width="8.832468"
+           height="8.832468"
+           x="73.83979"
+           y="26.86459" />
+        <text
+           xml:space="preserve"
+           style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+           x="78.256027"
+           y="33.397491"
+           id="text456-7-3-2-3"><tspan
+             sodipodi:role="line"
+             id="tspan454-5-6-8-6"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491">4</tspan></text>
+      </g>
+    </g>
+    <g
+       id="g1736-7"
+       transform="translate(-11.379579,-49.916261)">
+      <g
+         id="g2933"
+         transform="translate(0.7529147,0.13616799)">
+        <g
+           id="g1117-3-3-2-3-4"
+           transform="translate(-1.6606212,59.292479)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-5-6-6-5"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-6-1-1-2"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-2-8-2-5"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">3</tspan></text>
+        </g>
+        <g
+           id="g1117-3-0-2-4-3"
+           transform="translate(-10.493087,59.292479)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-9-3-7-0"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-3-7-8-7"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-6-5-4-8"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">2</tspan></text>
+        </g>
+        <g
+           id="g1117-3-0-9-5-6"
+           transform="translate(-19.325553,59.292479)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-9-2-0-8"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-3-2-3-8"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-6-8-6-4"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">1</tspan></text>
+        </g>
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1"
+       x="79.135818"
+       y="43.385677"
+       id="text2937"><tspan
+         sodipodi:role="line"
+         id="tspan2935"
+         style="stroke-width:0.3"
+         x="79.135818"
+         y="43.385677">+</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       x="46.910595"
+       y="32.894543"
+       id="text3818"><tspan
+         sodipodi:role="line"
+         id="tspan3816"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0"
+         x="46.910595"
+         y="32.894543">xs</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       x="87.656357"
+       y="32.926292"
+       id="text3818-9"><tspan
+         sodipodi:role="line"
+         id="tspan3816-1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0"
+         x="87.656357"
+         y="32.926292">ys</tspan></text>
+    <g
+       id="g1302"
+       class="fragment">
+      <g
+         id="g1736-3"
+         transform="translate(25.904931,-29.282018)">
+        <g
+           id="g1117-3-3-2-3-1"
+           transform="translate(-7.2537018,60.514204)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-5-6-6-4"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-6-1-1-9"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-2-8-2-2"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">6</tspan></text>
+        </g>
+        <g
+           id="g1117-9-7-9-0"
+           transform="translate(1.356035,60.514204)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-1-9-3-6"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-2-2-1-8"><tspan
+               sodipodi:role="line"
+               id="tspan454-7-0-9-9"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">7</tspan></text>
+        </g>
+        <g
+           id="g1117-3-0-2-4-2"
+           transform="translate(-16.086168,60.514204)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-9-3-7-6"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-3-7-8-6"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-6-5-4-4"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">5</tspan></text>
+        </g>
+        <g
+           id="g1117-3-0-9-5-9"
+           transform="translate(-24.918634,60.514204)">
+          <rect
+             style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+             id="rect288-6-9-2-0-5"
+             width="8.832468"
+             height="8.832468"
+             x="73.83979"
+             y="26.86459" />
+          <text
+             xml:space="preserve"
+             style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+             x="78.256027"
+             y="33.397491"
+             id="text456-7-3-2-3-0"><tspan
+               sodipodi:role="line"
+               id="tspan454-5-6-8-6-48"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491">4</tspan></text>
+        </g>
+      </g>
+      <g
+         id="g1736-7-7"
+         transform="translate(-6.9384628,-28.196461)">
+        <g
+           id="g2933-1"
+           transform="translate(0.7529147,0.13616799)">
+          <g
+             id="g1117-3-3-2-3-4-7"
+             transform="translate(-1.6606212,59.292479)">
+            <rect
+               style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+               id="rect288-6-5-6-6-5-2"
+               width="8.832468"
+               height="8.832468"
+               x="73.83979"
+               y="26.86459" />
+            <text
+               xml:space="preserve"
+               style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491"
+               id="text456-7-6-1-1-2-7"><tspan
+                 sodipodi:role="line"
+                 id="tspan454-5-2-8-2-5-2"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491">3</tspan></text>
+          </g>
+          <g
+             id="g1117-3-0-2-4-3-2"
+             transform="translate(-10.493087,59.292479)">
+            <rect
+               style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+               id="rect288-6-9-3-7-0-6"
+               width="8.832468"
+               height="8.832468"
+               x="73.83979"
+               y="26.86459" />
+            <text
+               xml:space="preserve"
+               style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491"
+               id="text456-7-3-7-8-7-1"><tspan
+                 sodipodi:role="line"
+                 id="tspan454-5-6-5-4-8-0"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491">2</tspan></text>
+          </g>
+          <g
+             id="g1117-3-0-9-5-6-6"
+             transform="translate(-19.325553,59.292479)">
+            <rect
+               style="fill:#ffccaa;stroke:#000000;stroke-width:0.3"
+               id="rect288-6-9-2-0-8-1"
+               width="8.832468"
+               height="8.832468"
+               x="73.83979"
+               y="26.86459" />
+            <text
+               xml:space="preserve"
+               style="font-size:6.35px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+               x="78.256027"
+               y="33.397491"
+               id="text456-7-3-2-3-8-5"><tspan
+                 sodipodi:role="line"
+                 id="tspan454-5-6-8-6-4-9"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3"
+                 x="78.256027"
+                 y="33.397491">1</tspan></text>
+          </g>
+        </g>
+      </g>
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart)"
+         d="M 57.136272,45.209446 74.106553,56.313048"
+         id="path3200"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.3;stroke-opacity:1;marker-end:url(#TriangleStart-4)"
+         d="M 102.36461,45.582587 79.451193,56.631297"
+         id="path3200-0"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+         x="51.51046"
+         y="73.680641"
+         id="text3945"><tspan
+           sodipodi:role="line"
+           id="tspan3943"
+           style="stroke-width:0"
+           x="51.51046"
+           y="73.680641">zs</tspan></text>
+    </g>
+  </g>
+</svg>
+</p>
     </section>
     
     <section>
       <h3>Ejemplo: concatenación de dos listas</h3>
       <p><code>val zs = xs + ys</code></p>
-      <p>Utilizando listas persistentes:</p>
-      <p><img src="04/ConcatPersistente.svg" width="70%"></p>
+      <p class="fragment">Utilizando listas persistentes:</p>
+      <p class="fragment"><svg
+   width="218.46281mm"
+   height="72.242096mm"
+   viewBox="0 0 218.46281 72.242096"
+   version="1.1"
+   id="svg4226"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="ConcatPersistente.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview4228"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.98520767"
+     inkscape:cx="680.05967"
+     inkscape:cy="-70.035996"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs4223">
+    <marker
+       style="overflow:visible"
+       id="TriangleStart"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <rect
+       x="376.94296"
+       y="210.61549"
+       width="11.743953"
+       height="95.123901"
+       id="rect7980" />
+    <marker
+       style="overflow:visible"
+       id="Dot-1"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-0"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-8"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-8"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-5" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-0-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-8-3"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-8-8"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-5-5" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-8"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-1"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-0"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-3" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-0-0"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-8-4"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-8-4"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-5-4" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-0-6-4"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-8-3-7"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-8-8-6"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-5-5-3" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-8-8"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-1-6"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-0-0"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-3-4" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-0-0-8"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-8-4-8"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-8-4-8"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-5-4-9" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Dot-1-0-6-4-7"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Dot"
+       markerWidth="5.6666665"
+       markerHeight="5.6666665"
+       viewBox="0 0 5.6666667 5.6666667"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         id="Dot1-2-8-3-7-7"
+         sodipodi:nodetypes="sssss" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-9-8-8-6-6"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="10"
+       markerHeight="11.111111"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-5-5-3-4" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(10.70015,-9.7826035)">
+    <g
+       id="g7896"
+       transform="translate(57.065048,-7.0976255)"
+       style="stroke:#000000">
+      <rect
+         style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524"
+         width="13.167396"
+         height="15.58748"
+         x="40.909084"
+         y="23.438498" />
+      <rect
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-7"
+         width="4.0667744"
+         height="15.587735"
+         x="54.035122"
+         y="23.43837" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         x="47.492783"
+         y="34.27177"
+         id="text7840"><tspan
+           sodipodi:role="line"
+           id="tspan7838"
+           style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+           x="47.492783"
+           y="34.27177">4</tspan></text>
+    </g>
+    <g
+       id="g7896-7"
+       transform="translate(83.192314,-7.0976255)"
+       style="stroke:#000000">
+      <rect
+         style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-1"
+         width="13.167396"
+         height="15.58748"
+         x="40.909084"
+         y="23.438498" />
+      <rect
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-7-1"
+         width="4.0667744"
+         height="15.587735"
+         x="54.035122"
+         y="23.43837" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         x="47.492783"
+         y="34.27177"
+         id="text7840-5"><tspan
+           sodipodi:role="line"
+           id="tspan7838-9"
+           style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+           x="47.492783"
+           y="34.27177">5</tspan></text>
+    </g>
+    <g
+       id="g7896-77"
+       transform="translate(109.31958,-7.0976255)"
+       style="stroke:#000000">
+      <rect
+         style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-6"
+         width="13.167396"
+         height="15.58748"
+         x="40.909084"
+         y="23.438498" />
+      <rect
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-7-7"
+         width="4.0667744"
+         height="15.587735"
+         x="54.035122"
+         y="23.43837" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         x="47.492783"
+         y="34.27177"
+         id="text7840-3"><tspan
+           sodipodi:role="line"
+           id="tspan7838-6"
+           style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+           x="47.492783"
+           y="34.27177">6</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text7978"
+       style="font-size:32px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;white-space:pre;shape-inside:url(#rect7980);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.755906;stroke-dasharray:none;stroke-opacity:1" />
+    <g
+       id="g7896-5"
+       transform="translate(135.44685,-7.0974938)"
+       style="stroke:#000000">
+      <rect
+         style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-63"
+         width="13.167396"
+         height="15.58748"
+         x="40.909084"
+         y="23.438498" />
+      <rect
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-7-9"
+         width="4.0667744"
+         height="15.587735"
+         x="54.035122"
+         y="23.43837" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         x="47.492783"
+         y="34.27177"
+         id="text7840-4"><tspan
+           sodipodi:role="line"
+           id="tspan7838-8"
+           style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+           x="47.492783"
+           y="34.27177">7</tspan></text>
+    </g>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot);marker-end:url(#TriangleStart)"
+       d="m 113.03142,24.002772 9.5379,-0.04747"
+       id="path8021"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1);marker-end:url(#TriangleStart-9)"
+       d="m 139.54986,24.002772 9.5379,-0.04747"
+       id="path8021-9"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-0);marker-end:url(#TriangleStart-9-8)"
+       d="m 165.67713,24.238161 9.5379,-0.04747"
+       id="path8021-9-0"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g8680"
+       transform="translate(83.907219,-28.93173)">
+      <circle
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="path8569"
+         cx="121.22891"
+         cy="53.093468"
+         r="2.5265293" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         d="m 119.61311,55.007464 3.17467,-3.885856"
+         id="path8634" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         d="m 122.79621,54.972973 -3.17467,-3.885856"
+         id="path8634-9" />
+    </g>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-0-6);marker-end:url(#TriangleStart-9-8-8)"
+       d="m 191.55887,24.222629 9.5379,-0.04747"
+       id="path8021-9-0-6"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g7896-7-7"
+       transform="translate(-51.509234,-7.0977589)"
+       style="stroke:#000000">
+      <rect
+         style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-1-8"
+         width="13.167396"
+         height="15.58748"
+         x="40.909084"
+         y="23.438498" />
+      <rect
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-7-1-5"
+         width="4.0667744"
+         height="15.587735"
+         x="54.035122"
+         y="23.43837" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         x="47.492783"
+         y="34.27177"
+         id="text7840-5-7"><tspan
+           sodipodi:role="line"
+           id="tspan7838-9-4"
+           style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+           x="47.492783"
+           y="34.27177">1</tspan></text>
+    </g>
+    <g
+       id="g7896-77-1"
+       transform="translate(-25.381974,-7.0977589)"
+       style="stroke:#000000">
+      <rect
+         style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-6-8"
+         width="13.167396"
+         height="15.58748"
+         x="40.909084"
+         y="23.438498" />
+      <rect
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-7-7-5"
+         width="4.0667744"
+         height="15.587735"
+         x="54.035122"
+         y="23.43837" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         x="47.492783"
+         y="34.27177"
+         id="text7840-3-9"><tspan
+           sodipodi:role="line"
+           id="tspan7838-6-7"
+           style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+           x="47.492783"
+           y="34.27177">2</tspan></text>
+    </g>
+    <g
+       id="g7896-5-5"
+       transform="translate(0.74530599,-7.0976269)"
+       style="stroke:#000000">
+      <rect
+         style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-63-3"
+         width="13.167396"
+         height="15.58748"
+         x="40.909084"
+         y="23.438498" />
+      <rect
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5524-7-9-8"
+         width="4.0667744"
+         height="15.587735"
+         x="54.035122"
+         y="23.43837" />
+      <text
+         xml:space="preserve"
+         style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         x="47.492783"
+         y="34.27177"
+         id="text7840-4-8"><tspan
+           sodipodi:role="line"
+           id="tspan7838-8-3"
+           style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+           x="47.492783"
+           y="34.27177">3</tspan></text>
+    </g>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-8);marker-end:url(#TriangleStart-9-0)"
+       d="m 4.848306,24.002639 9.5379,-0.04747"
+       id="path8021-9-8"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-0-0);marker-end:url(#TriangleStart-9-8-4)"
+       d="m 30.975575,24.238028 9.53791,-0.04747"
+       id="path8021-9-0-9"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g8680-6"
+       transform="translate(-50.794334,-28.931862)">
+      <circle
+         style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         id="path8569-4"
+         cx="121.22891"
+         cy="53.093468"
+         r="2.5265293" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         d="m 119.61311,55.007464 3.17467,-3.885856"
+         id="path8634-3" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+         d="m 122.79621,54.972973 -3.17467,-3.885856"
+         id="path8634-9-3" />
+    </g>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-0-6-4);marker-end:url(#TriangleStart-9-8-8-6)"
+       d="m 56.857325,24.222496 9.5379,-0.04747"
+       id="path8021-9-0-6-3"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       x="-7.1140032"
+       y="13.249703"
+       id="text3818"><tspan
+         id="tspan3816"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0"
+         x="-7.1140032"
+         y="13.249703"
+         sodipodi:role="line">xs</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       x="101.80744"
+       y="13.270684"
+       id="text3818-1"><tspan
+         id="tspan3816-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0"
+         x="101.80744"
+         y="13.270684"
+         sodipodi:role="line">ys</tspan></text>
+    <g
+       id="g1648"
+       class="fragment">
+      <g
+         id="g7896-7-7-3"
+         transform="translate(-9.92576,35.477611)"
+         style="stroke:#000000">
+        <rect
+           style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+           id="rect5524-1-8-0"
+           width="13.167396"
+           height="15.58748"
+           x="40.909084"
+           y="23.438498" />
+        <rect
+           style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+           id="rect5524-7-1-5-3"
+           width="4.0667744"
+           height="15.587735"
+           x="54.035122"
+           y="23.43837" />
+        <text
+           xml:space="preserve"
+           style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+           x="47.492783"
+           y="34.27177"
+           id="text7840-5-7-0"><tspan
+             sodipodi:role="line"
+             id="tspan7838-9-4-9"
+             style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+             x="47.492783"
+             y="34.27177">1</tspan></text>
+      </g>
+      <g
+         id="g7896-77-1-2"
+         transform="translate(16.2015,35.477611)"
+         style="stroke:#000000">
+        <rect
+           style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+           id="rect5524-6-8-5"
+           width="13.167396"
+           height="15.58748"
+           x="40.909084"
+           y="23.438498" />
+        <rect
+           style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+           id="rect5524-7-7-5-4"
+           width="4.0667744"
+           height="15.587735"
+           x="54.035122"
+           y="23.43837" />
+        <text
+           xml:space="preserve"
+           style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+           x="47.492783"
+           y="34.27177"
+           id="text7840-3-9-0"><tspan
+             sodipodi:role="line"
+             id="tspan7838-6-7-5"
+             style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+             x="47.492783"
+             y="34.27177">2</tspan></text>
+      </g>
+      <g
+         id="g7896-5-5-9"
+         transform="translate(42.32878,35.477743)"
+         style="stroke:#000000">
+        <rect
+           style="fill:#c6e9af;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+           id="rect5524-63-3-4"
+           width="13.167396"
+           height="15.58748"
+           x="40.909084"
+           y="23.438498" />
+        <rect
+           style="fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.199481;stroke-dasharray:none;stroke-opacity:1"
+           id="rect5524-7-9-8-6"
+           width="4.0667744"
+           height="15.587735"
+           x="54.035122"
+           y="23.43837" />
+        <text
+           xml:space="preserve"
+           style="font-size:8.46667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:center;text-anchor:middle;fill:#77ae54;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
+           x="47.492783"
+           y="34.27177"
+           id="text7840-4-8-9"><tspan
+             sodipodi:role="line"
+             id="tspan7838-8-3-2"
+             style="font-size:8.46667px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2"
+             x="47.492783"
+             y="34.27177">3</tspan></text>
+      </g>
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-8-8);marker-end:url(#TriangleStart-9-0-0)"
+         d="m 46.43178,66.578009 9.5379,-0.04747"
+         id="path8021-9-8-2"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-0-0-8);marker-end:url(#TriangleStart-9-8-4-8)"
+         d="m 72.559049,66.813398 9.53791,-0.04747"
+         id="path8021-9-0-9-4"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Dot-1-0-6-4-7);marker-end:url(#TriangleStart-9-8-8-6-6)"
+         d="M 98.440799,66.797866 104.55783,31.928353"
+         id="path8021-9-0-6-3-8"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+         x="34.827915"
+         y="81.961197"
+         id="text3818-8"><tspan
+           id="tspan3816-9"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:monospace;-inkscape-font-specification:monospace;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0"
+           x="34.827915"
+           y="81.961197"
+           sodipodi:role="line">zs</tspan></text>
+    </g>
+  </g>
+</svg>
+</p>
     </section>
 
     <section>
@@ -144,7 +2022,12 @@
         <li>La lista <code>ys</code> forma parte de <code>zs</code>, pero <code>ys</code> sigue siendo accesible de manera independiente.</li>
       </ul>
     </section>
+  </section>
+  <section>
     
+    <section>
+      <h2>Listas funcionales</h2>
+    </section>
     
     <section>
       <h3>Definición del tipo <code>List&lt;T&gt;</code></h3>
@@ -152,16 +2035,16 @@
         <li>Definimos una clase abstracta vacía:
         </li>
         <pre><code class="language-kotlin" data-trim data-noescape>
-                        <span class="arrow_box_down" style="position:relative;top:-5px">Tipo de los elementos</span>
+                        <span class="arrow_box_down fragment" style="position:relative;top:-5px"  data-fragment-index="2">Tipo de los elementos</span>
           abstract class List&lt;out T&gt;
         </code></pre>
-        <li>Definimos dos clases que la extienden:</li>
+        <li class="fragment" data-fragment-index="3">Definimos dos clases que la extienden:</li>
         <div style="display:flex">
-          <div style="width:70%">
+          <div style="width:70%" class="fragment"data-fragment-index="4">
           <pre><code class="language-kotlin" data-trim data-noescape>
           object Nil : List&lt;Nothing&gt;()
           </code></pre>
-          <pre><code class="language-kotlin" data-trim data-noescape>
+          <pre class="fragment" data-fragment-index="6"><code class="language-kotlin" data-trim data-noescape>
           data class Cons&lt;T&gt;(
               val head: T, 
               val tail: List&lt;T&gt;
@@ -170,9 +2053,9 @@
           </div>
           <div>
             
-            <div><img src="04/ListaVacia.svg"></div>
+            <div class="fragment" data-fragment-index="5"><img src="04/ListaVacia.svg"></div>
             
-            <div><img src="04/ListaNoVacia.svg"></div>
+            <div class="fragment" data-fragment-index="7"><img src="04/ListaNoVacia.svg"></div>
           </div>
         </div>
         
@@ -183,7 +2066,7 @@
       <h3>Ejemplo: lista <code>[1, 2, 3]</code></h3>
       <p>¿Cómo construimos la siguiente lista?</p>
       <p><img src="04/Lista123.svg"></p>
-      <pre><code class="language-kotlin" data-trim data-noescape>
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
         val xs = Cons(1, Cons(2, Cons(3, Nil)))
       </code></pre>
     </section>
@@ -198,7 +2081,7 @@
         </li>
         <li>Se declara como <code>object</code> porque solamente necesitamos un objeto en memoria que represente la lista vacía.
         </li>
-        <li>El objeto tiene tipo <code>List&lt;Nothing&gt;</code>, porque <code>Nothing</code> es subtipo de cualquier otro.
+        <li class="fragment">El objeto tiene tipo <code>List&lt;Nothing&gt;</code>, porque <code>Nothing</code> es subtipo de cualquier otro.
         <ul>
           <li>Por tanto, <code>Nil</code> también puede utilizarse donde se requiera un <code>List&lt;Int&gt;</code> o un <code>List&lt;String&gt;</code>.</li>
         </ul>
@@ -218,8 +2101,10 @@
         data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()        
         </code></pre>
         </li>
+        <div class="fragment">
         <li>El primer elemento se encuentra en el atributo <code>head</code> y recibe el nombre de <strong>cabeza</strong> de la lista.</li>
         <li>El atributo <code>tail</code> representa la <strong>cola</strong> de la lista, y puede ser <code>Nil</code>, u otra instancia de <code>Cons</code>.</li>        
+        </div>
       </ul>
     </section>
     
@@ -231,7 +2116,7 @@
         fun seq(from: Int, to: Int): List&lt;Int&gt; =
             if (from &gt;= to) Nil else Cons(from, seq(from + 1, to))      
       </code></pre>
-      <pre><code class="no-highlight" data-trim data-noescape>
+      <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
       seq(1, 5)
       &rarr; Cons(1, seq(2, 5))
       &rarr; Cons(1, Cons(2, seq(3, 5)))
@@ -239,9 +2124,16 @@
       &rarr; Cons(1, Cons(2, Cons(3, Cons(4, seq(5, 5)))))
       &rarr; Cons(1, Cons(2, Cons(3, Cons(4, Nil))))        
       </code></pre></li>
-      <li>La llamada <code>seq(0, N)</code> ahora tiene coste <em class="rojo">O(N)</em>.</li>
+      <li class="fragment">La llamada <code>seq(0, N)</code> ahora tiene coste <em class="rojo">O(N)</em>.</li>
       </ul>
     </section>
+    
+  </section>
+  <section>
+
+    <section>
+      <h2>Operaciones básicas</h2>
+    </section>    
     
     <section>
       <h3>Operaciones con <code>List&lt;T&gt;</code></h3>
@@ -254,7 +2146,7 @@
           data class Cons&lt;T&gt;(val head: T, val tail: <span class="hl">List&lt;T&gt;</span>) : List&lt;T&gt;() 
         </code></pre>
         </li>
-        <li>Las funciones que recorran una lista también serán recursivas.</li>
+        <li>Las funciones que realicen recorridos sobre listas también serán recursivas.</li>
       </ul>
     </section>
     
@@ -263,30 +2155,30 @@
       <ul>
         <li>Definimos un método que calcule el número de elementos de la lista:</li>
         <pre><code class="language-kotlin" data-trim data-noescape>
-          fun &lt;T&gt; List&lt;T&gt;.length(): Int = when (this) { <span class="arrow_box_left">Error de compilación</span>
+          fun &lt;T&gt; List&lt;T&gt;.length(): Int = when (this) { <span class="arrow_box_left fragment">Error de compilación</span>
               is Nil -> 0
               is Cons -> 1 + this.tail.length()
           }          
         </code></pre>
-        <li>
+        <li class="fragment">
         La distinción de casos no es exhaustiva, y el compilador exige una rama <code>else</code>, ya que podría haber más subclases de <code>List&lt;T&gt;</code>.
         </li>
-        <li>¿Cómo lo arreglamos? Hay dos maneras.</li>
+        <li class="fragment">¿Cómo lo arreglamos? Hay dos maneras.</li>
       </ul>
     </section>
     
     <section>
       <h3>Ejemplo: método <code>length()</code></h3>
       <ol>
-        <li>Lanzar una excepción en el caso <code>else</code>:
+        <li class="fragment">Lanzar una excepción en el caso <code>else</code>:
         <pre><code class="language-kotlin" data-trim data-noescape>
 fun &lt;T&gt; List&lt;T&gt;.length(): Int = when (this) {
     is Nil -> 0
     is Cons -> 1 + tail.length()
-    else -> throw UnsupportedOperationException()   <span class="arrow_box_left">¡Feo!</span>
+    else -> throw UnsupportedOperationException()   <span class="arrow_box_left fragment">¡Feo!</span>
 }
         </code></pre></li>
-        <li>Prohibir que <code>List&lt;T&gt;</code> tenga más subclases, aparte de las ya definidas: <code>Nil</code> y <code>Cons</code>.
+        <li class="fragment">Prohibir que <code>List&lt;T&gt;</code> tenga más subclases, aparte de las ya definidas: <code>Nil</code> y <code>Cons</code>.
         <ul>
           <li>Es lo que haremos a continuación.</li>
         </ul></li>
@@ -303,8 +2195,8 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
         
       </code></pre>
       <ul>
-        <li>Mediante <code>sealed</code> indicamos que la clase <code>List&lt;T&gt;</code> es abstracta, pero se prohibe heredar de ella en cualquier otro sitio que no sea el módulo en el que está definida.</li>
-        <li>De este modo, el compilador puede saber que la clase un objeto de tipo <code>List&lt;T&gt;</code> ha de ser, o bien <code>Nil</code>, o bien una instancia de <code>Cons</code>.</li>
+        <li class="fragment">Mediante <code>sealed</code> indicamos que la clase <code>List&lt;T&gt;</code> es abstracta, pero se prohibe heredar de ella en cualquier otro sitio que no sea el módulo en el que está definida.</li>
+        <li class="fragment">De este modo, el compilador puede saber que la clase un objeto de tipo <code>List&lt;T&gt;</code> ha de ser, o bien <code>Nil</code>, o bien una instancia de <code>Cons</code>.</li>
       </ul>
     </section>
     
@@ -317,6 +2209,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
             is Cons -> 1 + this.tail.length()
         }          
       </code></pre>
+      <div class="fragment">
       <p>Versión con parámetros acumuladores y recursión de cola:</p>
       <pre><code class="language-kotlin" data-trim data-noescape>
         fun &lt;T&gt; List&lt;T&gt;.length(): Int {
@@ -327,7 +2220,8 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
             return this.lengthAc(0)
         }        
       </code></pre>
-      <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
+      </div>
+      <p class="fragment">Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
     </section>
     
     
@@ -335,13 +2229,13 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
       <h3>Ejemplo: método <code>length()</code></h3>
       <ul>
         <li>¿Coste <em class="rojo">O(N)</em> solo para obtener la longitud de la lista?</li>
-        <li>Es posible mejorar ese coste almacenando un atributo en la clase <code>List</code> que contenga la longitud de la lista.
+        <li class="fragment">Es posible mejorar ese coste almacenando un atributo en la clase <code>List</code> que contenga la longitud de la lista.
         <ul>
           <li><em>(Lo dejamos como ejercicio)</em></li>
         </ul></li>
-        <li>Con esto podemos obtener la longitud de una lista en coste <em>O(1)</em>.
+        <li class="fragment">Con esto podemos obtener la longitud de una lista en coste <em>O(1)</em>.
         <ul>
-          <li>...a costa de guardar más información en cada celda.</li>
+          <li>...a costa de guardar un atributo adicional en cada celda.</li>
         </ul>
         </li>
       </ul>
@@ -357,6 +2251,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
           is Cons -> this.head + this.tail.sum()
       }        
       </code></pre>
+      <div class="fragment">
       <p>Con recursión de cola y parámetro acumulador:</p>
       <pre><code class="language-kotlin" data-trim data-noescape>
       fun List&lt;Int&gt;.sum(): Int {
@@ -367,11 +2262,19 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
           return this.sumRec(0)
       }
       </code></pre>
-      <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
+      </div>
+      <p class="fragment">Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
     </section>
+  </section>
+  <section>
     
     <section>
-      <h3>Ejemplo: concatenar dos listas</h3>
+      <h2>Concatenación de listas</h2>
+    </section>    
+    
+    
+    <section>
+      <h3>Concatenar dos listas</h3>
       <ul>
         <li>Definimos una función <code>plus</code> que, dadas dos listas <code>xs   </code> e <code>ys</code>, devuelva el resultado de concatenar ambas:
         <pre><code class="language-kotlin" data-trim data-noescape>          
@@ -399,7 +2302,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
     </section>
     
     <section>
-      <h3>Ejemplo: concatenar dos listas</h3>
+      <h3>Concatenar dos listas</h3>
       <pre><code class="language-kotlin" data-trim data-noescape>
         val xs = Cons(1, Cons(2, Cons(3, Nil)))
         val ys = Cons(4, Cons(5, Nil))
@@ -408,26 +2311,28 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
       <p>
       <img src="04/ConcatPersistente2.svg">
       </p>
-      <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista pasada como primer parámetro.</p>
+      <p class="fragment">Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista pasada como primer parámetro.</p>
     </section>
     
     <section>
-      <h3>Ejemplo: concatenar dos listas</h3>
+      <h3>Concatenar dos listas</h3>
       <p>Podemos hacer que <code>plus</code> sea más fácil de utilizar si lo declaramos como una función de extensión infija:</p>
         <pre><code class="language-kotlin" data-trim data-noescape>          
-        infix fun &lt;T&gt; List&lt;T&gt;.plus(other: List&lt;T&gt;): List&lt;T&gt; = when (this) {
+        <span class="hl">infix</span> fun &lt;T&gt; List&lt;T&gt;.plus(other: List&lt;T&gt;): List&lt;T&gt; = when (this) {
             is Nil -> other
             is Cons -> Cons(this.head, this.tail plus ys)
         }
         </code></pre></li>
+        <div class="fragment">
         <p>Ejemplo de uso:</p>
         <pre><code class="language-kotlin" data-trim data-noescape>
         val zs = xs plus ys          
-        </code></pre>      
+        </code></pre>
+        </div>
     </section>
     
     <section>
-      <h3>Ejemplo: concatenar dos listas</h3>
+      <h3>Concatenar dos listass</h3>
       <p>Incluso mejor: podemos sobrecargar el operador <code>+</code> en Kotlin, declarando la función <code>plus</code> como <code>operator</code>:</p>
         <pre><code class="language-kotlin" data-trim data-noescape>          
         <span class="hl">operator</span> fun &lt;T&gt; List&lt;T&gt;.plus(other: List&lt;T&gt;): List&lt;T&gt; = when (this) {
@@ -435,20 +2340,29 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
             is Cons -> Cons(this.head, this.tail + ys)
         }
         </code></pre></li>
+        <div class="fragment">
         <p>Ejemplo de uso:</p>
         <pre><code class="language-kotlin" data-trim data-noescape>
-        val zs = xs + ys          
+        val zs = xs + ys              
         </code></pre>
-        <p>Sobrecarga de operadores en Kotlin: <a href="https://kotlinlang.org/docs/operator-overloading.html">[+]</a>
+        </div>
+        <p class="fragment">Sobrecarga de operadores en Kotlin: <a href="https://kotlinlang.org/docs/operator-overloading.html">[+]</a>
     </section>
     
+  </section>
+  <section>
+    
     <section>
-      <h3>Ejemplo: invertir una lista</h3>
+      <h2>Inversión de listas</h2>
+    </section>    
+        
+    <section>
+      <h3>Invertir una lista</h3>
       <ul>
         <li>Implementamos un método <code>reversed()</code> que invierte los elementos de la lista <code>this</code>.</li>
         <li>Por ejemplo, si <code>xs</code> denota la lista <code>[1, 2, 3]</code>, <code>xs.reversed()</code> devuelve la lista <code>[3, 2, 1]</code>.</li>
       </ul>
-      <pre><code class="language-kotlin" data-trim data-noescape>
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
         fun &lt;T&gt; List&lt;T&gt;.reversed(): List&lt;T&gt; = when (this) {
             is Nil -> Nil
             is Cons -> tail.reversed() + Cons(head, Nil)
@@ -457,14 +2371,14 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
     </section>
     
     <section>
-      <h3>Ejemplo: invertir una lista</h3>
+      <h3>Invertir una lista</h3>
       <pre><code class="language-kotlin" data-trim data-noescape>
         fun &lt;T&gt; List&lt;T&gt;.reversed(): List&lt;T&gt; = when (this) {
             is Nil -> Nil
             is Cons -> tail.reversed() + Cons(head, Nil)
         }
       </code></pre>
-      <pre><code class="no-highlight" data-trim data-noescape>
+      <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
         Cons(1, Cons(2, Cons(3, Nil))).reversed()
         &rarr; Cons(2, Cons(3, Nil)).reversed() + Cons(1, Nil)
         &rarr; (Cons(3, Nil).reversed() + Cons(2, Nil)) + Cons(1, Nil)
@@ -479,7 +2393,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
     </section>
     
     <section>
-      <h3>Ejemplo: invertir una lista</h3>
+      <h3>Invertir una lista</h3>
       <pre><code class="language-kotlin" data-trim data-noescape>
         fun &lt;T&gt; List&lt;T&gt;.reversed(): List&lt;T&gt; = when (this) {
             is Nil -> Nil
@@ -501,7 +2415,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
     </section>    
     
     <section>
-      <h3>Ejemplo: invertir una lista</h3>
+      <h3>Invertir una lista</h3>
       <pre><code class="language-kotlin" data-trim data-noescape>
         fun &lt;T&gt; List&lt;T&gt;.reversed(): List&lt;T&gt; = when (this) {
             is Nil -> Nil
@@ -510,13 +2424,13 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
       </code></pre>
       <ul>
         <li>¿Cuál es el coste del algoritmo?</li>
-        <li>Recordemos que la operación <code>xs + ys</code> tiene coste lineal con respecto a la longitud lista <code>xs</code>.</li>
-        <li>Si <code>zs</code> es una lista de tamaño <em>N</em>, la llamada a <code>zs.reversed()</code> hace <em>N</em> llamadas al operador <code>+</code>
+        <li class="fragment">Recordemos que la operación <code>xs + ys</code> tiene coste lineal con respecto a la longitud lista <code>xs</code>.</li>
+        <li class="fragment">Si <code>zs</code> es una lista de tamaño <em>N</em>, la llamada a <code>zs.reversed()</code> hace <em>N</em> llamadas al operador <code>+</code>
         <ul>
-          <li>...cada una con una lista cada vez más grande que la anterior.</li>
+          <li class="fragment">...cada una con una lista cada vez más grande que la anterior.</li>
         </ul>
         </li>
-        <li>Por tanto, el coste es <em class="rojo">O(N<sup>2</sup>)</em>.</li>
+        <li class="fragment">Por tanto, el coste es <em class="rojo">O(N<sup>2</sup>)</em>.</li>
       </ul>
     </section>
     
@@ -526,10 +2440,10 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
         <li>Es posible mejorar el coste mediante un parámetro acumulador:
         <pre><code class="language-kotlin" data-trim data-noescape>
           fun &lt;T&gt; List&lt;T&gt;.reversed(): List&lt;T&gt; {          
-              tailrec fun List&lt;T&gt;.reversedRec(ac: List&lt;T&gt;): List&lt;T&gt; = when(this) {
-                  is Nil -> ac
-                  is Cons -> tail.reversedRec(Cons(head, ac))
-              }
+             tailrec fun List&lt;T&gt;.reversedRec(ac: List&lt;T&gt;): List&lt;T&gt; = when(this) {
+                 is Nil -> ac
+                 is Cons -> tail.reversedRec(Cons(head, ac))
+             }
               
               // Llamada inicial:
               return reversedRec(Nil)
@@ -584,7 +2498,14 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
           &rarr; [].reversedRec([3, 2, 1])
           &rarr; [3, 2, 1]
         </code></pre>
-        <p>Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
+        <p class="fragment">Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
+    </section>
+    
+  </section>
+  <section>
+
+    <section>
+      <h2>Funciones parciales</h2>
     </section>
     
     <section>
@@ -593,7 +2514,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
         <li>Implementamos una función que devuelva el último elemento de una lista:
         <pre><code class="language-kotlin" data-trim data-noescape>
           fun &lt;T&gt; List&lt;T&gt;.last(): T = when(this) {
-            is Nil -> ???                 <span class="arrow_box_left">¿Qué devolvemos si la lista es vacía?</span>
+            is Nil -> ???                 <span class="arrow_box_left fragment">¿Qué devolvemos si la lista es vacía?</span>
             is Cons -> when (tail) {
               is Nil -> head
               is Cons -> tail.last()
@@ -601,8 +2522,8 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
           }
         </code></pre>
         </li>
-        <li>La función es parcial: solo puede aplicarse a listas no vacías.</li>
-        <li>¿Qué hacemos si llamamos a <code>last()</code> sobre una lista vacía.</li>
+        <li class="fragment">La función es parcial: solo puede aplicarse a listas no vacías.</li>
+        <li class="fragment">¿Qué hacemos si llamamos a <code>last()</code> sobre una lista vacía.</li>
         
       </ul>
     </section>
@@ -611,18 +2532,18 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
       <h3>¿Cómo tratar las funciones parciales?</h3>
       <p>Hay varias posibilidades:</p>
       <ol>
-        <li>Lanzar una excepción en el caso en el que <code>this</code> es la lista vacía.
+        <li class="fragment">Lanzar una excepción en el caso en el que <code>this</code> es la lista vacía.
         <ul>
-          <li>Evitaremos las excepciones en esta asignatura.</li>
+          <li class="fragment">Evitaremos las excepciones en esta asignatura.</li>
         </ul>
         </li>
-        <li>Devolver un tipo <code>Option&lt;T&gt;</code>, o devolver <code>null</code>.
+        <li class="fragment">Devolver un tipo <code>Option&lt;T&gt;</code>, o devolver <code>null</code>.
         <ul>
-          <li>Veremos ambas alternativas más adelante (pero no ahora).</li>
+          <li class="fragment">Veremos ambas alternativas más adelante (pero no ahora).</li>
         </ul></li>
-        <li>Prohibir las llamadas con listas no vacías.
+        <li class="fragment">Prohibir las llamadas con listas no vacías.
         <ul>
-          <li>Es lo que haremos a continuación.</li>
+          <li class="fragment">Es lo que haremos a continuación.</li>
         </ul>
         </li>
       </ol>
@@ -645,8 +2566,8 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
       <h3>¿Cómo tratar las funciones parciales?</h3>
       <ul>
         <li>Si queremos que una función solamente sea aplicable a una lista no vacía, basta declarar el tipo del parámetro (o receptor) como <code>Cons&lt;T&gt;</code>, en lugar de <code>List&lt;T&gt;</code>.</li>
-        <li>Como el nombre <code>Cons&lt;T&gt;</code> no es demasiado ilustrativo, Kotlin nos permite declarar tipos nuevos como sinónimos de otros:
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <li class="fragment">Como el nombre <code>Cons&lt;T&gt;</code> no es demasiado ilustrativo, Kotlin nos permite declarar tipos nuevos como sinónimos de otros:
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
           typealias NonEmptyList&lt;T&gt; = Cons&lt;T&gt;
         </code></pre>
         </li>
@@ -665,9 +2586,15 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
         </code></pre>
     </section>
     
+  </section>
+  <section>
     
     <section>
-      <h3>Librería <code>collections.immutable</code></h3>
+      <h2>Biblioteca <code>collections.immutable</code></h2>
+    </section>
+    
+    <section>
+      <h3>Biblioteca <code>collections.immutable</code></h3>
       <ul>
         <li>La biblioteca estándar de Kotlin no proporciona soporte para EDs persistentes.
         <ul>
@@ -675,7 +2602,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
           <li>Por ejemplo, <code>listOf(...)</code> devuelve un <code>ArrayList</code>.</li>
         </ul>
         </li>
-        <li>Sin embargo, existe una biblioteca separada para EDs persistentes:
+        <li class="fragment">Sin embargo, existe una biblioteca separada para EDs persistentes:
         <a href="https://github.com/Kotlin/kotlinx.collections.immutable">kotlinx.collections.immutable</a>
         </li>
       </ul>
@@ -712,7 +2639,7 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
     <section>
       <h3>Ejemplo de uso</h3>
       <ul>
-        <li>El objeto devuelto por <code>persistentListOf()</code> implementa la interfaz <code>List&lt;T&gt;</code>, por lo que es posible utilizar cualquier función de la biblioteca de Kotlin <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/">[+]</a>.
+        <li>El objeto devuelto por <code>persistentListOf()</code> implementa la interfaz <code>List&lt;T&gt;</code> de la biblioteca de Kotlin, por lo que es posible utilizar cualquier función de esta interfaz <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/">[+]</a>.
         <pre><code class="language-kotlin" data-trim data-noescape>
           val l1 = persistentListOf(1, 2, 3)
           val l2 = persistentListOf(4, 5)
@@ -725,39 +2652,8 @@ data class Cons&lt;T&gt;(val head: T, val tail: List&lt;T&gt;) : List&lt;T&gt;()
       </ul>
     </section>
     
+  </section>
     
-    
-    
-    
-    
-    <!--
-    <section>
-      <h3>Costes de acceso a una lista</h3>
-      <ul>
-        <li>¿Qué coste tiene acceder al primer elemento de una lista?
-        <pre><code class="language-kotlin" data-trim data-noescape>
-          fun &lt;T&gt; NonEmptyList&lt;T&gt;.first(): T = <span class="fragment">head</span>
-        </code></pre>
-        <p class="fragment">Coste: <em class="rojo">O(1)</em></p>
-        </li>
-        <li>¿Qué coste tiene acceder al último elemento de una lista?
-        <pre><code class="language-kotlin" data-trim data-noescape>
-          fun &lt;T&gt; NonEmptyList&lt;T&gt;.last(): T = <span class="fragment">when (tail) {
-              is Nil -> head
-              is Cons -> tail.last()
-          }</span>
-        </code></pre>
-        <p class="fragment">Coste: <em class="rojo">O(N)</em>, donde <em>N</em> es la longitud de la lista.</p>
-        </li>        
-        
-      </ul>
-    </section>
-    
-    <section>
-      <h3>Costes de acceso a una lista</h3>
-      
-    </section>
-    -->
     
     
         <section>
