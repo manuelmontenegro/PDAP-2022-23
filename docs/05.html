@@ -57,8 +57,8 @@
     <section>
       <h3>Contar los elementos pares de una lista</h3>
       <ul>
-        <li>Suponiendo que <code>this</code> es una lista de enteros, implementamos un método extensión <code>countEven()</code> que devuelva el número elementos pares que contiene.
-      <pre><code class="language-kotlin" data-trim data-noescape>
+        <li>Suponiendo que <code>this</code> es una lista de enteros, queremos implementar un método extensión <code>countEven()</code> que devuelva el número elementos pares que contiene.
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
         fun List&lt;Int&gt;.countEven(): Int = when (this) {
             is Nil -> 0
             is Cons -> 
@@ -66,7 +66,7 @@
         }
       </code></pre>
         </li>
-        <li>Por ejemplo:
+        <li class="fragment">Por ejemplo:
         <pre><code class="language-kotlin" data-trim data-noescape>
           val xs = persistentListOf(1, 6, 3, 2, 0, 4)
           println(xs.countEven())   // &rarr; 4
@@ -78,8 +78,8 @@
     <section>
       <h3>Contar los elementos positivos de una lista</h3>
       <ul>
-        <li>Implementamos un método extensión <code>countPositive()</code> que devuelva el número elementos positivos que contiene la lista <code>this</code>.
-      <pre><code class="language-kotlin" data-trim data-noescape>
+        <li>Ahora queremos implementar un método extensión <code>countPositive()</code> que devuelva el número elementos positivos que contiene la lista <code>this</code>.
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
         fun List&lt;Int&gt;.countPositive(): Int = when (this) {
             is Nil -> 0
             is Cons -> 
@@ -87,7 +87,7 @@
         }
       </code></pre>
         </li>
-        <li>Por ejemplo:
+        <li class="fragment">Por ejemplo:
         <pre><code class="language-kotlin" data-trim data-noescape>
           val xs = persistentListOf(1, 6, -3, 2, 0, 4, 1, 0, -3)
           println(xs.countPositive())   // &rarr; 5
@@ -99,8 +99,8 @@
     <section>
       <h3>Contar las cadenas no vacías de una lista</h3>
       <ul>
-        <li>Dada una lista de cadenas, implementamos un método extensión <code>countNonEmpty()</code> que devuelva el número de cadenas no vacías que contiene:
-      <pre><code class="language-kotlin" data-trim data-noescape>
+        <li>Dada una lista de cadenas, queremos escribir un método extensión <code>countNonEmpty()</code> que devuelva el número de cadenas no vacías que contiene:
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
       fun List&lt;String&gt;.countNonEmpty(): Int = when (this) {
         is Nil -> 0
         is Cons -> 
@@ -108,7 +108,7 @@
       }
       </code></pre>
         </li>
-        <li>Por ejemplo:
+        <li class="fragment">Por ejemplo:
         <pre><code class="language-kotlin" data-trim data-noescape>
         val ys = persistentListOf("Foo", "", "Bar", "", "")
         println(ys.countNonEmpty())   //   &rarr; 2
@@ -147,19 +147,19 @@
       <ul>
         <li>Las funciones son casi idénticas, excepto:
         <ul>
-          <li>El tipo de la lista</li>
-          <li>La condición del <code>if</code></li>
+          <li class="fragment">El tipo de la lista.</li>
+          <li class="fragment">La condición del <code>if</code>.</li>
         </ul>
         </li>
-        <li>¿Es posible generalizar las tres funciones en una sola?
+        <li class="fragment">¿Es posible generalizar las tres funciones en una sola?
         <ul>
-          <li>Llamaremos a la función genérica <code>count()</code>.</li>
-          <li>Para el tipo de la lista podemos utilizar tipos genéricos.
+          <li class="fragment">Llamaremos a la función genérica <code>count()</code>.</li>
+          <li class="fragment">Para el tipo de la lista podemos utilizar tipos genéricos.
           <pre><code class="language-kotlin" data-trim data-noescape>
             fun List&lt;<span class="hl">T</span>&gt;.count(): Int = ...
           </code></pre>
           </li>
-          <li>La condición del <code>if</code> es más complicada...</li>
+          <li class="fragment">La condición del <code>if</code> es más complicada...</li>
         </ul>
         </li>
       </ul>
@@ -177,11 +177,11 @@
         if (<span class="hl">head != ""</span>) ...
       </code></pre>
       <ul>
-        <li>Son expresiones booleanas que dependen de <code>head</code>.</li>
-        <li>Podrían reemplazarse por una <strong>llamada a función</strong> que reciba <code>head</code> y devuelva un valor booleano.</li>
-        <li>Esa función debería ser un parámetro de <code>count()</code>.</li>
+        <li class="fragment">Son expresiones booleanas que dependen de <code>head</code>.</li>
+        <li class="fragment">Podrían reemplazarse por una <strong>llamada a función</strong> que reciba <code>head</code> y devuelva un valor booleano.</li>
+        <li class="fragment">Esa función debería ser un parámetro de <code>count()</code>.</li>
       </ul>
-      <p class="info_box">🤔 ¿Es posible pasar una función como parámetro?</p>
+      <p class="info_box fragment">🤔 ¿Es posible pasar una función como parámetro?</p>
     </section>
     
     <section>
@@ -208,7 +208,7 @@
         <ul>
           <li>Es posible pasar funciones como parámetro.</li>
           <li>Es posible devolver funciones como resultado.</li>
-          <li>Es posible almacenar funciones en variables, listas, etc..</li>
+          <li>Es posible almacenar funciones en variables, listas, etc.</li>
         </ul>
         </li>
       </ul>
@@ -219,19 +219,19 @@
       <h3>Funciones de orden superior</h3>
       <p>Una función de <strong>orden superior</strong> es una función que recibe una o más funciones como parámetro, o bien devuelve una función como resultado.</p>
       
-      <p>En este caso, el método <code>count()</code> es un método de orden superior.</p>
+      <p class="fragment">En este caso, el método <code>count()</code> es un método de orden superior.</p>
     </section>
     
     <section>
       <h3>En los lenguajes de programación</h3>
       <ul>
-        <li>La gran mayoría de lenguajes funcionales permiten funciones de orden superior.</li>
-        <li>Los lenguajes imperativos populares lo permiten directa o indirectamente mediante distintas técnicas:
+        <li>La gran mayoría de lenguajes <strong>funcionales</strong> permiten funciones de orden superior.</li>
+        <li class="fragment">Los lenguajes imperativos populares lo permiten directa o indirectamente mediante distintas técnicas:
           <ul>
-            <li>Mediante <strong>interfaces funcionales</strong>: Kotlin, Java.</li>
-            <li>Mediante <strong>objetos función</strong>: Python, C++.</li>
-            <li>Mediante <strong>punteros a función</strong>: C.</li>
-            <li>Como <strong>valores propios del lenguaje</strong>: JavaScript.</li>
+            <li class="fragment">Mediante <strong>interfaces funcionales</strong>: Kotlin, Java.</li>
+            <li class="fragment">Mediante <strong>objetos función</strong>: Python, C++.</li>
+            <li class="fragment">Mediante <strong>punteros a función</strong>: C.</li>
+            <li class="fragment">Como <strong>valores propios del lenguaje</strong>: JavaScript.</li>
           </ul>
         </li>
       </ul>
@@ -254,13 +254,13 @@
       }
       </code></pre>
       <ul>
-        <li>En programación orientada a objetos podemos exigir que el parámetro <code>f</code> implemente una interfaz:
+        <li class="fragment">En programación orientada a objetos podemos exigir que el parámetro <code>f</code> implemente una interfaz:
         <pre><code class="language-kotlin" data-trim data-noescape>
           interface Tester&lt;T&gt; {
             fun test(elem: T): Boolean
           }
         </code></pre>
-      <pre><code class="language-kotlin" data-trim data-noescape>
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
       fun List&lt;T&gt;.count(f: <span class="hl">Tester&lt;T&gt;</span>): Int = when (this) {
         is Nil -> 0
         is Cons -> 
@@ -275,17 +275,17 @@
       <h3>Uso del método <code>count()</code></h3>
       <ul>
         <li>Una vez definida la interfaz, hemos de crear objetos que la implementen:
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
         class Even : Tester&lt;Int&gt; {
           override fun test(elem: Int) = elem % 2 == 0
         }
         </code></pre>
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
         class Positive : Tester&lt;Int&gt; {
           override fun test(elem: Int) = elem > 0
         }
         </code></pre>
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
         class NonEmpty : Tester&lt;String&gt; {
           override fun test(elem: String) = elem != ""
         }
@@ -315,7 +315,7 @@
       }        
       </code></pre>
       
-      <pre><code class="language-kotlin" data-trim data-noescape>
+      <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
       val xs = persistentListOf(1, 6, -3, 2, 0, 4, 1, 0, -3)
       
       println(xs.count(MultipleOf(2)))  // &rarr; 5
@@ -329,10 +329,10 @@
       <ul>
         <li>En Java y Kotlin, una <strong>interfaz funcional</strong> es una clase abstracta que contiene un único método abstracto.
         <ul>
-          <li>Las interfaces funcionales también reciben el nombre de interfaces SAM (<em>Single Abstract Method</em>).</li>
+          <li class="fragment">Las interfaces funcionales también reciben el nombre de interfaces SAM (<em>Single Abstract Method</em>).</li>
         </ul>
         <pre><code class="language-kotlin" data-trim data-noescape>
-        fun interface Tester&lt;T&gt; {
+        <span class="hl">fun</span> interface Tester&lt;T&gt; {
             fun test(elem: T): Boolean
         }          
         </code></pre>
@@ -345,8 +345,8 @@
       <ul>
         <li>Java y Kotlin proporcionan facilidades para expresar funciones de orden superior de manera concisa:
         <ul>
-          <li>&lambda;-expresiones: en Java y Kotlin.</li>
-          <li>Tipos funcionales: Kotlin.</li>
+          <li class="fragment">&lambda;-expresiones: en Java y Kotlin.</li>
+          <li class="fragment">Tipos funcionales: Kotlin.</li>
         </ul>
         </li>        
       </ul>
@@ -360,11 +360,11 @@
         <pre><code class="language-kotlin" data-trim data-noescape>
           { x<sub>1</sub>: T<sub>1</sub>, ..., x<sub>n</sub>: T<sub>n</sub> -> expr }
         </code></pre>
-        donde:
+        <span class="fragment">donde:</span>
         <ul>
-          <li><code>x<sub>1</sub></code>, ..., <code>x<sub>1</sub></code> son los parámetros.</li>
-          <li><code>T<sub>1</sub></code>, ..., <code>T<sub>1</sub></code> son los tipos de los parámetros.</li>
-          <li><code>T<sub>1</sub></code>, ..., <code>T<sub>1</sub></code> es el cuerpo de la función (también una expresión).</li>
+          <li class="fragment"><code>x<sub>1</sub></code>, ..., <code>x<sub>1</sub></code> son los parámetros.</li>
+          <li class="fragment"><code>T<sub>1</sub></code>, ..., <code>T<sub>1</sub></code> son los tipos de los parámetros.</li>
+          <li class="fragment"><code>T<sub>1</sub></code>, ..., <code>T<sub>1</sub></code> es el cuerpo de la función (también una expresión).</li>
         </ul>
         </li>
       </ul>
@@ -374,16 +374,16 @@
       <h3><span style="text-transform:none">&lambda;</span>-expresiones en Kotlin</h3>
       <ul style="width:100%">
         <li>Ejemplos:
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
           { x: Int -> x % 2 == 0 }
         </code></pre>
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
           { x: Int -> x > 0 }
         </code></pre>
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
           { str: String -> str != "" }
         </code></pre>
-        <pre><code class="language-kotlin" data-trim data-noescape>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
           { x: Int, y: Int -> x + y }
         </code></pre>
         </li>
@@ -399,7 +399,7 @@
           xs.count({ x: Int -> x &gt; 0 })
         </code></pre>        
         </li>
-        <li>Para cada una, el compilador genera una clase nueva que implementa la interfaz funcional y coloca el cuerpo de la &lambda;-expresión como implementación del único método de la interfaz.</li>
+        <li class="fragment">Para cada una, el compilador genera una clase nueva que implementa la interfaz funcional y coloca el cuerpo de la &lambda;-expresión como implementación del único método de esa interfaz.</li>
       </ul>
     </section>
     
@@ -408,21 +408,21 @@
       <ul>
         <li>Pueden omitirse los tipos de los parámetros si se deducen del contexto:
         <ul>
-          <li>En lugar de
+          <li class="fragment">En lugar de
           <pre><code class="language-kotlin" data-trim data-noescape>
             { x: Int -> x % 2 == 0 }
           </code></pre>
-          puede escribirse
-          <pre><code class="language-kotlin" data-trim data-noescape>
+          <span class="fragment">puede escribirse</span>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
             { x -> x % 2 == 0 }
           </code></pre>          
           </li>
-          <li>En lugar de
+          <li class="fragment">En lugar de
           <pre><code class="language-kotlin" data-trim data-noescape>
             { x: Int, y: Int -> x + y }
           </code></pre>
-          puede escribirse
-          <pre><code class="language-kotlin" data-trim data-noescape>
+          <span class="fragment">puede escribirse</span>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
             { x, y -> x + y }
           </code></pre>
           </li>
@@ -436,7 +436,7 @@
       <ul>
         <li>Si el tipo de la entrada puede descomponerse en distintas componentes, es posible hacer la descomposición directamente en la lista de parámetros:
         <ul>
-          <li>En lugar de
+          <li class="fragment">En lugar de
           <pre><code class="language-kotlin" data-trim data-noescape>
             { p: Pair&lt;Int, String&gt; -> p.first + p.second.length }
           </code></pre>
@@ -447,8 +447,8 @@
                 x + s.length
             }
           </code></pre>          
-          puede escribirse
-          <pre><code class="language-kotlin" data-trim data-noescape>
+          <span class="fragment">puede escribirse</span>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
             { (x, s) -> x + s.length }
           </code></pre>
           </li>
@@ -483,18 +483,18 @@
           <pre><code class="language-kotlin" data-trim data-noescape>
             { x -> x % 2 == 0 }
           </code></pre>
-          puede escribirse
-          <pre><code class="language-kotlin" data-trim data-noescape>
-            { it % 2 == 0 }
+          <span class="fragment">puede escribirse</span>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            { <span class="hl">it</span> % 2 == 0 }
           </code></pre>          
           </li>
-          <li>En lugar de
+          <li class="fragment">En lugar de
           <pre><code class="language-kotlin" data-trim data-noescape>
             { str -> str != "" }
           </code></pre>
-          puede escribirse
-          <pre><code class="language-kotlin" data-trim data-noescape>
-            { it != "" }
+          <span class="fragment">puede escribirse</span>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            { <span class="hl">it</span> != "" }
           </code></pre>
           </li>
         </ul>
@@ -511,8 +511,8 @@
           <pre><code class="language-kotlin" data-trim data-noescape>
             xs.count({ it % 2 == 0 })
           </code></pre>
-          puede escribirse:
-          <pre><code class="language-kotlin" data-trim data-noescape>
+          <span class="fragment">puede escribirse:</span>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
             xs.count { it % 2 == 0 }
           </code></pre>          
           </li>
@@ -531,8 +531,8 @@
           <pre><code class="language-kotlin" data-trim data-noescape>
             xs.fold(0, { x, y -> x + y })
           </code></pre>
-          puede escribirse:
-          <pre><code class="language-kotlin" data-trim data-noescape>
+          <span class="fragment">puede escribirse:</span>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
             xs.fold(0) { x, y -> x + y }
           </code></pre>          
           </li>
@@ -574,9 +574,9 @@
         </code></pre>
         </li>
         <li>Hemos tenido que definir aparte una interfaz funcional <code>Tester&lt;T&gt;</code>.</li>
-        <li>Mediante un <strong>tipo funcional</strong> podemos ahorrarnos la definición de la interfaz funcional.
+        <li class="fragment">Mediante un <strong>tipo funcional</strong> podemos ahorrarnos la definición de la interfaz funcional.
         <ul>
-          <li>El tipo <code>(T<sub>1</sub>, ..., T<sub>n</sub>) -> T</code> representa a las funciones que toman parámetros de tipo <code>T<sub>1</sub></code>, ..., <code>T<sub>n</sub></code> y devuelven un resultado de tipo <code>T</code>.</li>
+          <li class="fragment">El tipo <code>(T<sub>1</sub>, ..., T<sub>n</sub>) -> T</code> representa a las funciones que toman parámetros de tipo <code>T<sub>1</sub></code>, ..., <code>T<sub>n</sub></code> y devuelven un resultado de tipo <code>T</code>.</li>
         </ul>
         </li>
       </ul>
@@ -597,9 +597,10 @@
       <h3>Ejemplo: devolver funciones</h3>
       <p>Es posible devolver una función como resultado de un método o función:</p>
       <pre><code class="language-kotlin" data-trim data-noescape>
-                              <span class="arrow_box_down" style="position:relative;top:-5px">Devuelve una función</span>
+                              <span class="arrow_box_down fragment" style="position:relative;top:-5px">Devuelve una función</span>
         fun isMultipleOf(n: Int): <span class="hl">(Int) -> Boolean</span> = { it % n == 0 }
       </code></pre>
+      <div class="fragment">
       <p>Ejemplos de uso:</p>
       <pre><code class="language-kotlin" data-trim data-noescape>
         val xs = persistentListOf(1, 6, -3, 2, 0, 4, 1, 0, -3)
@@ -607,6 +608,63 @@
         println(xs.count(isMultipleOf(3)))  // &rarr; 5
         println(xs.count(isMultipleOf(4)))  // &rarr; 3
         println(xs.count(isMultipleOf(5)))  // &rarr; 2
+      </code></pre>
+      </div>
+    </section>
+    
+    
+    <section>
+      <h3>Y más &laquo;azúcar sintáctico&raquo;</h3>
+      <p>Supongamos que <code>f</code> es una función, <code>C</code> es una clase, <code>m</code> es un método de esa clase, y <code>o</code> es una instancia de esa clase.</p>
+      
+      <table>
+        <tr>
+          <td><pre style="width:100%"><code class="language-kotlin" data-trim data-noescape>
+            xs.count(::f)
+          </code></pre></td>
+          <td>equivale a</td>
+          <td><pre style="width:100%" class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            xs.count { f(it) }
+          </code></pre></td>
+        </tr>
+        <tr>
+          <td><pre style="width:100%"><code class="language-kotlin" data-trim data-noescape>
+            xs.count(C::m)
+          </code></pre></td>
+          <td>equivale a</td>
+          <td><pre style="width:100%" class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            xs.count { it.m() }
+          </code></pre></td>
+        </tr>
+        <tr>
+          <td><pre style="width:100%"><code class="language-kotlin" data-trim data-noescape>
+            xs.count(o::m)
+          </code></pre></td>
+          <td>equivale a</td>
+          <td><pre style="width:100%" class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            xs.count { o.m(it) }
+          </code></pre></td>
+        </tr>
+      </table>
+    </section>
+    
+    <section>
+      <h3>Ejemplos</h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun acabaEnCinco(n: Int) = n % 10 == 5
+        
+        fun String.comienzaPorA() = this.startsWith("A") || this.startsWith("a")
+      </code></pre>
+      
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        val xs = persistentListOf(25, 3, 65, 21, 44)
+        println(xs.count(::acabaEnCinco))        // &rarr; 2
+        
+        val ys = persistentListOf("Amanda", "David", "Aaron", "Mauricio")
+        println(ys.count(String::comienzaPorA))  // &rarr; 2
+        
+        val zs = persistentListOf("P", "Pe", "Otro", "Pep")
+        println(ys.count("Pepe"::startsWith))     // &rarr; 3
       </code></pre>
     </section>
   
@@ -623,11 +681,11 @@
         <li>En Python, las funciones son objetos que tienen un método llamado <code>__call__</code>.</li>
         <li>Si <code>f</code> es una función, la llamada <code>f(x)</code> equivale a hacer <code>f.__call__(x)</code>.
         <pre><code class="language-python" data-trim data-noescape>
-          def suma(x, y):
-            return x + y
+        def suma(x, y):
+          return x + y
             
-          print(suma(4, 5))           # &rarr; 9
-          print(suma.__call__(4, 5))  # &rarr; 9
+        <span class="fragment">print(suma(4, 5))           # &rarr; 9</span>
+        <span class="fragment">print(suma.__call__(4, 5))  # &rarr; 9</span>
         </code></pre>
         </li>
       </ul>
@@ -636,22 +694,22 @@
     <section>
       <h3>Implementación del método <code>count()</code></h3>
       <pre><code class="language-python" data-trim data-noescape>
-        def count(xs, f):
-            result = 0
-            for x in xs:
-                if f(x):
-                    result += 1
-            return result
-            
-        def isEven(x):
-            return x % 2 == 0
-    
-        def isPositive(x):
-            return x > 0
-            
-        xs = [1, 5, -2, 1, 4, 2]
-        print(count(xs, isEven))      # &rarr; 3
-        print(count(xs, isPositive))  # &rarr; 5
+      def count(xs, f):
+          result = 0
+          for x in xs:
+              if f(x):
+                  result += 1
+          return result
+          
+      <span class="fragment">def isEven(x):
+          return x % 2 == 0</span>
+  
+      <span class="fragment">def isPositive(x):
+          return x &gt; 0</span>
+          
+      <span class="fragment">xs = [1, 5, -2, 1, 4, 2]
+      print(count(xs, isEven))      # &rarr; 3
+      print(count(xs, isPositive))  # &rarr; 5</span>
       </code></pre>      
     </section>
     
@@ -663,7 +721,7 @@
         def __call__(self, x):
           return x % 2 == 0
 
-      print(count(xs, MiClase()))     # &rarr; 3     
+      <span class="fragment">print(count(xs, MiClase()))     # &rarr; 3 </span>
       </code></pre>
     </section>
     
@@ -674,21 +732,21 @@
         print(count(xs, <span class="hl">lambda x: x % 2 == 0</span>))
         print(count(xs, <span class="hl">lambda x: x > 0</span>))
       </code></pre>
-      <p>Pero el cuerpo solamente puede ser una expresión, por lo que están muy limitadas 😒</p>
+      <p class="fragment">Pero el cuerpo solamente puede ser una expresión, por lo que están muy limitadas 😒</p>
     </section>
     
     <section>
       <h3>Objetos función en C++</h3>
       <ul>
         <li>En C++, cualquier objeto que sobrecargue el operador <code>()</code> se considera un objeto función.</li>
-        <li>El tipo <code>function&lt;T(T<sub>1</sub>,...,T<sub>n</sub>)&gt;</code> representa los objetos función que reciben parámetros de tipo <code>T<sub>1</sub></code>,...,<code>T<sub>n</sub></code> y devuelven un resultado de tipo <code>T</code>.
+        <li class="fragment">El tipo <code>function&lt;T(T<sub>1</sub>,...,T<sub>n</sub>)&gt;</code> representa los objetos función que reciben parámetros de tipo <code>T<sub>1</sub></code>,...,<code>T<sub>n</sub></code> y devuelven un resultado de tipo <code>T</code>.
       </ul>
     </section>
     
     <section>
       <h3>Objetos función en C++</h3>
       <ul style="width:100%">
-        <li>Definimos el método <code>count()</code>:</li>
+        <li cf>Definimos el método <code>count()</code>:</li>
         <pre><code class="language-cpp" data-trim data-noescape>
           template &lt;typename T&gt;
           int count(const vector&lt;T&gt; xs, <span class="hl">function&lt;bool(int)&gt;</span> f) {
@@ -717,13 +775,14 @@
             bool operator()(int x) { return x > 0; }
         };
       </code></pre>
+      <div class="fragment">
       <p>Ejemplos de uso:</p>
       <pre><code class="language-cpp" data-trim data-noescape>
-        vector<int> v = {1, -2, 3, 0, 5, 3};
+        vector&lt;int&gt; v = {1, -2, 3, 0, 5, 3};
   
         cout << count(v, IsEven()) << endl;
         cout << count(v, IsPositive()) << endl;
-      </code></pre>
+      </code></pre></div>
     </section>
     
     <section>
@@ -780,6 +839,7 @@
             return x > 0;
         }        
       </code></pre>
+      <div class="fragment">
       <p>Podemos utilizar <code>count()</code> del siguiente modo:</p>
       <pre><code class="language-c" data-trim data-noescape>
           int a[] = {1, -4, 3, 2, 6, 8, 9};  
@@ -787,7 +847,7 @@
           
           printf("%d\n", count(a, longitud, is_even));     // &rarr; 4
           printf("%d\n", count(a, longitud, is_positive)); // &rarr; 6
-      </code></pre>
+      </code></pre></div>
       
     </section>
     
@@ -795,7 +855,7 @@
       <h3>¿Y las <span style="text-transform:none">&lambda;</span>-expresiones?</h3>
       <ul>
         <li>El estándar de C no las soporta 👎.</li>
-        <li>Pero algunos compiladores las añaden fuera del estándar:
+        <li class="fragment">Pero algunos compiladores las añaden fuera del estándar:
         <ul>
           <li>Clang  <a href="https://en.wikipedia.org/wiki/Blocks_(C_language_extension)">[+]</a></li>
           <li>GCC  <a href="https://hackaday.com/2019/09/11/lambdas-for-c-sort-of/">[+]</a></li>
