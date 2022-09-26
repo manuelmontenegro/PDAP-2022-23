@@ -1,0 +1,409 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Funciones de orden superior sobre listas</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Funciones de orden superior sobre listas</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li></li>
+          </ol>
+      </section>
+      
+      <section>
+        <h3>Método <code>map</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T, S&gt; List&lt;T&gt;.map(f: (T) -> S): List&lt;S&gt;
+        </code></pre>
+        <p>Aplica la función <code>f</code> recibida como parámetro a cada elemento de la lista <code>this</code>, y construye una lista con los resultados devueltos.</p>
+        <p><img src="06/map.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Método <code>map</code></h3>
+        <p>Posible implementación:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T, S&gt; List&lt;T&gt;.map(f: (T) -> S): List&lt;S&gt; = when (this) {
+          is Nil -> Nil
+          is Cons -> Cons(f(head), tail.map(f))
+        }
+        </code></pre>
+        <div class="fragment">
+        <p>Con recursión de cola:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T, S&gt; List&lt;T&gt;.map(f: (T) -> S): List&lt;S&gt; {
+            tailrec fun List&lt;T&gt;.mapAc(ac: List&lt;S&gt;): List&lt;S&gt; = when (this) {
+                is Nil -> ac
+                is Cons -> tail.mapAc(Cons(f(head), ac))
+            }
+            return mapAc(Nil).reversed()
+        }          
+        </code></pre>
+        </div>
+      </section>
+      
+      <section>
+        <h3>Ejemplos</h3>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          listOf(-2, 1, 5, 6).map { it * it }
+              // &rarr; [4, 1, 25, 36]
+              
+          listOf(1, 6, 9, -20).map { it + 1 }
+              // &rarr; [2, 7, 10, -19]
+          
+          listOf("Gloria", "Daniel", "Estela", "Juan").map { it.length }
+              // &rarr; [6, 6, 6, 4]
+          
+          File("mi_fichero.txt").readLines().map { it.trim() }
+        </code></pre>
+      </section>
+    
+    
+      <section>
+        <h3>Ejemplos</h3>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          data class Point(val x: Int, val y: Int)
+          
+          listOf(Point(1, 4), Point(6, -1), Point(-4, 5)).map { (x, y) -> x }
+            // &rarr; [1, 6, -4]
+
+          listOf(Point(1, 4), Point(6, -1), Point(-4, 5)).map { (x, y) -> x + y }
+            // &rarr; [5, 5, 1]
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Método <code>mapIndexed</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T, S&gt; List&lt;T&gt;.mapIndexed(f: (Int, T) -> S): List&lt;S&gt;
+        </code></pre>
+        <p>Similar a <code>map</code>, pero la función <code>f</code> pasada como parámetro también recibe el <strong>índice</strong> de cada elemento de la lista.</p>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          listOf("A", "B", "C").mapIndexed { idx, x -> Pair(idx, x) }
+            // &rarr; [(0, "A"), (1, "B"), (2, "C")]
+            
+          // Lo anterior equivale a:
+          listOf("A", "B", "C").mapIndexed(::Pair)
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Método <code>flatMap</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T, S&gt; List&lt;T&gt;.flatMap(f: (T) -> List&lt;S&gt;): List&lt;S&gt;          
+        </code></pre>
+        <p>Similar a <code>map</code>, pero aplana la lista resultante, concatenando todos los resultados.</p>
+        <p>Posible implementación:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T, S&gt; List&lt;T&gt;.flatMap(f: (T) -> List&lt;S&gt;): List&lt;S&gt;
+            = map(f).concat()   // concat() implementada en Hoja 2, ejercicio 7
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun trimAndJoin(inputFiles: List&lt;String&gt;, outputFile: String) =
+            File(outputFile).writeText(
+              inputFiles.flatMap { File(it).readLines() }
+                        .map { it.trim() }
+                        .joinToString("\n")
+            )
+        </code></pre>
+        <p>Recibe una lista <code>inputFiles</code> de nombres de ficheros, concatena sus líneas, y elimina los espacios al principio y final de cada una de ellas, guardando el resultado en otro fichero <code>outputFile</code>.</p>
+      </section>
+      
+      
+      <section>
+        <h3>Método <code>filter</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.filter(f: (T) -> Boolean): List&lt;T&gt;
+        </code></pre>
+        <p>Devuelve una lista con aquellos elementos de <code>this</code> para los que la función <code>f</code> devuelve <code>true</code>.</p>
+        <p><img src="06/filter.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplos</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          listOf(1, 6, 4, 3, 5).filter { it % 2 == 0 }
+              // &rarr; [6, 4]
+              
+          listOf(Point(3, -3), Point(1, 5), Point(0, 3), Point(-1, -1))
+              .filter { (x, y) -> x >= 0 && y >= 0 }
+              // &rarr; [Point(1, 5), Point(0, 3)]
+        </code></pre>
+        <pre style="font-size:50%"><code class="language-kotlin" data-trim data-noescape>
+      fun comienzaPorVocal(s: String) =
+          s.isNotEmpty() && s[0].uppercaseChar() in listOf('A', 'E', 'I', 'O', 'U')
+          
+      listOf("Manuel", "Oscar", "Aaron", "Irene", "Daniela").filter(::comienzaPorVocal)
+              // &rarr; ["Oscar", "Aaron", "Irene"]
+          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Variantes de <code>filter</code></h3>
+        <ul>
+          <li><code>filterNot</code>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun &lt;T&gt; List&lt;T&gt;.filterNot(f: (T) -> Boolean): List&lt;T&gt;
+                = this.filter { !f(it) }
+            </code></pre>
+            Funciona igual que <code>filter</code>, pero devuelve los elementos para los que la función <code>f</code> devuelve <code>false</code>.
+          </li>
+          <li><code>filterIndexed</code>
+            <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T&gt; List&lt;T&gt;.filterIndexed(f: (Int, T) -> Boolean): List&lt;T&gt;
+            </code></pre>
+    Igual que <code>filter</code>, pero la función <code>f</code> recibe también el índice del elemento de la lista.
+          </li>          
+        </ul>
+      </section>
+      
+      
+    <section>
+      <h3>Método <code>fold</code></h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T, A&gt; List&lt;T&gt;.fold(ini: A, f: (A, T) -> A): A
+      </code></pre>
+      <ul>
+        <li>Supongamos que <code>this</code> es la lista <code>[x<sub>1</sub>, ..., x<sub>n</sub>]</code>.</li>
+        <li>Si denotamos mediante <code>y</code> &oplus; <code>z</code> el resultado de la expresión <code>f(y, z)</code>,
+        <code>fold</code> calcula el resultado de la siguiente expresión:
+        </li>
+        
+      </ul>
+        <p>
+        (...((<code>ini</code> &oplus; <code>x<sub>1</sub></code>) &oplus; <code>x<sub>2</sub></code>) &oplus; ... ) &oplus; <code>x<sub>n</sub></code>
+        </p>
+    </section>
+    
+    <section>
+      <h3>Método <code>fold</code></h3>
+      <img src="06/fold.svg">
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T, A&gt; List&lt;T&gt;.fold(ini: A, f: (A, T) -> A): A = when (this) {
+            is Nil -> ini
+            is Cons -> tail.fold(f(ini, head), f)
+        }
+      </code></pre>
+    </section>
+    
+    <section>
+      <h3>Ejemplos</h3>
+      <ul>
+        <li>Sumar todos los elementos de una lista de enteros:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun List&lt;Int&gt;.sum() = this.fold(0) { ac, x -> ac + x }
+        </code></pre>
+        o, equivalentemente:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun List&lt;Int&gt;.sum() = this.fold(0, Int::plus)
+        </code></pre>
+        </li>
+        <li>Por ejemplo:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          listOf(6, -1, 3, 4).sum() // &rarr; 12
+        </code></pre>
+        </li>
+      </ul>      
+    </section>
+    
+    <section>
+      <h3>Ejemplos</h3>
+      <ul>
+        <li>Multiplicar todos los elementos de una lista de enteros:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun List&lt;Int&gt;.multiply() = this.fold(1, Int::times)
+        </code></pre>
+        </li>
+        <li>Por ejemplo:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          listOf(6, -1, 3, 4).multiply() // &rarr; -72
+        </code></pre>
+        </li>
+      </ul>      
+    </section> 
+    
+    <section>
+      <h3>Ejemplos</h3>
+      <ul>
+        <li>Invertir el orden de los elementos de una lista:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.reversed() 
+            = fold(Nil) { ac: List&lt;T&gt;, x: T -> Cons(x, ac) }
+        </code></pre>
+        </li>
+        <li>Contar el número de veces que aparece un elemento en una lista:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.count(elem: T) 
+            = fold(0) { ac, x -> if (x == elem) ac + 1 else ac }          
+        </code></pre>
+        </li>
+        <li>Contar el número de elementos para los que los que una función devuelve <code>true</code>:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T&gt; List&lt;T&gt;.count(f: (T) -> Boolean) 
+            = fold(0) { ac, x -> if (f(x)) ac + 1 else ac }          
+        </code></pre>
+        </li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Método <code>foldRight</code></h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T, A&gt; List&lt;T&gt;.foldRight(ini: A, f: (T, A) -> A): A
+      </code></pre>
+      <p>Similar a <code>fold</code>, pero recorre la lista de derecha a izquierda:</p>
+      <p>
+        <code>x<sub>1</sub></code>  &oplus; (<code>x<sub>2</sub></code> &oplus; ... &oplus; (<code>x<sub>n-1</sub></code> &oplus; (<code>x<sub>n</sub></code> &oplus; <code>ini</code>))...)
+        </p>
+    </section>
+    
+    <section>
+      <h3>Método <code>foldRight</code></h3>
+      <p><img src="06/foldRight.svg"></p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun &lt;T, A&gt; List&lt;T&gt;.foldRight(ini: A, f: (T, A) -> A): A = when (this) {
+            is Nil -> ini
+            is Cons -> f(head, tail.foldRight(ini, f))
+        }        
+      </code></pre>
+    </section>
+    
+    <section>
+      <h3>Ejemplo</h3>
+      <ul style="width:100%">
+        <li>Concatenar dos listas:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          operator fun &lt;T&gt; List&lt;T&gt;.plus(other: List&lt;T&gt;) 
+              = this.foldRight(other, ::Cons)
+        </code></pre>
+        </li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Variantes de <code>fold</code> y <code>foldRight</code></h3>
+      <ul style="width:100%">
+        <li><code>reduce</code> y <code>reduceRight</code>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; List&lt;T&gt;.reduce(f: (T, T) -> T): T
+          fun &lt;T&gt; List&lt;T&gt;.reduceRight(f: (T, T) -> T): T
+        </code></pre>
+        <ul>
+          <li>Similares a <code>fold</code> y <code>foldRight</code>, pero utilizan el primer/último elemento de la lista como valor inicial del acumulador.</li>
+          <li>Si se aplican a la lista vacía, se lanza una excepción.</li>
+        </ul>
+        </li>
+      </ul>
+    </section>
+    
+    <section>
+      <h3>Método <code>reduce</code></h3>
+      <p><img src="06/reduce.svg"></p>
+      <p>Ejemplo:</p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun List&lt;Int&gt;.max() 
+          = this.reduce { ac, y -> if (y > ac) y else ac }
+      </code></pre>
+    </section>
+    
+    <section>
+      <h3>Método <code>scan</code></h3>
+      <p>Similar a <code>fold</code>, pero devuelve los resultados intermedios del acumulador tras recorrer cada elemento.</p>
+      <p><img src="06/scan.svg"></p>
+    </section>
+    
+    <section>
+      <h3>Método <code>scan</code></h3>
+      <p>Ejemplos:</p>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        listOf(1, 7, 3, 2, 0, 3).scan(0, Int::plus)
+          // &rarr; [0, 1, 8, 11, 13, 13, 16]
+          
+        listOf("A", "B", "C").scan("", String::plus)
+          // &rarr; ["", "A", "AB", "ABC"]
+      </code></pre>
+    </section>
+    
+    
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:60%">
+                <ul>
+                    <li style="margin-top:0.5em">
+                        <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/">Kotlin Standard Library</a>
+                        <br> Interfaz <code>List&lt;T&gt;</code> 
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Kotlin_Icon.svg/512px-Kotlin_Icon.svg.png?20171012085709" style="width:30%; border:none">
+            </div>
+        </section>
+    
+    
+    
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
