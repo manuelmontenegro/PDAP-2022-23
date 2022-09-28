@@ -25,8 +25,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.84096521"
-     inkscape:cx="525.58655"
-     inkscape:cy="213.44522"
+     inkscape:cx="527.37021"
+     inkscape:cy="214.63432"
      inkscape:window-width="1815"
      inkscape:window-height="1258"
      inkscape:window-x="26"
@@ -448,55 +448,67 @@
            x="157.70853"
            y="54.624779">f</tspan></text>
     </g>
-    <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3)"
-       d="M 72.298626,50.343283 H 61.475105"
-       id="path3923-4"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3-9)"
-       d="M 104.8469,50.676991 H 94.023386"
-       id="path3923-4-0"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3-6)"
-       d="M 137.30805,51.492576 H 126.48453"
-       id="path3923-4-9"
-       sodipodi:nodetypes="cc" />
+    <g
+       id="g19646"
+       class="fragment">
+      <path
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3-4)"
+         d="M 203.07589,51.492576 H 192.25237"
+         id="path3923-4-5"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:monospace;-inkscape-font-specification:'monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+         x="204.1199"
+         y="53.637463"
+         id="text3613-0"><tspan
+           sodipodi:role="line"
+           id="tspan3667-4"
+           x="204.1199"
+           y="53.637463">ini</tspan></text>
+    </g>
     <path
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3-2)"
        d="M 170.61474,51.492576 H 159.79122"
        id="path3923-4-6"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       class="fragment" />
     <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3-4)"
-       d="M 203.07589,51.492576 H 192.25237"
-       id="path3923-4-5"
-       sodipodi:nodetypes="cc" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:monospace;-inkscape-font-specification:'monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
-       x="204.1199"
-       y="53.637463"
-       id="text3613-0"><tspan
-         sodipodi:role="line"
-         id="tspan3667-4"
-         x="204.1199"
-         y="53.637463">ini</tspan></text>
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3-6)"
+       d="M 137.30805,51.492576 H 126.48453"
+       id="path3923-4-9"
+       sodipodi:nodetypes="cc"
+       class="fragment" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-02)"
-       d="m 39.458275,50.343283 h -15.77727 l 0.11307,21.718388"
-       id="path11857" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:monospace;-inkscape-font-specification:'monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
-       x="12.416786"
-       y="76.093246"
-       id="text11987"><tspan
-         sodipodi:role="line"
-         id="tspan11985"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3-9)"
+       d="M 104.8469,50.676991 H 94.023386"
+       id="path3923-4-0"
+       sodipodi:nodetypes="cc"
+       class="fragment" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-3)"
+       d="M 72.298626,50.343283 H 61.475105"
+       id="path3923-4"
+       sodipodi:nodetypes="cc"
+       class="fragment" />
+    <g
+       id="g20557"
+       class="fragment">
+      <path
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-opacity:1;marker-end:url(#TriangleStart-02)"
+         d="m 39.458275,50.343283 h -15.77727 l 0.11307,21.718388"
+         id="path11857" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:monospace;-inkscape-font-specification:'monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
          x="12.416786"
-         y="76.093246">Resultado</tspan></text>
+         y="76.093246"
+         id="text11987"><tspan
+           sodipodi:role="line"
+           id="tspan11985"
+           style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+           x="12.416786"
+           y="76.093246">Resultado</tspan></text>
+    </g>
   </g>
 </svg>
