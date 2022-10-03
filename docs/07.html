@@ -1,0 +1,1291 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Gestión de errores sin excepciones</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Gestión de errores sin excepciones</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Gestión de errores funcional</li>
+            <li>Tipos anulables</li>
+            <li>Tipo <span style="font-family:monospace;text-transform:none">Option</span></li>
+            <li>Tipo <span style="font-family:monospace;text-transform:none">Either</span></li>
+            <li>Tipo <span style="font-family:monospace;text-transform:none">Validated</span></li>
+          </ol>
+      </section>
+      
+    <section>
+      <section>
+        <h2>Gestión de errores funcional</h2>
+      </section>
+
+      <section>
+        <h3>Gestión de errores</h3>
+        
+        <ul>
+          <li>Muchos lenguajes imperativos poseen un mecanismo basado en <strong>excepciones</strong> para controlar los errores ocasionados durante la ejecución del programa.</li>
+          <li>Sin embargo, las excepciones no encajan muy bien con la programación funcional.</li>
+        </ul>
+      </section>
+      
+      
+      
+      
+      <section>
+        <h3>Excepciones y transparencia referencial</h3>
+        <ul>
+          <li>Supongamos el siguiente programa:</li>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun ejemplo(): Int {
+                val x = g()
+                return try { x + 1 } catch (e: Exception) { 0 }
+            }
+          </code></pre>
+          <li>La propiedad de <strong>transparencia referencial</strong> de los lenguajes funcionales nos permite reemplazar la <code>x</code> por su valor sin alterar la semántica de la función <code>ejemplo()</code>:</li>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun ejemplo(): Int {
+                return try { g() + 1 } catch (e: Exception) { 0 }
+            }
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Excepciones y transparencia referencial</h3>
+          <p>En efecto, si <code>g</code> está definida así:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun g(): Int = 1
+          </code></pre>
+          <p>Los dos programas son equivalentes:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun ejemplo(): Int {
+                val x = g()
+                return try { x + 1 } catch (e: Exception) { 0 }
+            }
+            // ejemplo() devuelve 2
+          </code></pre>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun ejemplo(): Int {
+                return try { g() + 1 } catch (e: Exception) { 0 }
+            }
+            // ejemplo() devuelve 2
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>Excepciones y transparencia referencial</h3>
+          <p>¿Qué pasaría si definiésemos <code>g</code> del siguiente modo?</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun g() = throw Exception()
+          </code></pre>
+          <p>¡Ya no son equivalentes!</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun ejemplo(): Int {
+                val x = g()
+                return try { x + 1 } catch (e: Exception) { 0 }
+            }
+            // ejemplo() lanza una excepción
+          </code></pre>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun ejemplo(): Int {
+                return try { g() + 1 } catch (e: Exception) { 0 }
+            }            
+            // ejemplo() devuelve 0
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>Excepciones y funciones de orden superior</h3>
+        <ul>
+          <li>En Java, las excepciones y las funciones de orden superior no se llevan bien 😠.</li>
+          <li>En general, un método no puede lanzar una excepción cuyo tipo no haya sido declarado en su cláusula <code>throws</code>.</li>
+          <li>Esto hace que el siguiente código Java no sea aceptado por el compilador:
+          <pre><code class="language-java" data-trim data-noescape>
+            List&lt;String&gt; ficheros = List.of("fich1.txt", "fich2.txt", "fich3.txt");
+            ficheros.forEach(name -> {
+                Reader r = new FileReader(name); <span class="arrow_box_left">Puede lanzar IOException</span>
+                System.out.println(r.read());
+            });            
+          </code></pre>
+          </li>
+        </ul>        
+      </section>
+      
+      <section>
+        <h3>Alternativa: valores centinela</h3>
+        <ul>
+          <li>Consiste en codificar la presencia de errores en el resultado.          </li>
+          <li>Ejemplos en Java:
+            <ul>
+              <li><code>String.indexOf(char)</code>. Devuelve <code>-1</code> si el carácter no se encuentra en la cadena.</li>
+              <li><code>Map&lt;K, V&gt;.get(key)</code>. Devuelve <code>null</code> si la clave no se encuentra en el diccionario.</li>
+            </ul>
+          </li>
+          <li>El compilador no obliga a comprobar los valores centinela en el resultado de una llamada, por lo que es fácil pasarlos por alto.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Problema con los valores centinela</h3>
+        <ul>
+          <li>Ejemplo 1:
+          <pre><code class="language-java" data-trim data-noescape>
+            String cad = ...;
+            cad.substring(cad.indexOf('P'));
+          </code></pre>
+          <code>IndexOutOfBoundsException</code> si el carácter <code>'P'</code> no está en la cadena.          
+          </li>
+          <li>Ejemplo 2:
+          <pre><code class="language-java" data-trim data-noescape>
+            Map&lt;Integer, String&gt; dicc = ...;
+            String nombre = dicc.get(2);
+            return nombre.toLowerCase();
+          </code></pre>
+          <p><code>NullPointerException</code> si el diccionario no contiene la clave <code>'2'</code>.</p>
+          </li>
+        </ul>
+      </section>
+      
+      
+      
+      <section>
+        <h3>Sobre el uso de <code>null</code></h3>
+        <blockquote style="font-size:75%;background-color:#FFFFDD;padding:1em">
+        I call it my billion-dollar mistake. It was the invention of the null reference in 1965. At that time, I was designing the first comprehensive type system for references in an object oriented language (ALGOL W). My goal was to ensure that all use of references should be absolutely safe, with checking performed automatically by the compiler. But I couldn't resist the temptation to put in a null reference, simply because it was so easy to implement. This has led to innumerable errors, vulnerabilities, and system crashes, which have probably caused a billion dollars of pain and damage in the last forty years.
+        </blockquote>
+        <p>C. A. R. Hoare. Premio Turing en 1980</p>
+        <p><a href="https://qconlondon.com/london-2009/qconlondon.com/london-2009/speaker/Tony+Hoare.html">QCon London, 2009</a></p>
+      </section>
+      
+      <section>
+        <h3>¿Cómo evitamos este problema?</h3>
+        <p>Haciendo que el compilador nos obligue a comprobar la presencia de centinelas en los valores devueltos por las funciones, antes de utilizarlos.</p>
+        <ul>
+          <li>Mecanismos:
+          <ul>
+            <li><strong>Tipos anulables</strong>: Kotlin, TypeScript, C#.</li>
+            <li><strong>Tipo <code>Option</code>/<code>Maybe</code></strong>: Java, C++, Scala, Haskell.</li>            
+          </ul>
+          que pueden evolucionar a:
+          <ul>
+            <li><strong>Tipo <code>Either</code>.</strong></li>
+            <li><strong>Tipo <code>Validated</code>.</strong></li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Tipos anulables</h2>
+      </section>
+      
+      
+      <section>
+        <h3>Puntero <code>null</code> en Kotlin</h3>
+        <ul>
+          <li>Por defecto no se permite asignar el valor <code>null</code> a variables o pasarlo como argumento:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun imprimir(s: String) { ... }            
+            ...            
+            imprimir(null)    <span class="arrow_box_left">Error de compilación</span>
+          </code></pre>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Direccion(val calle: String, 
+                                 val numero: Int, 
+                                 val piso: Int)
+            
+            val z1: Direccion = null;  <span class="arrow_box_left">Error de compilación</span>
+            
+            val z2 = Direccion("C/ Salvador Dalí", 32, null)  <span class="arrow_box_left">Error de compilación</span>
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos anulables</h3>
+        <ul>
+          <li>Si se quiere asignar o pasar el valor <code>null</code>, el tipo receptor ha de ser <strong>anulable</strong>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun imprimir(s: <span class="hl">String?</span>) { ... }
+            ...            
+            imprimir(null)    <span class="arrow_box_left">Ok</span>          
+          </code></pre>
+          
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Direccion(val calle: String, 
+                                 val numero: Int,
+                                 val piso: <span class="hl">Int?</span>)
+                                 
+            val z2 = Direccion("C/ Salvador Dalí", 32, null)  <span class="arrow_box_left">Ok</span>
+          </code></pre>            
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos anulables</h3>
+        <ul>
+          <li>Para cada tipo <code>T</code>, existe un tipo <code>T?</code> que contiene todos los valores de <code>T</code>, y además el valor <code>null</code>.</li>
+          <li>Para todo tipo <code>T</code>, se cumple que <code>T</code> es un subtipo de <code>T?</code>, por lo que puede utilizarse un valor de tipo <code>T</code> donde se espera un valor de tipo <code>T?</code> (pero no al revés).</li>
+        </ul>
+        <div style="display:flex">
+        <div style="width:45%"><img src="07/Anulables.svg"></div>
+        <div style="width:50%">
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun f1(x: String?) = ...
+            
+            val str: String = ...;
+            f1(str) <span class="arrow_box_left">Ok</span>
+          </code></pre>
+          
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun f2(x: String) = ...
+            
+            val str: String? = ...;
+            f2(str); <span class="arrow_box_left">Incorrecto</span>
+          </code></pre>
+        </div>
+        </div>
+      </section>
+      
+      <section>
+        <h3>Conversión automática</h3>
+        <ul>
+          <li>Si una variable tiene tipo <code>T?</code> no es posible llamar a ningún método del tipo <code>T</code> a través de esa variable.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun longitud(x: String?) = x.length()   <span class="arrow_box_left">Error de compilación</span>
+          </code></pre>
+          </li>
+          <li>El compilador hace la conversión de <code>T?</code> a <code>T</code> cuando sabe que la variable tiene valor distinto de <code>null</code>.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun longitud(x: String?) = 
+              if (x != null) {
+                // Aquí la variable 'x' pasa a tener tipo 'String'
+                // Podemos llamar a los métodos de 'x'
+                x.length()
+              } else {
+                // Aquí la variable 'x' sigue teniendo tipo 'String?'
+                // Por tanto, no podemos llamar a los métodos de 'x'
+                0
+              }
+          </code></pre>
+          </li>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        data class Persona(val nombre: String, 
+                           val direccion: Direccion?, 
+                           val fechaNacimiento: Date)
+        
+        data class Direccion(val calle: String, 
+                             val numero: Int,
+                             val piso: Int?)
+                             
+        operator fun &lt;K, V&gt; Map&lt;K, V&gt;.get(key: K): V?
+        </code></pre>
+        <ul>
+          <li>Implementamos una función que, a partir de un diccionario <code>ps</code> que asocia identificadores con personas y un identificador <code>id</code>, obtenga el piso en el que vive la persona con identificador <code>id</code>.</li>
+        </ul>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun obtenerPiso(ps: Map&lt;Int, Persona&gt;, id: Int): Int?
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        data class Persona(val nombre: String, 
+                           val direccion: Direccion?, 
+                           val fechaNacimiento: Date)
+        
+        data class Direccion(val calle: String, 
+                             val numero: Int,
+                             val piso: Int?)
+        </code></pre>
+        
+        <pre><code class="language-kotlin" data-trim data-noescape>
+            fun obtenerPiso(ps: Map&lt;Int, Persona&gt;, id: Int): Int? {
+                val p = ps[id]    // ps[id] equivale a ps.get(id)
+                return if (p != null) {
+                           if (p.direccion != null) {
+                               p.direccion.piso
+                           } else null
+                       } else null
+            }
+        </code></pre>        
+      </section>
+      
+      <section>
+        <h3>Operador <em>safe call</em> (<code>?.</code>)</h3>
+        <ul>
+          <li>Suponemos una variable <code>x</code> de tipo <code>T?</code> y un método <code>m()</code>.</li>
+        <li>La expresión <code>x?.m()</code> denota una <strong>llamada segura</strong> y se evalúa del siguiente modo:
+        <ul>
+          <li>Si <code>x</code> es <code>null</code>, se evalúa a <code>null</code> como resultado.</li>
+          <li>Si <code>x</code> es distinto de <code>null</code>, se evalúa al resultado de llamar al método <code>m()</code>.</li>
+        </ul>
+        </li>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          x?.m()
+        </code></pre>
+        equivale a
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          if (x != null) x.m() else null          
+        </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun obtenerPiso(ps: Map&lt;Int, Persona&gt;, id: Int): Int? {
+              val p = ps[id]
+              return if (p != null) {
+                         if (p.direccion != null) {
+                             p.direccion.piso
+                         } else null
+                     } else null
+          }
+        </code></pre>        
+        Puede simplificarse a:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun obtenerPiso(ps: Map&lt;Int, Persona&gt;, id: Int): Int? = 
+            ps[id]?.direccion?.piso
+        </code></pre>        
+      </section>
+      
+      <section>
+        <h3>Operador <em>Elvis</em> (<code>?:</code>)</h3>
+        <ul>
+          <li>Permite reemplazar el valor <code>null</code> de tipo <code>T?</code> por un valor de tipo <code>T</code>.</li>
+          <li>Suponemos que <code>x</code> tiene tipo <code>T?</code> y <code>z</code> tiene tipo <code>T</code>.</li>
+          <li>La expresión <code>x ?: z</code> equivale a:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            if (x != null) x else z
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        fun obtenerPiso(ps: Map&lt;Int, Persona&gt;, id: Int): Int? = ...
+        // ..
+        val num = obtenerPiso(p, i)
+        if (num != null) {
+          println(num)
+        } else {
+          println("No hay piso")
+        }
+      </code></pre>
+      
+      equivale a:
+      
+      <pre><code class="language-kotlin" data-trim data-noescape>
+        println(obtenerPiso(p, i)?.toString() ?: "No hay piso")
+      </code></pre>
+      </section>
+      
+      <section>
+        <h3>Operador <em>not-null assertion</em> (<code>!!</code>)</h3>
+        <ul>
+          <li>Fuerza la conversión de <code>T?</code> a <code>T</code>.</li>
+          <li>Si <code>x</code> tiene tiempo <code>T?</code>, entonces <code>x!!</code> tiene tipo <code>T</code>.
+          <li>Comprueba realmente que <code>x</code> sea distinto de <code>null</code>.
+            <ul>
+              <li>Si no, se lanza un <code>NullPointerException</code>.</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+          <h3>Operador <em>not-null assertion</em> (<code>!!</code>)</h3>
+          <ul>
+            <li>Se utiliza cuando tenemos la certeza de que un valor es distinto de <code>null</code> en un determinado punto, pero el compilador no es capaz de darse cuenta por sí solo.</li>
+          </ul>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun imprimirDireccion(ps: Map<Int, Persona>, id: Int) {
+              if (ps.containsKey(id)) {
+                  // Sabemos que 'id' es una clave de 'ps', por lo que ps[id] va
+                  // a ser distinto de null.
+                  println(ps[id]!!.direccion)
+              }
+          }
+          </code></pre>
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Método <code>let()</code></h3>
+        <ul>
+          <li>Es un método de orden superior definido para cualquier valor:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T, R&gt; T.let(f: (T) -> R): R = f(this)
+          </code></pre></li>
+          <li>La expresión <code>obj.let(f)</code> equivale a <code>f(obj)</code>.</li>
+          <li>Sirve para poder aplicar el operador <code>?.</code> cuando llamamos a una función, en lugar de un método.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun incrementar(x: Int) = x + 1
+        
+        fun pisoSuperior(d: Direccion): Int? =
+            if (d.piso != null) incrementar(d.piso) else null
+        </code></pre>
+        <p>equivale a</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun incrementar(x: Int) = x + 1
+        
+        fun pisoSuperior(d: Direccion): Int? =
+            d.piso?.let(::incrementar)
+        </code></pre>
+      </section>
+      
+    </section>
+    <section>
+      
+      
+      <section>
+        <h2>Tipo <span style="font-family:monospace;text-transform:none">Option</span></h2>
+      </section>
+      
+      
+      <section>
+        <h3>Los tipos opcionales</h3>
+        <ul>
+          <li>Son la alternativa a los tipos anulables en aquellos lenguajes que no los soportan directamente.</li>
+          <li>Hacen que el sistema tipos del lenguaje obligue a comprobar la existencia de un valor antes de obtenerlo.</li>
+          <li>Existente en lenguajes imperativos y funcionales:
+          <div style="display:flex;margin-top:0.5em">
+          <ul style="width:40%">
+            <li>Java: <code>Optional</code></li>
+            <li>C++: <code>std::optional</code></li>
+            <li>Kotlin: <code>Option</code> (en <a href="https://arrow-kt.io/">Arrow</a>)</li>
+          </ul>
+          <ul style="width:40%">
+            <li>Scala: <code>Option</code></li>
+            <li>Haskell: <code>Maybe</code></li>
+          </ul>
+          </div>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipo <code>Option&lt;T&gt;</code></h3>
+        <ul>
+          <li>Tiene dos subclases:
+          <ul>
+            <li><code>Some</code>: encapsula un valor.</li>
+            <li><code>None</code> (singleton): representa la ausencia de valor.</li>
+          </ul>
+          </li>
+        </ul>
+        <p><img src="07/Option.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Tipo <code>Option&lt;T&gt;</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          sealed interface Option&lt;out T&gt;
+          
+          data class Some&lt;out T&gt;(val value: T) : Option<T>
+          object None : Option&lt;Nothing&gt;
+        </code></pre>
+        <p>Ejemplo:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun dividir(x: Double, y: Double): Option&lt;Double&gt; =
+            if (y == 0.0) None else Some(x / y)
+        </code></pre>        
+      </section>
+      
+      <section>
+        <h3>Convertir tipos anulables a <code>Option&lt;T&gt;</code></h3>
+        <ul>
+          <li>El método <code>toOption()</code> convierte cualquier valor anulable en un <code>Option</code>.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T: Any?&gt; T.toOption(): Option&lt;T&gt; =
+                if (this == null) None else Some(this)
+          </code></pre>
+          <ul>
+            <li>Mediante la restricción <code>T: Any?</code> indicamos que el parámetro de tipo <code>T</code> puede instanciarse a un tipo anulable.</li>
+            <li>(Por defecto, los tipos genéricos solo pueden instanciarse a tipos sin <code>?</code>)</li>
+          </ul>
+          </li>
+          <li>Ejemplo:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          val dicc = Map&lt;Int, String&gt;
+          dicc[3].toOption() // &rarr; 'None' si 3 no es clave en 'dicc'
+        </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          data class Persona(
+            val nombre: String,
+            val direccion: Option&lt;Direccion&gt;,
+            val fechaNacimiento: Option&lt;Date&gt;
+          )
+          data class Direccion(
+            val calle: String, 
+            val numero: Int, 
+            val piso: Option&lt;Int&gt;
+          )
+        </code></pre>
+        <p>Incorrecto:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun fechaString(p: Persona): String {
+            val df = SimpleDateFormat("dd/MM/yyyy")
+            return df.format(<span class="hl">p.fechaNacimiento</span>)  <span class="arrow_box_left">Error de tipo</span>
+                // p.fechaNacimiento no tiene tipo 'Date',
+                // sino 'Option&lt;Date&gt;'
+        }          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          data class Persona(
+            val nombre: String,
+            val direccion: Option&lt;Direccion&gt;,
+            val fechaNacimiento: Option&lt;Date&gt;
+          )
+          data class Direccion(
+            val calle: String, 
+            val numero: Int, 
+            val piso: Option&lt;Int&gt;
+          )
+        </code></pre>
+        <p>Correcto:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun fechaString(p: Persona): String {
+            val df = SimpleDateFormat("dd/MM/yyyy")
+            return if (p.fechaNacimiento is Some) 
+                      df.format(p.fechaNacimiento.value)
+                   else 
+                      "No hay fecha"
+        }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Combinadores de <code>Option&lt;T&gt;</code></h3>
+        <ul>
+          <li>Son unos métodos de orden superior que permiten manipular valores de tipo <code>Option&lt;T&gt;</code> de manera segura sin necesidad de comprobar si son <code>Some</code> o <code>None</code>.</li>
+          <ul>
+            <li><code>Option&lt;T&gt;.map()</code></li>
+            <li><code>Option&lt;T&gt;.getOrElse()</code></li>
+            <li><code>Option&lt;T&gt;.flatMap()</code></li>
+            <li><code>Option&lt;T&gt;.filter()</code></li>
+          </ul>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>map()</code></h3>
+        <ul>
+          <li>Permite transformar el valor contenido dentro de un <code>Option</code> (si existe).
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T, S&gt; Option&lt;T&gt;.map(f: (T) -> S): Option&lt;S&gt; = when (this) {
+                is Some -> Some(f(value))
+                is None -> None
+            }
+          </code></pre>
+          </li>
+          <li>Tiene una función parecida al operador <code>?.</code> de los tipos anulables.</li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <p>En lugar de:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun fechaStringOption(p: Persona): Option&lt;String&gt; {
+              val df = SimpleDateFormat("dd/MM/yyyy")
+              return if (p.fechaNacimiento is Some) 
+                        Some(df.format(p.fechaNacimiento.value)) 
+                     else None
+          }
+        </code></pre>
+        <p>puede escribirse:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun fechaStringOption2(p: Persona): Option&lt;String&gt; {
+              val df = SimpleDateFormat("dd/MM/yyyy")
+              return p.fechaNacimiento.map { df.format(it) }
+          }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Método <code>getOrElse()</code></h3>
+        <ul>
+          <li>Devuelve el valor contenido dentro de un <code>Option&lt;T&gt;</code>. Si no existe, devuelve el valor por defecto pasado como parámetro:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T&gt; Option&lt;T&gt;.getOrElse(default: T): T = when (this) {
+                is Some -> value
+                is None -> default
+            }
+          </code></pre>
+          </li>
+          <p>Ejemplo:</p>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun fechaString(p: Persona): String {
+                val df = SimpleDateFormat("dd/MM/yyyy")
+                return p.fechaNacimiento.map { df.format(it) }
+                                        .getOrElse("No hay fecha")
+            }            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>getOrElse()</code></h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; Option&lt;T&gt;.getOrElse(default: T): T
+        </code></pre>
+        <ul>          
+          <li>Problema: el valor por defecto siempre se evalúa, aunque luego no se utilice.</li>
+          <li>Ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            p.fechaNacimiento.getOrElse(<span class="hl">buscar_en_bd()</span>)
+          </code></pre>
+          Se ejecuta la función <code>buscar_en_bd()</code> aunque <code>p.fechaNacimiento</code> sea de tipo <code>Some</code>.
+          </li>
+          <li>¿Se puede evitar la evaluación de un parámetro si no se va utilizar?</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>getOrElse()</code></h3>
+        <ul>
+          <li>Solución: encapsular el argumento en una función.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+                                         <span class="arrow_box_down" style="position:relative;top:-0.2em">Función sin parámetros</span>
+            fun &lt;T&gt; Option&lt;T&gt;.getOrElse(default: <span class="hl">() -> T</span>): T
+          </code></pre>
+          Solo se llamará a esa función si <code>this</code> es <code>None</code>          
+          </li>
+          <li>Nueva implementación:
+          <pre style="font-size:50%"><code class="language-kotlin" data-trim data-noescape>
+                fun &lt;T&gt; Option&lt;T&gt;.getOrElse(default: () -&gt; T): T = when (this) {
+                    is Some -&gt; value
+                    is None -&gt; <span class="hl">default()</span>
+                }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>getOrElse()</code></h3>
+        <ul>
+          <li>En el ejemplo anterior:</li>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          p.fechaNacimiento.getOrElse { buscar_en_bd() }
+        </code></pre>
+          <li>Si <code>p.fechaNacimiento</code> contiene un valor <code>Some</code>, no se llamará a la función <code>{ buscar_en_bd() }</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>flatMap()</code></h3>
+        <ul>
+          <li>Igual que <code>map</code>, pero la función pasada como parámetro devuelve un valor de tipo <code>Option&lt;S&gt;</code>, en lugar de <code>S</code>.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T, S&gt; Option&lt;T&gt;.flatMap(f: (T) -&gt; Option&lt;S&gt;): Option&lt;S&gt; = 
+                  when (this) {
+                      is Some -&gt; f(value)
+                      is None -&gt; None
+                  }            
+          </code></pre>
+          </li>
+          <li>El método <code>map()</code> puede escribirse en términos de <code>flatMap()</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T, S&gt; Option&lt;T&gt;.map(f: (T) -&gt; S): Option&lt;S&gt; = 
+                flatMap { f(it).toOption() }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          data class Persona(
+            val nombre: String,
+            val direccion: Option&lt;Direccion&gt;,
+            val fechaNacimiento: Option&lt;Date&gt;
+          )
+          data class Direccion(
+            val calle: String, 
+            val numero: Int, 
+            val piso: Option&lt;Int&gt;
+          )
+        </code></pre>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun obtenerPiso(ps: Map&lt;Int, Persona&gt;, id: Int): Option&lt;Int&gt; =
+              ps[id].toOption()
+                .flatMap { it.direccion }
+                .flatMap { it.piso }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          data class Persona(
+            val nombre: String,
+            val direccion: Option&lt;Direccion&gt;,
+            val fechaNacimiento: Option&lt;Date&gt;
+          )
+          data class Direccion(
+            val calle: String, 
+            val numero: Int, 
+            val piso: Option&lt;Int&gt;
+          )
+        </code></pre>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun obtenerPisoStr(ps: Map&lt;Int, Persona&gt;, id: Int): Option&lt;String&gt; =
+              ps[id].toOption()
+                .flatMap { it.direccion }
+                .flatMap { it.piso }
+                .map { it.toString() }
+                .orElseGet { "No hay piso" }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Método <code>filter()</code></h3>
+        <ul>
+          <li>Aplica una función booleana al valor contenido en un <code>Option&lt;T&gt;</code> (si existe).</li>
+          <li>Si la función booleana devuelve <code>false</code>, devuelve <code>None</code>.</li>
+        </ul>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;T&gt; Option&lt;T&gt;.filter(f: (T) -&gt; Boolean): Option&lt;T&gt; = 
+              this.flatMap { if (f(it)) this else None }
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>El método <code>filter()</code> es útil para realizar validaciones de valores.</li>
+          <li>Ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun obtenerNombre(ps: Map&lt;Int, Persona&gt;, id: Int): Option&lt;String&gt; =
+    ps[id].toOption()
+          .map { it.nombre }
+          .filter { it != "" }
+          </code></pre>
+          La función <code>obtenerNombre()</code> devuelve <code>None</code> si la persona con clave <code>id</code> no está en el diccionario, o está con nombre vacío.
+          </li>
+        </ul>
+      </section>
+      
+    </section>
+    <section>
+      
+      
+      <section>
+        <h2>Tipo <span style="font-family:monospace;text-transform:none">Either</span></h2>
+      </section>
+            
+      
+      <section>
+        <h3>El tipo <code>Either</code></h3>
+        <ul>
+          <li>El tipo <code>Option&lt;Y&gt;</code> permite denotar la ausencia de resultados, pero no ofrece información sobre el motivo de esta ausencia.</li>
+          <li>El tipo <code>Either&lt;L, R&gt;</code> incorpora información al caso de &laquo;error&raquo;, donde podemos indicar el tipo de error ocurrido.</li>          
+        </ul>
+        <p><img src="07/Either.svg"></p>
+      </section>
+      
+      <section>
+        <h3>El tipo <code>Either</code></h3>
+        <ul>
+          <li><code>Right&lt;R&gt;</code> representa un resultado correcto.</li>
+          <li><code>Left&lt;L&gt;</code> representa el caso de error.
+          <ul>
+            <li>El tipo <code>L</code> puede ser <code>Exception</code>, o cualquier otro.</li>
+          </ul>
+          </li>
+        </ul>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+sealed interface Either&lt;out L, out R&gt;
+
+data class Left&lt;out L&gt;(val value: L) : Either&lt;L, Nothing&gt;
+data class Right&lt;out R&gt;(val value: R) : Either&lt;Nothing, R&gt;          
+        </code></pre>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          fun divide(x: Double, y: Double): Either&lt;String, Double&gt; =
+            if (y == 0.0) Left("Division por cero")
+            else Right(x / y)
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Combinadores de <code>Either</code></h3>
+        <div style="display:flex">
+        <ul style="width:40%">
+          <li>Creación:<ul>
+            <li><code>conditionally()</code></li>
+            <li><code>catch()</code></li>            
+          </ul>
+          </li>
+        </ul>
+        <ul style="width:40%">
+          <li>Transformación:<ul>
+            <li><code>map()</code></li>
+            <li><code>mapLeft()</code></li>
+            <li><code>flatMap()</code></li>
+          </ul>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Partimos del siguiente tipo de datos:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+data class Cliente(val nombre: String, 
+                   val edad: Int, 
+                   val correo: String)
+            
+          </code></pre>
+          </li>
+          <li>Queremos construir una función que construye un objeto <code>Cliente</code> a partir de información proporcionada en un formulario.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+typealias ErrorMsg = String
+
+fun construirCliente(nombreStr: String, 
+                     edadStr: String, 
+                     correoStr: String): Either&lt;ErrorMsg, Cliente&gt; 
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Creación mediante <code>conditionally()</code></h3>
+        <ul>
+          <li>Recibe una condición booleana y construye un valor <code>Right</code> o <code>Left</code> según la condición se cumpla o no:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L, R&gt; conditionally(b: Boolean, 
+                         ifTrue: () -&gt; R, 
+                         ifFalse: () -&gt; L) =
+    if (b) Right(ifTrue()) else Left(ifFalse())
+          </code></pre>
+          </li>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>La función <code>checkAndTrim(str, fieldName)</code> elimina los espacios iniciales y finales de <code>str</code> y comprueba si es vacía.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun checkAndTrim(str: String, 
+                 fieldName: String): Either&lt;ErrorMsg, String&gt; =
+    conditionally(str.trim() != "",
+                  { str.trim() },     <span class="arrow_box_left">Caso Right</span>
+                  { "Empty string: $fieldName" }) <span class="arrow_box_left">Caso Left</span>
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Creación mediante <code>catch()</code></h3>
+        <ul>
+          <li>El método <code>catch()</code> recibe un cómputo y captura sus excepciones, devolviendo un tipo <code>Either</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;T&gt; catch(f: () -&gt; T): Either&lt;Exception, T&gt; =
+    try {
+        Right(f())
+    } catch (e: Exception) {
+        Left(e)
+    }
+          </code></pre>
+          </li>
+          <li>Ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun checkInt(str: String): Either&lt;NumberFormatException, Int&gt; =
+              catch { str.toInt() }
+              
+          checkInt("23")   // &rarr; Right(23)
+          checkInt("sdf")  // &rarr; Left(NumberFormatException)
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Transformación: <code>map()</code> y <code>mapLeft()</code></h3>
+        <ul>
+          <li><code>map()</code> sirve para transformar el valor contenido dentro de un objeto <code>Right</code>.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L, R1, R2&gt; Either&lt;L, R1&gt;.map(f: (R1) -&gt; R2): Either&lt;L, R2&gt; =
+        when (this) {
+            is Left -> this
+            is Right -> Right(f(value))
+        }
+          </code></pre>
+          </li>
+          <li><code>mapLeft()</code> sirve para transformar el valor contenido dentro de un objeto <code>Left</code>.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L1, L2, R&gt; Either&lt;L1, R&gt;.mapLeft(f: (L1) -&gt; L2): Either&lt;L2, R&gt; = 
+        when (this) {
+            is Left -> Left(f(value))
+            is Right -> this
+        }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun checkInt(str: String, fieldName: String): Either&lt;ErrorMsg, Int&gt; =
+              catch { str.toInt() }.mapLeft { "Not a number: $fieldName" }
+              
+          checkInt("23", "edad")   // &rarr; Right(23)
+          checkInt("sdf", "edad")  // &rarr; Left("Not a number: edad")
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>Transformación: <code>flatMap()</code></h3>
+        <ul>
+          <li>Similar a <code>map()</code>, pero la función a aplicar al caso <code>Right</code> es de tipo <code>R1 -> Either &lt;L, R2&gt;</code>:
+          </li>
+        </ul>
+          <pre style="font-size:50%"><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L, R1, R2&gt; Either&lt;L, R1&gt;.flatMap(f: (R1) -&gt; Either&lt;L, R2&gt;): Either&lt;L, R2&gt; = 
+        when (this) {
+            is Left -&gt; this
+            is Right -&gt; f(value)
+        }            
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun checkInt(str: String, fieldName: String): Either&lt;ErrorMsg, Int&gt; =
+              checkAndTrim(str, fieldName).flatMap { s ->
+                  catch { s.toInt() }.mapLeft { "Not a number: $fieldName" }
+              }
+              
+          checkInt(" 23", "edad")   // &rarr; Right(23)
+          checkInt(" ", "edad")     // &rarr; Left("Empty string: edad")
+          checkInt("sdf", "edad")  // &rarr; Left("Not a number: edad")
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        val emailRegex: Regex = ...
+        
+        fun checkMail(str: String, fieldName: String): Either&lt;ErrorMsg, String&gt; =
+            checkAndTrim(str, fieldName).flatMap { s ->
+                conditionally(emailRegex.matches(s), 
+                              { s }, 
+                              { "Invalid email: $fieldName" })
+            }
+          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Con las tres funciones <code>checkAndTrim()</code>, <code>checkInt()</code> y <code>checkMail()</code> podemos completar la función de validación que construye un objeto <code>Cliente</code>:
+<pre style="font-size:45%"><code class="language-kotlin" data-trim data-noescape>
+fun construirCliente(nombreStr: String, 
+                     edadStr: String, 
+                     correoStr: String): Either&lt;ErrorMsg, Cliente&gt; =
+    checkAndTrim(nombreStr, "nombre").flatMap { nombre ->
+        checkInt(edadStr, "edad").flatMap { edad ->
+            checkMail(correoStr, "correo").map { correo ->
+                Cliente(nombre, edad, correo)
+            }
+        }
+    }
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul style="width:100%">
+          <li>Ejemplos de uso:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            construirCliente(" ", "23", "correcto@ucm.es")
+                // Left("Empty string: nombre")
+                
+            construirCliente("Javier", "", "correcto@ucm.es")
+                // Left("Empty string: edad")
+            
+            construirCliente("Javier", "das", "correcto@ucm.es")
+                // Left("Not a number: edad")
+            
+            construirCliente("Javier", "32", "incorrecto@ucm@es")
+                // Left("Invalid email: correo")
+            
+            construirCliente("Javier ", " 32", "correcto@ucm.es")
+                // Right(Cliente(nombre="Javier", edad=32, correo="correcto@ucm.es"))
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+    </section>
+    <section>
+      
+      <section>
+        <h2>Tipo <span style="font-family:monospace;text-transform:none">Validated</span></h2>
+      </section>
+            
+      
+      <section>
+        <h3>Inconvenientes de <code>Either</code></h3>
+        <ul>
+          <li>Cuando encadenamos varios pasos de cómputo con <code>Either</code> y <code>flatMap</code>, la evaluación se detiene en el primer error generado.</li>
+          <li>A veces nos interesa, en caso de error, seguir con la evaluación del resto de pasos y acumular todos los errores obtenidos.</li>
+          <li>El tipo <code>Validated</code> nos permite acumular errores.</li>
+        </ul>        
+      </section>
+      
+
+
+            <section>
+        <h3>El tipo <code>Validated</code></h3>
+<pre><code class="language-kotlin" data-trim data-noescape>
+sealed interface Validated&lt;out L, out R&gt;
+
+data class Valid&lt;out R&gt;(val value: R) : Validated&lt;Nothing, R&gt;
+data class Invalid&lt;out L&gt;(val errors: List&lt;L&gt;) : Validated&lt;L, Nothing&gt;
+</code></pre>
+        <ul>
+          <li><code>Valid</code> es análogo al <code>Right</code> del tipo <code>Either</code>.</li>
+          <li><code>Invalid</code> es análogo al <code>Left</code> del tipo <code>Either</code>, pero ahora acumula una lista de objetos de tipo <code>L</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Combinadores de <code>Validated</code></h3>
+        <ul>
+          <li>Conversión desde <code>Either</code>:
+          <ul>
+            <li><code>toValidated()</code></li>
+          </ul>
+          <li>Transformación:
+          <ul>
+            <li><code>map()</code></li>
+          </ul>
+          </li>
+          </li>
+          <li>Combinación de <code>Validated</code>:</li>
+          <ul>
+            <li><code>zip()</code></li>
+          </ul>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Método <code>toValidated()</code></h3>
+        <ul>
+          <li>Transforma un tipo <code>Either</code> en un tipo <code>Validated</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L, R&gt; Either&lt;L, R&gt;.toValidated() = when (this) {
+    is Left -&gt; Invalid(listOf(value))
+    is Right -&gt; Valid(value)
+}            
+          </code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>map()</code></h3>
+        <ul style="width:100%">
+          <li>Análogo al <code>map</code> de <code>Either</code>.</li>
+          <li>Transforma el valor contenido dentro de <code>Valid</code>.</li>
+          <li>Si <code>this</code> es <code>Invalid</code>, se devuelve tal cual.</li>
+          <pre style="font-size:45%"><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L, R1, R2&gt; Validated&lt;L, R1&gt;.map(f: (R1) -&gt; R2): Validated&lt;L, R2&gt; = when (this) {
+    is Invalid -&gt; this
+    is Valid -&gt; Valid(f(value))
+}            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>zip()</code></h3>
+        <pre style="font-size:45%"><code class="language-kotlin" data-trim data-noescape>
+          fun &lt;L, R1, R2, R&gt; Validated&lt;L, R1&gt;.zip(other: Validated&lt;L, R2&gt;, 
+                                                  f: (R1, R2) -&gt; R): Validated&lt;L, R&gt;
+        </code></pre>
+        <ul>
+          <li>Combina los valores de <code>this</code> y <code>other</code>:</li>
+          <ul>
+            <li>Si uno de ellos es <code>Invalid</code>, se devuelve <code>Invalid</code>.</li>
+            <li>Si los dos son <code>Invalid</code>, se concatenan los errores de cada uno de ellos.</li>
+            <li>Si los dos son <code>Valid</code>, se aplica la función <code>f</code> a los dos valores resultado.</li>
+          </ul>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Método <code>zip()</code></h3>
+        <pre style="font-size:45%"><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L, R1, R2, R&gt; Validated&lt;L, R1&gt;.zip(other: Validated&lt;L, R2&gt;, 
+                                        f: (R1, R2) -&gt; R): Validated&lt;L, R&gt; = when (this) {
+    is Invalid -&gt; when (other) {
+        is Invalid -&gt; Invalid(this.errors + other.errors)
+        is Valid -&gt; this
+    }
+    is Valid -&gt; when (other) {
+        is Invalid -&gt; other
+        is Valid -&gt; Valid(f(this.value, other.value))
+    }
+}
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Método <code>zip()</code></h3>
+        <ul>
+          <li>Es posible generar el método <code>zip()</code> para combinar más de dos valores <code>Validated</code>.</li>
+          <li>Por ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;L, R1, R2, R3, R&gt; Validated&lt;L, R1&gt;.zip(
+      val2: Validated&lt;L, R2&gt;, 
+      val3: Validated&lt;L, R3&gt;,
+      f: (R1, R2, R3) -&gt; R): Validated&lt;L, R&gt; = ...
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Podemos expresar el método <code>construirCliente()</code> realizado anteriormente:</li>
+          <pre style="font-size:45%"><code class="language-kotlin" data-trim data-noescape>
+fun construirCliente(nombreStr: String, 
+                     edadStr: String,
+                     correoStr: String): Validated&lt;ErrorMsg, Cliente&gt; =
+    checkAndTrim(nombreStr, "nombre").toValidated().zip(
+        checkInt(edadStr, "edad").toValidated(),
+        checkMail(correoStr, "correo").toValidated(),
+    ) { nombre, edad, correo -&gt; Cliente(nombre, edad, correo) }
+          </code></pre>
+        </ul>
+      </section>
+    </section>
+      
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:70%; font-size: 95%">
+                <ul>
+                    <li>M. Vermeulen, R. Bjarnason, P. Chiusano
+                        <br>
+                        <em>Functional Programming in Kotlin</em>
+                        <br> Manning Publications (2021)
+                        <br> Capítulo 4
+                    </li>
+                    <li style="margin-top:3em">
+                        <a href="https://arrow-kt.io/docs/core/">Arrow Core</a>
+                        <br> https://kotlinlang.org/api/latest/jvm/stdlib/
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://images.manning.com/book/f/ac70811-658d-439c-8c07-605e7a8a2e19/Vermeulen-HI.png" style="width:50%; border:none"><br/>
+                <img src="https://arrow-kt.io/docs/img/core/arrow-core-brand-sidebar.svg" style="width:30%; border:none">
+                
+            </div>            
+        </section>      
+      
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
