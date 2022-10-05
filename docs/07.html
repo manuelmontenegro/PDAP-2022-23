@@ -173,7 +173,7 @@
           <li>Ejemplo 1:
           <pre><code class="language-java" data-trim data-noescape>
             String cad = ...;
-            cad.substring(cad.indexOf('P'));
+            System.out.println(cad.substring(cad.indexOf('P')));
           </code></pre>
           <p class="fragment"><code>IndexOutOfBoundsException</code> si el carácter <code>'P'</code> no está en la cadena.</p>
           </li>
@@ -181,7 +181,7 @@
           <pre><code class="language-java" data-trim data-noescape>
             Map&lt;Integer, String&gt; dicc = ...;
             String nombre = dicc.get(2);
-            nombre.toLowerCase();
+            System.out.println(nombre.toLowerCase());
           </code></pre>
           <p class="fragment"><code>NullPointerException</code> si el diccionario no contiene la clave <code>'2'</code>.</p>
           </li>
