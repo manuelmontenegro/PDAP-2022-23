@@ -1,0 +1,796 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Gestión de errores sin excepciones</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Tipos de datos algebraicos</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Tipos producto</li>
+            <li>Tipos unión disjunta</li>
+            <li>Ajuste de patrones en tipos unión</li>
+            <li>Extensibilidad</li>
+          </ol>
+      </section>
+      
+      
+      <section>
+        <h3>Tipos de datos algebraicos (TDA)</h3>
+        <ul>
+          <li>El concepto de <strong>tipo de datos algebraico</strong> (TDA) es fundamental en programación funcional.
+          </li>
+          <li>Un TDA es un tipo de datos formado mediante la combinación de otros tipos de datos, bien sean simples, o bien otros TDA.</li>
+          <li class="fragment">Hay dos clases fundamentales de TDA:
+          <ul>
+            <li><strong class="rojo">Tipos producto</strong></li>
+            <li><strong class="rojo">Tipos unión disjunta</strong></li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+    <section>
+      
+      <section>
+        <h2>Tipos producto</h2>
+      </section>
+      
+      <section>
+        <h3>Tipos producto</h3>
+        <ul>
+          <li>Sirven para agrupar valores de distintos tipos en una única entidad.</li>
+          <li>Por ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>          
+            data class Empleado(val id: Int,
+                                val nombre: String,
+                                val direccion: String)
+          </code></pre>
+          Una instancia de <code>Empleado</code> combina los tres campos: <code>id</code>, <code>nombre</code> y <code>direccion</code>.
+          </li>
+          <li class="fragment">Otro ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Pair&lt;T, S&gt;(val first: T, val second: S)
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos producto</h3>
+        <ul>
+          <li>Existen en casi todos los lenguajes:
+          <ul>
+            <li>C: registros (<code>struct</code>)</li>
+            <li>Java: clases (<code>class</code>)</li>
+            <li>C++: registros (<code>struct</code>) y clases (<code>class</code>)</li>
+            <li>Javascript: objetos</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+    </section>
+    <section>
+      
+      <section>
+        <h2>Tipos unión disjunta</h2>
+      </section>
+      
+      <section>
+        <h3>Tipos unión disjunta</h3>
+        <ul>
+          <li>Un tipo unión puede tomar valores de <strong>uno</strong> de entre varios tipos prefijados <code>T<sub>1</sub></code>, <code>T<sub>2</sub></code>, ..., <code>T<sub>n</sub></code>, denominados <em>alternativas</em>.
+          </li>
+          <li class="fragment">Dado un elemento de un tipo unión, siempre es posible determinar a qué alternativa <code>T<sub>i</sub></code> corresponde.</li>
+          <li class="fragment">También llamados: <em>sum types</em>, <em>variants</em>, <em>discriminated unions</em>, <em>disjoint unions</em>, <em>coproducts</em>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Los tipos unión existen en la mayoría de lenguajes funcionales. Por ejemplo, en OCaml:
+        <pre><code class="language-ocaml" data-trim data-noescape>
+          type figura =
+            | Rectangulo
+            | Circulo
+            | Segmento
+        </code></pre>
+          <p class="fragment">o en Haskell:</p>
+        <pre class="fragment"><code class="language-haskell" data-trim data-noescape>
+          data Figura = Rectangulo | Circulo | Segmento
+        </code></pre>        
+        </li>
+        <li class="fragment">Un valor de tipo <code>Figura</code> solamente puede ser <code>Rectangulo</code>, <code>Circulo</code> o <code>Segmento</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Cada una de las alternativas de un tipo unión puede ser, a su vez, un tipo producto:
+        <pre><code class="language-ocaml" data-trim data-noescape>
+          type punto = ...
+        
+          type figura =
+            | Rectangulo of { centro: punto, alto: float, ancho: float }
+            | Circulo of { centro: punto, radio: float }
+            | Segmento { desde: punto, hasta: punto }
+        </code></pre>
+        <div class="fragment">o en Haskell:
+        <pre><code class="language-haskell" data-trim data-noescape>
+          type Punto = ...
+          
+          data Figura = 
+              Rectangulo Punto Float Float
+            | Circulo Punto Float
+            | Segmento Punto Punto
+        </code></pre></div>
+          </li>
+          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¡Ya conocíamos los tipos unión!</h3>
+        <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
+          Option&lt;T&gt; =
+            | None
+            | Some(value: T)
+        </code></pre>
+        <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
+          Either&lt;L, R&gt; =
+            | Left(value: L)
+            | Right(value: R)
+        </code></pre>
+        <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
+          List&lt;T&gt; =
+            | Nil
+            | Cons(head: T, tail: List&lt;T&gt;)
+        </code></pre>
+      </section>
+
+      <section>
+        <h3>Ajuste de patrones</h3>
+        <ul>
+          <li>Los lenguajes funcionales permiten distinguir entre las distintas alternativas mediante <strong>ajuste de patrones</strong>.</li>
+          <li class="fragment">Por ejemplo, en Haskell:
+          <pre><code class="language-haskell" data-trim data-noescape>
+            area :: Figura -> Double
+            area fig = case fig of
+                         Rectangulo pos ancho alto -> ancho * alto
+                         Circulo pos radio -> PI * radio * radio
+                         Segmento desde hasta -> 0.0
+          </code></pre>
+          <div class="fragment">
+          o, incluso:
+          <pre><code class="language-haskell" data-trim data-noescape>
+            area :: Figura -> Double
+            area (Rectangulo pos ancho alto) = ancho * alto
+            area (Circulo pos radio) = PI * radio * radio
+            area (Segmento desde hasta) = 0.0
+          </code></pre>
+          </div>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>En lenguajes imperativos</h3>
+        <ul>
+          <li>La mayoría de lenguajes imperativos no soporta, de manera directa, los tipos unión disjunta.
+          </li>
+          <li class="fragment">Algunos proporcionan tipos enumerados,
+          <pre><code class="language-java" data-trim data-noescape>
+            enum Figura {
+              RECTANGULO, CIRCULO, SEGMENTO
+            }
+          </code></pre>
+          <div class="fragment">
+          pero las alternativas de un tipo <code>enum</code> no pueden almacenar información asociada.
+          <ul class="fragment">
+            <li>o, si lo permiten, ha de ser el mismo tipo de información en todas las alternativas.</li>
+          </ul>          
+          </div>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos unión en C/C++</h3>
+        <ul>
+          <li>En C y C++ tenemos los tipos <code>union</code>:
+        <pre><code class="language-c" data-trim data-noescape>
+          typedef union {
+            int entero;
+            char caracter;
+          } EnteroCaracter;
+        </code></pre></li>
+          <li class="fragment">Un valor de tipo <code>EnteroCaracter</code> tendrá un atributo <code>entero</code>, o un atributo <code>caracter</code>, pero no ambos simultáneamente.</li>
+          <pre class="fragment"><code class="language-c" data-trim data-noescape>
+              EnteroCaracter ec;
+              ec.entero = 10;
+              ec.caracter = '2';    <span class="arrow_box_left fragment">Sobreescribe el valor anterior.</span>
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos unión en C/C++</h3>
+        <ul>
+          <li>Problema: dado un valor de tipo <code>EnteroCaracter</code>, siempre es posible acceder a ambos atributos.
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+          EnteroCaracter ec;
+          ec.entero = 65;
+          printf("%c\n", ec.caracter);  <span class="arrow_box_left fragment">???</span>
+          </code></pre>
+          </li>
+          <li class="fragment">Además, dado un valor de tipo <code>EnteroCaracter</code>, no es posible saber cúal de las alternativas contiene.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            void funcion(EnteroCaracter ec) {
+                // ¿Accedemos a ec.entero? ¿o a ec.caracter?
+            }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos unión en C/C++</h3>
+        <ul>
+          <li>Solución: asociar a cada tipo <code>union</code> un atributo (<code>tag</code>) que indique cuál es la alternativa correspondiente a la información almacenada.
+          <pre><code class="language-c" data-trim data-noescape>
+            typedef enum { ENTERO, CARACTER } TipoDato;
+
+            typedef struct {
+              TipoDato <span class="hl">tag</span>;
+              union {
+                int entero;
+                char caracter;
+              };
+            } EnteroCaracter;
+            
+          </code></pre>
+          </li>
+          <li>Por ejemplo:
+          <pre><code class="language-c" data-trim data-noescape>
+            EnteroCaracter ec1 = { ENTERO, 65 };
+            EnteroCaracter ec2 = { CARACTER, 'b' };            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Tipos unión en C/C++</h3>
+        <ul>
+          <li>Podemos distinguir casos sobre el atributo <code>tag</code>:
+          <pre><code class="language-c" data-trim data-noescape>
+          void imprimir(EnteroCaracter ec) {
+            switch (ec.tag) {
+              case ENTERO:
+                printf("Es un entero: %d\n", ec.entero);
+                break;
+              case CARACTER:
+                printf("Es un carácter: %c\n", ec.caracter);
+                break;
+            }
+          }            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: figuras</h3>
+        <div style="display:flex">
+        <pre style="width:45%"><code class="language-c" data-trim data-noescape>
+typedef enum { CIRCULO, RECTANGULO,
+               SEGMENTO }
+        TipoFigura;
+
+typedef struct {
+  Punto centro; 
+  double radio;
+} Circulo;
+
+typedef struct {
+  Punto centro;
+  double ancho, alto;
+} Rectangulo;
+
+typedef struct {
+  Punto desde, hasta;
+} Segmento;
+        </code></pre>
+        
+        <pre style="width:45%"><code class="language-c" data-trim data-noescape>
+typedef struct {
+  TipoFigura tag;
+  union {
+    Rectangulo rectangulo;
+    Circulo circulo;
+    Segmento segmento;    
+  };
+} Figura;                    
+        </code></pre>
+        </div>
+        
+      </section>
+      
+      <section>
+        <h3>Ejemplo: figuras</h3>
+        <pre><code class="language-c" data-trim data-noescape>
+double area(Figura f) {
+  switch (f.tag) {
+    case CIRCULO:
+      return f.circulo.radio * f.circulo.radio * M_PI;
+    case RECTANGULO:
+      return f.rectangulo.ancho * f.rectangulo.alto;
+    case SEGMENTO:
+      return 0;
+  }
+}
+        </code></pre>
+      </section>
+      <section>
+        <h3>Inconvenientes de <code>union</code> en C/C++</h3>
+        <ul style="list-style:none;padding:0;margin:0">
+          <li class="hands_down fragment">El compilador no comprueba si la distinción de casos es exhaustiva.</li>
+          <li class="hands_down fragment">El compilador no impide que accedamos a los atributos incorrectos:
+          </li>
+        </ul>
+          <pre class="fragment"><code class="language-c" data-trim data-noescape>
+ switch (f.tag) {
+  case CIRCULO:
+    return <span class="hl">f.rectangulo.ancho</span>; <span class="arrow_box_left">Acceso incorrecto, pero el compilador no avisa.</span>
+}
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>Tipos unión en lenguajes orientados a objetos</h3>
+        <ul>
+          <li>En programación orientada a objetos, es posible simular los tipos unión mediante <strong>herencia</strong>.</li>
+          <li>Declaramos una interfaz para el tipo unión, y una subclase para cada una de las alternativas.</li>
+        </ul>
+          <p class="fragment"><img src="08/Figura.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Tipos unión en Kotlin</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          sealed interface Figura
+
+          data class Circulo(val centro: Punto, 
+                             val radio: Double): Figura
+          
+          data class Rectangulo(val centro: Punto, 
+                                val ancho: Double, 
+                                val alto: Double): Figura
+          
+          data class Linea(val desde: Punto,
+                           val hasta: Punto): Figura
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Tipos unión en Kotlin</h3>
+        <ul>
+          <li>Kotlin no soporta ajuste de patrones directamente, pero es relativamente fácil distinguir casos según las alternativas:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun area(f: Figura) = when (f) {
+                is Circulo -> radio * radio * Math.PI
+                is Rectangulo -> ancho * alto
+                is Segmento -> 0.0
+            }
+          </code></pre>
+          </li>
+        </ul>
+        <ul style="list-style:none;padding:0;margin:0">
+          <li class="hands_up fragment">El compilador comprueba que la distinción sea exhaustiva, gracias a que <code>Figura</code> es una interfaz <code>sealed</code>.</li>
+          </li>
+          <li class="hands_up fragment">Siempre accedemos a los atributos correctos de cada alternativa, gracias a los <em>smart casts</em>.
+        </ul>      
+        </section>
+        
+        <section>
+          <h3>Tipos unión en Java</h3>
+          <ul>
+            <li>En Java podemos definir las interfaces y clases de manera similar:</li>
+            <pre><code class="language-java" data-trim data-noescape>
+              public interface Figura { }
+            </code></pre>
+            <pre><code class="language-java" data-trim data-noescape>
+              public class Circulo implements Figura {
+                  private Punto centro;
+                  private double radio;
+
+                  public Circulo(Punto centro, double radio) { ... }
+                  public Punto getCentro() { ... }
+                  public double getRadio() { ... }
+              }
+            </code></pre>
+            <pre><code class="language-java" data-trim data-noescape>
+              public class Rectangulo implements Figura { ... }
+            </code></pre>
+            <pre><code class="language-java" data-trim data-noescape>
+              public class Segmento implements Figura { ... }
+            </code></pre>
+          </ul>
+        </section>
+        
+        <section>        
+          <h3>Tipos unión en Java</h3>
+          <ul>
+            <li>Sin embargo, la distinción de casos según alternativa es algo más laboriosa:
+            <pre style="font-size:45%" class="fragment"><code class="language-java" data-trim data-noescape>
+    public double area(Figura f) {
+        if (f instanceof Circulo) {
+            Circulo c = (Circulo) f;
+            return c.getRadio() * c.getRadio() * Math.PI;
+        } else if (f instanceof Rectangulo) {
+            Rectangulo r = (Rectangulo) f;
+            return r.getAncho() * r.getAlto();
+        } else if (f instanceof Segmento) {
+            return 0.0;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }              
+            </code></pre>            
+            </li>
+        <ul style="list-style:none;padding:0;margin:0">
+          <li class="hands_down fragment">El compilador no comprueba si la distinción de casos es exhaustiva.</li>
+          <li class="hands_down fragment">Tenemos que hacer un <em>casting</em> explícito.</li>
+          <li class="hands_down fragment">Necesitamos un caso <em>default</em> al final.</li>
+        </ul>                  
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Tipos unión en Java</h3>
+          <ul>
+            <li>Desde la versión 14 de Java es posible ahorrarse el <em>casting</em> explícito.</li>
+            <li class="fragment">En lugar de
+          <pre><code class="language-java" data-trim data-noescape>
+           if (f instanceof Circulo) {
+                Circulo c = (Circulo) f;
+                return c.getRadio() * c.getRadio() * Math.PI;
+           } else { ... }
+          </code></pre>
+          <div class="fragment">
+          puede escribirse
+          <pre><code class="language-java" data-trim data-noescape>
+           if (f instanceof Circulo <span class="hl">c</span>) {  <span class="arrow_box_left fragment">Se declara variable c de tipo Circulo</span>
+                return c.getRadio() * c.getRadio() * Math.PI;
+           } else { ... }
+          </code></pre></div></li>
+          </ul>
+          <p>
+          </p>
+        </section>
+        
+        <section>
+          <h3>Tipos unión en Java</h3>
+          <ul>
+            <li>Desde la versión 17 de Java es posible definir clases <code>sealed</code>:
+            <pre><code class="language-java" data-trim data-noescape>
+              public sealed interface Figura 
+                permits Circulo, Rectangulo, Segmento { }
+            </code></pre></li>
+            <li class="fragment">Se prevé la incorporación de una sintaxis de distinción de casos similar a Kotlin:
+<pre><code class="language-java" data-trim data-noescape>
+      public double area(Figura f) {
+        return switch(f) {
+            case Circulo c -> c.getRadio() * c.getRadio();
+            case Rectangulo r -> r.getAncho() * r.getAlto();
+            case Segmento s -> 0.0;
+        };
+      }
+</code></pre>            
+            </li>
+          </ul>
+        </section>
+        
+
+    </section>
+    <section>
+        
+        <section>
+          <h2>Ajuste de patrones</h2>
+        </section>
+
+              
+        <section>
+          <h3>Ajuste de patrones</h3>
+          <ul>
+            <li>Es posible simular ajuste de patrones mediante el uso de orden superior.</li>
+            <li>Para ello se define una función <code>match</code> que recibe como parámetro tantas funciones como alternativas tiene el tipo unión.</li>
+            <li>Cada función recibida realiza las acciones correspondientes a esa alternativa.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Ejemplo: figuras</h3>
+          <ul style="width:100%">
+            <li>Por ejemplo, en Kotlin:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              fun area(f: Figura) = f.match(
+                  { centro, radio -> radio * radio * Math.PI },   <span class="arrow_box_left fragment">Caso `Circulo`</span>
+                  { centro, ancho, alto -> ancho * alto },        <span class="arrow_box_left fragment">Caso `Rectangulo`</span>
+                  { origen, destino -> 0 }                        <span class="arrow_box_left fragment">Caso `Segmento`</span>
+              )
+            </code></pre>
+            <div class="fragment">
+            o, en Java:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+              public double area(Figura f) {
+                  return f.match(
+                      (centro, radio) -> radio * radio * Math.PI, <span class="arrow_box_left fragment">Caso `Circulo`</span>
+                      (centro, ancho, alto) -> ancho * alto,      <span class="arrow_box_left fragment">Caso `Rectangulo`</span>
+                      (desde, hasta) -> 0.0                       <span class="arrow_box_left fragment">Caso `Segmento`</span>
+                  );
+              }              
+            </code></pre>
+            </div>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>¿Cómo se implementa <code>match</code>?</h3>
+          <ul class="fragment">
+            <li>En Kotlin:
+            <pre style="width:100%"><code class="language-kotlin" data-trim data-noescape>
+              fun &lt;R&gt; Figura.match(ifCirculo: (Punto, Double) -&gt; R,
+                                   ifRectangulo: (Punto, Double, Double) -&gt; R,
+                                   ifSegmento: (Punto, Punto) -&gt; R): R = 
+                  when (this) {
+                      is Circulo -&gt; ifCirculo(this.centro, this.radio)
+                      is Rectangulo -&gt; ifRectangulo(this.centro, this.ancho, this.alto)
+                      is Segmento -&gt; ifSegmento(this.desde, this.hasta)
+                  }
+            </code></pre>
+            </li>
+            <li class="fragment">En Java: de manera similar.</li>
+          </ul>
+          <p class="fragment">Ventajas de <code>match</code>:</p>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li class="hands_up fragment">Funciona para cualquier lenguaje orientado a objetos.</li>
+            <li class="hands_up fragment">Obliga a una distinción de casos exhaustiva.</li>
+          </ul>                  
+            </ul>          
+        </section>
+        
+        
+        <section>
+          <h3>¿Cómo se implementa <code>match</code>?</h3>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li class="hands_up">Puede implementarse incluso si el lenguaje no soporta comprobación de tipos en tiempo de ejecución (<code>is</code> o <code>instanceof</code>).</li>
+          </ul> 
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            sealed interface Figura {
+                // Definimos `match` como método abstracto en la clase Figura
+                fun &lt;R&gt; Figura.match(ifCirculo: (Punto, Double) -&gt; R,
+                                     ifRectangulo: (Punto, Double, Double) -&gt; R,
+                                     ifSegmento: (Punto, Punto) -&gt; R): R
+            }            
+          </code></pre>
+          
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Circulo(val centro: Punto, val radio: Double): Figura {
+                // Concretamos su definición en cada subclase
+                override fun &lt;R&gt; Figura.match(
+                    ifCirculo: (Punto, Double) -&gt; R,
+                    ifRectangulo: (Punto, Double, Double) -&gt; R,
+                    ifSegmento: (Punto, Punto) -&gt; R
+                ): R = ifCirculo(centro, radio)
+            }            
+          </code></pre>
+        
+        </section>
+        
+    </section>
+    <section>
+        
+        <section>
+          <h2>Extensibilidad</h2>
+        </section>
+        
+        
+        <section>
+          <h3>Comparativa entre estilo funcional y orientado a objetos</h3>
+          <ul>
+            <li>Supongamos un tipo unión con distintas alternativas, como el tipo <code>Figura</code> visto anteriormente:
+            </li>
+          </ul>
+          <p>
+            <img src="08/Figura.svg">
+          </p>
+        </section>
+        
+        
+        <section>
+          <h3>Enfoque funcional</h3>
+          <ul>
+            <li>Para definir funciones sobre <code>Figura</code>, hemos realizado distinción de casos de manera explícita sobre el tipo de la figura recibida:
+            <pre><code class="language-kotlin" data-trim data-noescape>
+fun Figura.area() = when (this) {
+    <span class="hl">is Circulo</span> -&gt; radio * radio * Math.PI
+    <span class="hl">is Rectangulo</span> -&gt; ancho * alto
+    <span class="hl">is Segmento</span> -&gt; 0.0
+}              
+            </code></pre>
+            </li>
+            <li class="fragment">¿Es esta la manera correcta de hacerlo en Programación Orientada a Objetos? 🤔</li>
+            <li class="fragment">¿No está &laquo;mal visto&raquo; el uso de <code>is</code>/<code>instanceof</code>? 😳</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Enfoque orientado a objetos clásico</h3>
+          <ul>
+            <li>Si queremos implementar una operación que dependa de la subclase utilizada, la manera clásica en POO es definirla mediante un método abstracto que se sobreescriba en cada alternativa.</li>
+          </ul>
+          <p class="fragment"><img src="08/FiguraMetodos.svg"></p>
+        </section>
+        
+        <section>
+          <h3>Enfoque orientado a objetos clásico</h3>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            sealed interface Figura {
+                fun area(): Double
+            }            
+          </code></pre>
+          <div class="fragment">
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Circulo(val centro: Punto, val radio: Double): Figura {
+                override fun area() = radio * radio * Math.PI
+            }
+          </code></pre>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Rectangulo(val centro: Punto, val ancho: Double, 
+                                  val alto: Double): Figura {
+                override fun area() = ancho * alto
+            }            
+          </code></pre>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Segmento(val desde: Punto, val hasta: Punto): Figura {
+                override fun area() = 0.0
+            }            
+          </code></pre>
+          </div>
+        </section>
+        
+        <section>
+          <h3>Comparativa</h3>
+          <p>Tenemos dos enfoques:</p>
+          <ol>
+            <li class="fragment">Distinción de casos explícita mediante <code>is</code> o <code>instanceof</code>.</li>
+            <li class="fragment">Distinción de casos implícita, distribuida en las distintas subclases.
+            </li>
+          </ol>
+          <div class="info_box fragment">¿Cuál es mejor?</div>
+        </section>
+        
+        <section>
+          <h3>Comparativa</h3>
+          <p class="rojo">¿En cuál de las dos alternativas es más fácil añadir una <strong>nueva función</strong> sobre el tipo de datos <code>Figura</code>?</p>
+          <p class="rojo fragment" style="font-size:70%">Por ejemplo, una función <code style="font-size:90%">perimetro()</code></p>
+          <ol>
+            <li>Distinción de casos explícita mediante <code>is</code> o <code>instanceof</code>.
+            <ul>
+              <li class="fragment">Se define la nueva función. No afecta a código existente.</li>
+            </ul>
+            </li>
+            <li>Distinción de casos implícita, distribuida en las distintas subclases.
+            <ul>
+              <li class="fragment">Hay que modificar la clase <code>Figura</code> para añadir el nuevo método. También hay que modificar cada subclase para reescribir el método abstracto. Afecta a código existente.</li>
+            </ul>
+            </li>
+        </section>
+
+        <section>
+          <h3>Comparativa</h3>
+          <p class="rojo">¿En cuál de las dos alternativas es más fácil añadir una <strong>nueva alternativa</strong> al tipo unión <code>Figura</code>?</p>
+          <p class="rojo fragment" style="font-size:70%">Por ejemplo, una subclase <code style="font-size:90%">Triangulo</code></p>
+          <ol>
+            <li>Distinción de casos explícita mediante <code>is</code> o <code>instanceof</code>.
+            <ul>
+              <li class="fragment">Hay que modificar todas las funciones existentes que actúen sobre <code>Figura</code> para incorporar el nuevo caso. Afecta a código existente.</li>
+            </ul>
+            </li>
+            <li>Distinción de casos implícita, distribuida en las distintas subclases.
+            <ul>
+              <li class="fragment">Se define la nueva clase, junto con los casos correspondientes para cada una de las funciones definidas sobre <code>Figura</code>. No afecta a código existente.</li>
+            </ul>
+            </li>
+        </section>
+        
+        <section>
+          <h3>Extensibilidad horizontal vs vertical</h3>
+          
+          <img src="08/Dimensiones.svg">
+          <ul>
+            <li class="fragment"><strong>Extensión horizontal</strong>: añadir nuevas funciones.</li>
+            <li class="fragment"><strong>Extensión vertical</strong>: añadir nuevas subclases.</li>
+          </ul>
+        </section>
+      </section>
+      
+      
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:100%; font-size: 95%">
+                <ul>
+                    <li>Heinlein, Christian
+                        <br>
+                        <em>Vertical, horizontal, and behavioural extensibility of software systems (2005).</em>
+                        <br><a style="font-size:70%" href="https://oparu.uni-ulm.de/xmlui/handle/123456789/356">https://oparu.uni-ulm.de/xmlui/handle/123456789/356</a>
+                    </li>
+                    <li style="margin-top:2em">
+                        <a href="https://github.com/derive4j/derive4j">Derive4J</a>
+                        <br>Biblioteca para uso de tipos algebraicos en Java.
+                        <br><a  style="font-size:70%" href="https://github.com/derive4j/derive4j">https://github.com/derive4j/derive4j</a>
+                    </li>
+                </ul>
+            </div>
+       
+        </section>      
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
