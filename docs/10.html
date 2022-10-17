@@ -1,0 +1,291 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Memoización</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Memoización</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Introducción</li>
+            <li>Función <span style="font-family:monospace;text-transform:none">memoize()</span></li>
+          </ol>
+      </section>
+      
+    <section>
+      <section>
+        <h2>Introducción</h2>
+      </section>
+      
+      <section>
+        <h3>Memoización</h3>
+        <ul>
+          <li>La <strong>memoización</strong> es una técnica utilizada para evitar recomputar el resultado de una función cuando se aplica varias veces al mismo argumento.</li>
+          <li>Consiste almacenar los resultados devueltos por la función en una tabla, a modo de memoria <em>caché</em>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Supongamos una función <code>divisoresDe</code> que devuelve una lista con los divisores de un número pasado como parámetro:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun divisoresDe(n: Int): List&lt;Int&gt; =
+              (1..n/2).filter { n % it == 0 } + n
+          </code></pre>
+          </li>
+          <li class="fragment">Ejemplos de uso:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+    divisoresDe(30)   // &rarr; [1, 2, 3, 5, 6, 10, 15, 30]
+    divisoresDe(23)   // &rarr; [1, 23]
+
+    divisoresDe(30)   // Vuelve a calcular el resultado:
+                      // &rarr; [1, 2, 3, 5, 6, 10, 15, 30]
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Función <code>esDivisorDe</code> memoizada</h3>
+        <ul>
+          <li>Utilizamos un diccionario para almacenar los resultados de la función <code>divisoresDe</code>:
+          <pre style="font-size:50%"><code class="language-kotlin" data-trim data-noescape>
+          val cache: MutableMap&lt;Int, List&lt;Int&gt;&gt; = mutableMapOf()   <span class="arrow_box_left fragment">Inicialmente vacío</span>
+          </code></pre></li>
+          <li class="fragment">Modificamos <code>esDivisorDe</code> para que consulte el diccionario <code>cache</code> antes de consultar el resultado.
+          <pre style="font-size:50%" class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            fun esDivisorDeMemo(n: Int): List&lt;Int&gt; {
+              if (!cache.containsKey(n)) {
+                cache[n] = esDivisorDe(n)   <span class="arrow_box_left fragment">Llama a función original</span>
+              }
+              return cache[n]!!       
+            }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Función <code>esDivisorDe</code> memoizada</h3>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+    divisoresDe(30)   // &rarr; [1, 2, 3, 5, 6, 10, 15, 30]
+    divisoresDe(23)   // &rarr; [1, 23]
+
+    divisoresDe(30)   // Reutiliza resultado anterior
+                      // &rarr; [1, 2, 3, 5, 6, 10, 15, 30]
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>¿Para qué sirve la memoización?</h3>
+        <ul>
+          <li>Mejora la eficiencia en tiempo de una función cuando se le llama repetidamente con el mismo valor.</li>
+          <li class="fragment">La mejora es considerable cuando memoizamos una función recursiva cuyo árbol de llamadas tiene muchas repeticiones:
+          <ul>
+            <li class="fragment">Fibonacci, problemas de programación dinámica, etc.</li>
+          </ul>
+          </li>
+          <li class="fragment">Esta técnica solo funciona si la función memoizada es funcional pura (es decir, no tiene efectos laterales).</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: Fibonacci</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+fun fib(n: Int): Int = when (n) {
+    0 -> 0
+    1 -> 1
+    else -> fib(n - 1) + fib(n - 2)
+}
+        </code></pre>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+          fib(45) // &rarr; 1134903170  (en 7.2 seg)
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: Fibonacci memoizado</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+val cache: MutableMap&lt;Int, Int&gt; = mutableMapOf();
+
+fun fibMemo(n: Int): Int {
+  if (!cache.containsKey(n)) {
+    cache[n] = when (n) {
+        0 -> 0
+        1 -> 1
+        else -> fibMemo(n - 1) + fibMemo(n - 2)
+    }
+  }
+  return cache[n]!!
+}
+        </code></pre>
+        <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+          fib(45) // &rarr; 1134903170  (en 0.0002 seg)
+        </code></pre>
+      </section>
+      
+    </section>
+    <section>
+      
+      <section>
+        <h2>Función <code>memoize()</code></h2>
+      </section>
+      
+      
+      <section>
+        <h3>Función <code>memoize()</code></h3>
+        <ul>
+          <li>Es una función de orden superior.</li>
+          <li>Dada una función (no recursiva), devuelve su versión memoizada.</li>
+        </ul>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+fun &lt;T, S&gt; memoize(f: (T) -&gt; S): (T) -&gt; S {
+    val cache: MutableMap&lt;T, S&gt; = mutableMapOf()
+    return { t -&gt;
+        if (!cache.containsKey(t)) {
+            cache[t] = f(t)
+        }
+        cache[t]!!
+    }
+}          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul style="width:100%">
+          <li>Dada la siguiente función:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+      fun divisoresDe(n: Int): List&lt;Int&gt; =
+          (1..n/2).filter { n % it == 0 } + n          
+        </code></pre>
+        <div class="fragment">
+        <p>podemos obtener su versión memoizada mediante <code>memoize()</code>:</p>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+    val divisoresDeMemo = memoize(::divisoresDe)          
+            // equivale a `memoize { n -> divisoresDe(n) }`
+            
+    divisoresDeMemo(343)  // &rarr; [1, 7, 49, 343]
+        </code></pre>
+        </div>
+        </li>
+        
+        </ul>
+      </section>
+      
+      <section>
+        <h3><code>memoize()</code> y funciones recursivas</h3>
+        <ul>
+          <li>La función <code>memoize()</code> puede aplicarse a funciones recursivas, pero las llamadas recursivas <strong>no</strong> hacen uso de la versión memoizada:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun fib(n: Int): Int = when (n) {
+              0 -> 0
+              1 -> 1
+              else -> fib(n - 1) + fib(n - 2)  <span class="arrow_box_left fragment">Llamadas a fib, no a fibMemo</span>
+          }
+          
+          ...
+          
+          val fibMemo = memoize(::fib)
+          </code></pre>
+          </li>
+          <li class="fragment">Por tanto, <code>fibMemo</code> solo memoiza la llamada inicial, pero no las recursivas.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: fibonacci</h3>
+        <ul>
+          <li>Hay que modificar <code>fib</code> para que haga las llamadas recursivas sobre la función memoizada:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+          fun fib(n: Int): Int = when (n) {
+              0 -> 0
+              1 -> 1
+              else -> fibMemo(n - 1) + fibMemo(n - 2) <span class=" fragment arrow_box_left">Llamadas a fibMemo</span>
+          }
+
+          val fibMemo = memoize(::fib)            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+    
+    </section>
+      
+      <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:60%">
+                <ul>
+                    <li>Pierre-Yves Saumont
+                        <br>
+                        <em>The Joy of Kotlin</em>
+                        <br> Manning Publications (2019)
+                        <br> Sección 4.4
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://kbimages1-a.akamaihd.net/daea93eb-bc71-4778-aa85-b8b5c38aa9e3/353/569/90/False/the-joy-of-kotlin.jpg" style="width:50%; border:none"><br/>
+                
+            </div>
+      </section>
+
+
+            
+      
+      
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
