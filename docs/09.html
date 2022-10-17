@@ -1,0 +1,526 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Evaluación perezosa</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Evaluación perezosa</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Estrategias de evaluación</li>
+            <li>Simulando evaluación perezosa</li>
+            <li>La clase <span style="font-family:monospace;text-transform:none">Lazy&lt;T&gt;</span></li>
+            <li>Variables locales perezosas</li>
+          </ol>
+      </section>
+      
+    <section>
+      <section>
+        <h2>Estrategias de evaluación</h2>
+      </section>
+      
+      <section>
+        <h3>Estrategias de evaluación</h3>
+        <ul>
+          <li>En un lenguaje de programación, una <strong>estrategia de evaluación</strong> es un conjunto de reglas que determina cómo debe evaluarse una expresión del lenguaje.</li>
+          <li class="fragment">Hay dos estrategias principales:
+          <ul>
+            <li class="fragment"><strong>Evaluación impaciente</strong>, utilizada en la mayoría de lenguajes imperativos, y en muchos de los funcionales.</li>
+            <li class="fragment"><strong>Evaluación perezosa</strong>, utilizada en algunos lenguajes funcionales, principalmente Haskell.</li>
+          </ul></li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Evaluación impaciente</h3>
+        <ul>
+          <li>Una estrategia de evaluación <strong>impaciente</strong> evalúa completamente los argumentos de una función antes de aplicarla.</li>
+          <li class="fragment">Ejemplo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun f(x: Int, y: Int) = 2 * x + y
+          </code></pre>
+          <div class="fragment">
+          Para evaluar la expresión <code>f(2 + 1, 6 * 6)</code>:
+          <ol style="margin-top:0.3em">
+            <li class="fragment">Se evalúa <code>2 + 1</code> &rarr; <code>3</code></li>
+            <li class="fragment">Se evalúa <code>6 * 6</code> &rarr; <code>36</code> </li>
+            <li class="fragment">Se realiza la llamada a <code>f</code> pasando <code>3</code> y <code>36</code> como parámetros: <code>f(3, 36)</code> &rarr; <code>2 * 3 + 36</code> &rarr; <code>6 + 36</code> &rarr; <code>42</code>.</li>
+          </ol>
+          </div>
+          </li>
+        </ul>
+        
+        
+      </section>
+      
+      <section>
+        <h3>Evaluación impaciente</h3>
+        <ul>
+          <li>La estrategia impaciente convierte a todas las funciones en <strong>estrictas</strong>: si la evaluación de un argumento falla, la llamada a función falla, aunque no utilice el argumento.</li>
+          <li class="fragment">Por ejemplo, dada la siguiente función:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T&gt; cond(b: Boolean, x: T, y: T): T =
+              if (cond) x else y
+          </code></pre>
+          <div class="fragment">
+          la evaluación de la siguiente expresión fallará,
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            cond(true, 1, 1/0)
+          </code></pre>
+          </div>
+          <div class="fragment">
+          porque se realizará la división <code>1/0</code>, aunque luego <code>cond</code> no utilice ese valor.
+          </div>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Evaluación perezosa</h3>
+        <ul>
+          <li>La estrategia de evaluación <strong>perezosa</strong> retrasa la evaluación de una expresión hasta que sea necesario.</li>
+          <li>En las llamadas a funciones, se aplica la función sin evaluar los argumentos.</li>
+          <li class="fragment">En el mismo ejemplo de antes,
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun f(x: Int, y: Int) = 2 * x + y
+          </code></pre>
+          <div class="fragment">
+          la expresión anterior se evalúa del siguiente modo:
+          <pre><code class="no-highlight" data-trim data-noescape>
+            f(2 + 1, 6 * 6) <span class="fragment">&rarr; 2 * (2 + 1) + (6 * 6)</span>
+                            <span class="fragment">&rarr; 2 * 3 + (6 * 6)</span>
+                            <span class="fragment">&rarr; 6 + (6 * 6)</span>
+                            <span class="fragment">&rarr; 6 + 36</span>
+                            <span class="fragment">&rarr; 42</span>
+          </code></pre>
+          </div>
+          </li>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Evaluación perezosa</h3>
+        <ul>
+          <li>La evaluación perezosa permite evitar la evaluación innecesaria de expresiones.</li>
+          <li class="fragment">Por ejemplo, si definimos la función <code>cond</code> anterior en Haskell:
+          <pre><code class="language-haskell" data-trim data-noescape>
+            cond b x y = if b then x else y
+          </code></pre>
+          La aplicación <code>cond True 1 (1/0)</code> se evalúa a <code>1</code> sin producir ningún error, porque no necesita evaluar <code>1/0</code>.
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Estrategia impaciente vs perezosa</h3>
+        <ul>
+          <li>La evaluación impaciente es más eficiente y más simple de implementar, ya que solo requiere pasar valores como parámetro, y no expresiones sin evaluar (<em>thunks</em>)
+          <ul class="fragment">
+            <li>Por este motivo, la mayoría de lenguajes tienen evaluación impaciente.</li>
+          </ul>
+          </li>
+          
+          <li class="fragment">No obstante, a veces la evaluación perezosa tiene ventajas:
+          <ul>
+            <li class="fragment">Permite ahorrar cómputos innecesarios.</li>
+            <li class="fragment">Permite trabajar con estructuras de datos potencialmente infinitas.</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Simulando la evaluación perezosa en Kotlin</h2>
+      </section>
+      
+      <section>
+        <h3>Evaluación perezosa</h3>
+        <ul>
+          <li>En Kotlin es posible evaluar perezosamente los argumentos de una función encapsulándolos dentro de funciones:</li>
+          <li>Por ejemplo, en lugar de:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun &lt;T&gt; cond(b: Boolean, thenCase: T, elseCase: T) 
+              = if (b) thenCase else elseCase
+          </code></pre>
+          <div class="fragment">
+          podemos tener:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+                                   <span class="arrow_box_down fragment" style="position:relative;top:-0.1em">Función de cero parámetros</span>
+            fun &lt;T&gt; cond(b: Boolean, thenCase: <span class="hl">() -> T</span>, elseCase: <span class="hl">() -> T</span>) 
+              = if (b) thenCase() else elseCase()
+              &nbsp;
+          </code></pre>
+          </div>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Evaluación perezosa</h3>
+        <ul>
+          <li>De este modo, en lugar de realizar la siguiente llamada:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            cond(true, 1, 1/0)
+          </code></pre>
+          <div class="fragment">
+          tendríamos que realizar:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+                   <span class="arrow_box_down fragment" style="position:relative;top:-0.2em">&lambda;-expresión</span>
+            cond(true, <span class="hl">{ 1 }</span>, <span class="hl">{ 1/0 }</span>)        <span class="fragment">// &rarr; 1</span>
+          </code></pre>
+          </div>
+          </li>
+        </ul>
+      </section>
+      
+    </section>
+    <section>
+      
+      <section>
+        <h2>La clase <code>Lazy&lt;T&gt;</code></h2>
+      </section>
+      
+      <section>
+        <h3>Atributos perezosos en una clase</h3>
+        <ul>
+          <li>Supongamos las siguientes definiciones:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            data class Nomina(val devengos: List&lt;Concepto&gt;,
+                              val deducciones: List&lt;Concepto&gt;)
+                              
+            data class Concepto(val descripcion: String, val cantidad: Int)
+          </code></pre>
+          </li>
+          <li>
+          El siguiente método suma las cantidades de una lista
+          de conceptos:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            fun List&lt;Concepto&gt;.sumaConceptos() = this.map { it.cantidad }.sum()
+          </code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Atributos perezosos en una clase</h3>
+        <ul>
+          <li>Queremos añadir a la clase <code>Nomina</code> un atributo <code>total</code> que contenga la suma de los conceptos de la lista <code>devengos</code>, menos la suma de los conceptos de la lista <code>deducciones</code>.</li>
+          <li>El atributo <code>total</code> se inicializa al construir el objeto:</li>
+          
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+data class Nomina(val devengos: List&lt;Concepto&gt;,
+                  val deducciones: List&lt;Concepto&gt;) {
+    val total: Int = 
+      devengos.sumaCantidades() - deducciones.sumaCantidades()
+}          </code></pre>
+          </li>          
+          <li>No pasamos el valor inicial de este nuevo atributo al constructor, ya que se calcula a partir de los restantes.</li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Atributos perezosos en una clase</h3>
+        <ul>        
+          <li><strong>Problema:</strong> el valor del atributo <code>total</code> se calcula siempre al construir el objeto, aunque luego no lo vayamos a utilizar.</li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Atributos perezosos en una clase</h3>
+        <ul>
+          <li>En lugar de inicializar el atributo <code>total</code> al construir el objeto, podemos modificar el método <em>getter</em> de <code>total</code> para que calcule la suma:</li>
+          
+          <pre><code class="language-kotlin" data-trim data-noescape>
+data class Nomina(val devengos: List&lt;Concepto&gt;, 
+                  val deducciones: List&lt;Concepto&gt;) {
+    val total: Int
+      get() = devengos.sumaCantidades() - deducciones.sumaCantidades()
+}
+          </code></pre>
+          <li class="fragment"><strong>Problema: </strong> el valor total de una nómina se recalcula desde cero cada vez que accedemos al atributo <code>total</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Atributos perezosos en una clase</h3>
+        <ul>
+          <li>Podemos almacenar el resultado de calcular el total de una nómina en una <strong>variable auxiliar</strong>.
+          <ul>
+            <li class="fragment">Inicialmente, esta variable tiene el valor <code>null</code>.</li>
+            <li class="fragment">Esta variable se inicializará con un número la primera vez que se acceda al atributo <code>total</code>.</li>
+            <li class="fragment">El resto de accesos a <code>total</code> acceden al valor almacenado en la variable auxiliar.</li>
+          </ul>
+          </li>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+<pre style="font-size:47%"><code class="language-kotlin" data-trim data-noescape>
+data class Nomina(val devengos: List&lt;Concepto&gt;, 
+                  val deducciones: List&lt;Concepto&gt;) {
+    
+    private var auxTotal: Int? = null
+
+    val total: Int
+      get() {
+          if (auxTotal == null) {
+              auxTotal = devengos.sumaCantidades() - deducciones.sumaCantidades()
+          }
+          return auxTotal!!
+      }
+}
+</code></pre>
+        <ul style="list-style:none;padding:0;margin:0">
+          <li class="hands_up fragment">Solo se calcula el valor del atributo perezoso la primera vez que se accede a él.</li>
+          </li>
+          <li class="hands_up fragment">Si nunca se accede al atributo perezoso, nunca se calcula su valor.</em>
+          <li class="hands_down fragment">Si una clase tiene muchos atributos perezosos, el código es muy repetitivo.</em>
+        </ul>      
+      </section>
+      
+      <section>
+        <h3>La clase <code>Lazy&lt;T&gt;</code></h3>
+        <ul>
+          <li>Podemos reutilizar la lógica de acceso a atributos perezosos mediante una clase <code>Lazy&lt;T&gt;</code>, que encapsula un atributo <code>value</code> de tipo <code>T</code>.
+          <pre><code class="language-kotlin" data-trim data-noescape>
+class Lazy&lt;T&gt;(private val computeValue: () -&gt; T) {
+    private var auxValue: T? = null
+
+    val value: T
+        get() {
+            if (auxValue == null) {
+                auxValue = computeValue()
+            }
+            return auxValue!!
+        }
+
+}          </code></pre>
+          </li>
+          <li class="fragment">El constructor de <code>Lazy&lt;T&gt;</code> recibe una función que indica cómo se ha de calcular el valor de tipo <code>T</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul style="width:100%">
+          <li>Volviendo a la clase <code>Nomina</code>:</li>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+data class Nomina(val devengos: List&lt;Concepto&gt;,
+                  val deducciones: List&lt;Concepto&gt;) {
+    val total: Lazy&lt;Int&gt; =  
+        Lazy {                          <span class="arrow_box_left fragment">Llamada al cons&#8203;tructor de Lazy&lt;In&#8203;t&gt;</span>
+          devengos.sumaCantidades() - deducciones.sumaCantidades()
+        }
+}            
+          </code></pre>
+          <ul style="list-style:none;padding:0;margin:0">
+          <li class="hands_up fragment">Evitamos duplicidad de código.</li>
+          </li>          
+          <li class="hands_down fragment">... pero <code>total</code> es de tipo <code>Lazy&lt;Int&gt;</code> en lugar de <code>Int</code>.
+          </li>
+          <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
+            val n = Nomina(...)
+            // Antes:
+            println(n.total)
+            // Ahora:
+            println(n.total.value)
+          </code></pre>
+        </ul>   
+          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Atributos delegados</h3>
+        <ul>
+          <li>Mediante una característica de Kotlin conocida como <em>atributos delegados</em>, podemos hacer que <code>total</code> tenga tipo <code>Int</code>, pero manteniendo el uso de <code>Lazy&lt;Int&gt;</code>.</li>
+        </ul>
+          <pre><code class="language-kotlin" data-trim data-noescape>
+data class Nomina(val devengos: List&lt;Concepto&gt;,
+                  val deducciones: List&lt;Concepto&gt;) {
+    val total: Int <span class="hl">by Lazy</span> {
+          devengos.sumaCantidades() - deducciones.sumaCantidades()
+        }
+}            
+          </code></pre>
+      </section>
+      
+      <section>
+        <h3>Explicación: atributos delegados</h3>
+        <ul>
+          <li>Cuando declaramos un atributo del siguiente modo:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+            val prop: T <span class="hl">by</span> expr
+          </code></pre>
+          se evalúa la expresión <code>expr</code> al construir la instancia de la clase. Esta expresión debe devolver un objeto (no necesariamente de tipo <code>T</code>) que ha de tener un método <code>getValue()</code>. A este objeto se le llama el <em>delegado</em> de <code>prop</code>.
+          </li>
+          <li>Cuando se accede a <code>prop</code>, se llama al método <code>getValue()</code> del delegado. El valor devuelto por este método es el valor de la propiedad.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Explicación: atributos delegados</h3>
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          val prop: T by expr
+        </code></pre>
+        equivale a
+        <pre><code class="language-kotlin" data-trim data-noescape>
+          private val _delegadoProp = expr
+          val prop: T
+            get() = delegadoProp.getValue(this, ::prop)
+        </code></pre>
+        <p>donde <code>::prop</code> devuelve un objeto <code>KProperty</code> con información sobre el atributo <code>prop</code>.</p>
+      </section>
+      
+      <section>
+        <h3>Explicación: atributos delegados</h3>
+        <ul>
+          <li>Para que <code>Lazy&lt;T&gt;</code> pueda ser un delegado tiene que disponer de un método <code>getValue()</code>:
+          <pre><code class="language-kotlin" data-trim data-noescape>
+class Lazy&lt;T&gt;(private val computeValue: () -&gt; T) {
+    private var auxValue: T? = null
+
+    val value: T
+        get() {
+            if (auxValue == null) {
+                auxValue = computeValue()
+            }
+            return auxValue!!
+        }
+
+    <span class="hl">operator fun getValue(obj: Any?, prop: KProperty<*>): T = value</span>
+}
+            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Variables locales perezosas</h2>
+      </section>
+      
+      <section>
+        <h3>Variables locales perezosas</h3>
+        <ul>
+        <li>La técnica anterior no se aplica solamente a atributos de clases; también puede aplicarse a variables locales en una función:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun f() {
+          val x = Lazy { ... }    <span class="arrow_box_left fragment">x tiene tipo Lazy&lt;I&#8203nt&gt;</span>
+          println(x.value)
+        }
+        </code></pre>
+        <div class="fragment">
+        o bien, mediante delegados:
+        <pre><code class="language-kotlin" data-trim data-noescape>
+        fun f() {
+          val x by Lazy { ... }   <span class="arrow_box_left fragment">x tiene tipo I&#8203nt</span>
+          println(x)
+        }
+        </code></pre>
+        </div>
+        </li>
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:60%">
+                <ul>
+                    <li>D. Jemerov, S. Isakova
+                        <br>
+                        Kotlin in Action
+                        <br> Manning Publications (2017)
+                        <br> <em>Sección 7.5</em>
+                    </li>
+                    <li style="margin-top:1em">
+                        <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-lazy/">Clase <span style="font-family:monospace">Lazy</span></a>
+                        <br> <span style="font-size:55%">https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-lazy/</span>
+                    </li>
+                    <li>
+                        <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/lazy.html">Función <span style="font-family:monospace">lazy</span></a>
+                        <br> <span style="font-size:55%">https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/lazy.html</span>
+                    </li>
+                    <li>
+                        <a href="https://kotlinlang.org/docs/delegated-properties.html">Atributos delegados</a>
+                        <br> <span style="font-size:55%">https://kotlinlang.org/docs/delegated-properties.html</span>
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://images.manning.com/720/960/resize/book/3/9458a37-9793-4e67-a23f-585da31dff55/Jemerov-Kotlin-HI.png" style="width:50%; border:none"><br/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Kotlin_Icon.svg/512px-Kotlin_Icon.svg.png?20171012085709" style="width:30%; border:none">
+            </div>
+        </section>
+      </section>
+      
+      
+      
+      
+      
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
