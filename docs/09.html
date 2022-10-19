@@ -243,7 +243,7 @@
         <h3>Atributos perezosos en una clase</h3>
         <ul>
           <li>Queremos añadir a la clase <code>Nomina</code> un atributo <code>total</code> que contenga la suma de los conceptos de la lista <code>devengos</code>, menos la suma de los conceptos de la lista <code>deducciones</code>.</li>
-          <li>El atributo <code>total</code> se inicializa al construir el objeto:</li>
+          <li class="fragment">El atributo <code>total</code> se inicializa al construir el objeto:</li>
           
           <pre class="fragment"><code class="language-kotlin" data-trim data-noescape>
 data class Nomina(val devengos: List&lt;Concepto&gt;,
@@ -252,7 +252,7 @@ data class Nomina(val devengos: List&lt;Concepto&gt;,
       devengos.sumaCantidades() - deducciones.sumaCantidades()
 }          </code></pre>
           </li>          
-          <li>No pasamos el valor inicial de este nuevo atributo al constructor, ya que se calcula a partir de los restantes.</li>
+          <li class="fragment">No pasamos el valor inicial de este nuevo atributo al constructor, ya que se calcula a partir de los restantes.</li>
         </ul>
       </section>
       
