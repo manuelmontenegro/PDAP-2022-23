@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="455.93335"
+   height="107.15949"
+   version="1.1"
+   id="svg22"
+   sodipodi:docname="ComplejoPrototipo4.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview24"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="2.5106383"
+     inkscape:cx="228.02966"
+     inkscape:cy="55.961864"
+     inkscape:window-width="1838"
+     inkscape:window-height="828"
+     inkscape:window-x="26"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g20" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="TriangleStart"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <rect
+       x="25.102648"
+       y="16.372629"
+       width="122.88014"
+       height="59.647629"
+       id="rect408" />
+    <rect
+       x="25.102648"
+       y="16.372629"
+       width="122.88014"
+       height="59.647629"
+       id="rect408-3" />
+  </defs>
+  <g
+     transform="translate(-1,14.659493)"
+     id="g20">
+    <rect
+       x="12"
+       y="2"
+       width="150"
+       height="90"
+       rx="26.1"
+       ry="26.1"
+       fill="#fff2cc"
+       stroke="#d6b656"
+       pointer-events="none"
+       id="rect4" />
+    <g
+       transform="translate(32.5,15.5)"
+       id="g10">
+      <text
+         xml:space="preserve"
+         transform="translate(-33,-6)"
+         id="text406"
+         style="font-size:10.6667px;font-family:NudMotoyaExAporo-W5-90msp-RKSJ-H;-inkscape-font-specification:NudMotoyaExAporo-W5-90msp-RKSJ-H;text-align:end;white-space:pre;shape-inside:url(#rect408);display:inline;fill:#ffffff;stroke-width:1.00157"
+         x="-60.714897"
+         y="0"><tspan
+           x="25.103516"
+           y="27.093081"
+           id="tspan2004"><tspan
+             style="font-family:monospace;-inkscape-font-specification:monospace;text-align:start;text-anchor:start;fill:#000000"
+             id="tspan2002">modulo: ...
+</tspan></tspan><tspan
+           x="25.103516"
+           y="41.441124"
+           id="tspan2008"><tspan
+             style="font-family:monospace;-inkscape-font-specification:monospace;text-align:start;text-anchor:start;fill:#000000"
+             id="tspan2006">argumento: ...</tspan></tspan></text>
+      <rect
+         x="273.93335"
+         y="-13.500001"
+         width="150"
+         height="90"
+         rx="26.1"
+         ry="26.1"
+         fill="#fff2cc"
+         stroke="#d6b656"
+         pointer-events="none"
+         id="rect4-6" />
+      <ellipse
+         cx="275.93335"
+         cy="-3.4999986"
+         rx="11.5"
+         ry="10"
+         fill="#e1d5e7"
+         stroke="#9673a6"
+         stroke-width="3"
+         pointer-events="none"
+         id="ellipse12-7" />
+      <text
+         xml:space="preserve"
+         transform="translate(261.43337,-6)"
+         id="text406-5"
+         style="font-size:10.6667px;font-family:NudMotoyaExAporo-W5-90msp-RKSJ-H;-inkscape-font-specification:NudMotoyaExAporo-W5-90msp-RKSJ-H;text-align:end;white-space:pre;shape-inside:url(#rect408-3);display:inline;fill:#ffffff;stroke-width:1.00157"
+         x="-60.714897"
+         y="0"><tspan
+           x="25.103516"
+           y="27.093081"
+           id="tspan2012"><tspan
+             style="font-family:monospace;-inkscape-font-specification:monospace;text-align:start;fill:#000000"
+             id="tspan2010">r = -1
+</tspan></tspan><tspan
+           x="25.103516"
+           y="41.441124"
+           id="tspan2016"><tspan
+             style="font-family:monospace;-inkscape-font-specification:monospace;text-align:start;fill:#000000"
+             id="tspan2014">i = -2</tspan></tspan></text>
+    </g>
+    <ellipse
+       cx="14"
+       cy="12"
+       rx="11.5"
+       ry="10"
+       fill="#e1d5e7"
+       stroke="#9673a6"
+       stroke-width="3"
+       pointer-events="none"
+       id="ellipse12" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.002;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart)"
+       d="M 308.43335,12.000001 162.5,28.486388"
+       id="path800" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:start;text-anchor:start;fill:none;stroke:#000000;stroke-width:1.002;stroke-dasharray:none;stroke-opacity:1"
+       x="29.367783"
+       y="-6.5528011"
+       id="text1936"><tspan
+         sodipodi:role="line"
+         id="tspan1934"
+         x="29.367783"
+         y="-6.5528011"
+         style="fill:#000000;fill-opacity:1;stroke:none">Complejo.prototype</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:monospace;-inkscape-font-specification:monospace;text-align:start;text-anchor:start;fill:none;stroke:#000000;stroke-width:1.002;stroke-dasharray:none;stroke-opacity:1"
+       x="316.41629"
+       y="-7.5903955"
+       id="text1936-3"><tspan
+         sodipodi:role="line"
+         id="tspan1934-5"
+         x="316.41629"
+         y="-7.5903955"
+         style="fill:#000000;fill-opacity:1;stroke:none">c</tspan></text>
+  </g>
+</svg>

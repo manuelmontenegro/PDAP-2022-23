@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="164px"
+   height="94px"
+   version="1.1"
+   style="background-color: rgb(255, 255, 255);"
+   id="svg22"
+   sodipodi:docname="ComplejoPrototipo3.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview24"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="2.5106383"
+     inkscape:cx="81.851695"
+     inkscape:cy="47"
+     inkscape:window-width="1601"
+     inkscape:window-height="539"
+     inkscape:window-x="26"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g10" />
+  <defs
+     id="defs2">
+    <rect
+       x="25.102647"
+       y="16.372629"
+       width="122.88014"
+       height="59.64763"
+       id="rect408" />
+  </defs>
+  <g
+     transform="translate(0.5,0.5)"
+     id="g20">
+    <rect
+       x="12"
+       y="2"
+       width="150"
+       height="90"
+       rx="26.1"
+       ry="26.1"
+       fill="#fff2cc"
+       stroke="#d6b656"
+       pointer-events="none"
+       id="rect4" />
+    <g
+       transform="translate(32.5,15.5)"
+       id="g10">
+      <text
+         xml:space="preserve"
+         transform="translate(-33,-6)"
+         id="text406"
+         style="font-size:10.6667px;font-family:NudMotoyaExAporo-W5-90msp-RKSJ-H;-inkscape-font-specification:NudMotoyaExAporo-W5-90msp-RKSJ-H;text-align:end;white-space:pre;shape-inside:url(#rect408);display:inline;fill:#ffffff;stroke-width:1.00157"
+         x="-60.714897"
+         y="0"><tspan
+           x="25.103516"
+           y="27.093081"
+           id="tspan610"><tspan
+             style="font-family:monospace;-inkscape-font-specification:monospace;text-align:start;text-anchor:start;fill:#000000"
+             id="tspan608">modulo: ...
+</tspan></tspan><tspan
+           x="25.103516"
+           y="41.441124"
+           id="tspan614"><tspan
+             style="font-family:monospace;-inkscape-font-specification:monospace;text-align:start;text-anchor:start;fill:#000000"
+             id="tspan612">argumento: ...</tspan></tspan></text>
+    </g>
+    <ellipse
+       cx="14"
+       cy="12"
+       rx="11.5"
+       ry="10"
+       fill="#e1d5e7"
+       stroke="#9673a6"
+       stroke-width="3"
+       pointer-events="none"
+       id="ellipse12" />
+  </g>
+</svg>
