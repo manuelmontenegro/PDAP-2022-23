@@ -58,7 +58,7 @@
             <ul>
             <li>Creado por Brendan Eich en 1995, para ser incluido en el navegador <em>Netscape</em>.</li>
             <li><em>Netscape</em> colaboraba con <em>Sun Microsystems</em>, propietaria por entonces del lenguaje Java.</li>
-            <li>Concebido como <strong>lenguaje &laquo;pegamento&raquo;</strong>, destinado a integrar los distintos componentes de las páginas web: applets, plugins, etc.</li>
+            <li>Concebido como <strong>lenguaje &laquo;pegamento&raquo;</strong>, destinado a integrar los distintos componentes de las páginas web: <em>applets</em>, plugins, etc.</li>
             </ul>
             <p class="fragment" style="font-style:italic">Pero su destino fue bien distinto...</p>
         </section>
@@ -123,7 +123,7 @@
 // planets.js
 // ----------
 
-let planetas = [
+const planetas = [
     "Mercurio", "Venus", "Tierra",
     "Marte", "Júpiter", "Saturno",
     "Urano", "Neptuno"
@@ -187,15 +187,9 @@ node planets.js
                     </li>
                     <li class="fragment">Declaraciones de variables y asignaciones:
                         <pre><code data-trim class="javascript">
-let x = 3;
+const x = 3;
 let y = x + 1;
 y += 3;
-                    </code></pre>
-                    </li>
-                    <li class="fragment">Pre/postincremento, pre/postdecremento:
-                        <pre><code data-trim class="javascript">
-z = x++;
---x;
                     </code></pre>
                     </li>
 
@@ -209,14 +203,14 @@ z = x++;
                         Declaraciones <code>const</code> para variables inmutables.
                         <pre><code data-trim data-noescape class="javascript">
 const x = 1;
-x = 3;  <span class="arrow_box_left">Er&#8203;ror</span>
+x = 3;  <span class="arrow_box_left fragment">Er&#8203;ror</span>
                     </code></pre> Su valor no puede cambiar a lo largo del programa.
                     </li>
                     <li class="fragment">
                         Declaraciones <code>let</code> 
                         <pre><code data-trim data-noescape class="javascript">
 let x = 1;
-x = 3;  <span class="arrow_box_left">OK</span>
+x = 3;  <span class="arrow_box_left fragment">OK</span>
                     </code></pre>
                     </li>
                     <li class="fragment">Declaraciones <code>var</code> (obsoletas).</li>
@@ -227,13 +221,13 @@ x = 3;  <span class="arrow_box_left">OK</span>
               <h3>Declaración de variables</h3>
               <ul>
                 <li>El hecho de que una variable sea <code>const</code> no significa que el valor apuntado por ella sea inmutable.
-                <pre><code class="language-kotlin" data-trim data-noescape>
+                <pre><code class="language-javascript" data-trim data-noescape>
                   const xs = [1, 2, 3];
-                  xs = [4, 5, 6];     <span class="arrow_box_left">Er&#8203;ror</span>
-                  xs[0] = 23;         <span class="arrow_box_left">OK</span>
+                  xs = [4, 5, 6];     <span class="fragment arrow_box_left">Er&#8203;ror</span>
+                  xs[0] = 23;         <span class="fragment arrow_box_left">OK</span>
                 </code></pre>
                 </li>
-                <li>Veremos más adelante cómo conseguir objetos inmutables.</li>
+                <li class="fragment">Veremos más adelante cómo conseguir objetos realmente inmutables.</li>
               </ul>
             </section>
 
@@ -268,13 +262,12 @@ switch(day) {
 
             <section>
                 <h3>Bucles</h3>
-                <ul style="width:20em">
+                <ul style="width:100%">
                     <li><code>while</code>, <code>do...while</code>, <code>for</code>.</li>
-                    <li>No los utilizaremos demasiado.</li>
-                    <li>Si quieres recorrer un array, utiliza métodos de orden superior, o los bucles <code>for...of</code>.</li>
-                    </li>
+                    <li class="fragment">No los utilizaremos demasiado.</li>
+                    <li class="fragment">Si queremos recorrer un array, podemos utilizar métodos de orden superior, o los bucles <code>for...of</code>.
                         <pre><code data-trim class="javascript">
-let arr = [4, 6, 10];
+const arr = [4, 6, 10];
 let sum = 0;
 for (const x of arr) { sum += x; }
 // o bien
@@ -282,7 +275,7 @@ const sum = arr.reduce((ac, x) => ac + x, 0);
                         </code></pre>
 
                     </li>
-                    <li>Nunca utilices bucles <code>for...in</code>.
+                    <li class="fragment">No utilices bucles <code>for...in</code>.
                 </ul>
             </section>
 
@@ -481,7 +474,7 @@ class Complejo {
     }
 }</code></pre>
 
-            <pre><code class="language-javascript" data-trim data-noescape>
+            <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
             const c1 = new Complejo(-3, 0);
             console.log(c1.modulo());
             </code></pre>
@@ -496,9 +489,9 @@ class Complejo {
               </section>
         <section>
           <h3>Las principales diferencias entre JavaScript y Java</h3>
-          <p class="rojo">(que nos interesen para este curso)</p>
+          <p class="rojo fragment">(que nos interesen para este curso)</p>
           
-          <ol>
+          <ol class="fragment">
             <li>JavaScript es dinámicamente tipado.</li>
             <li>Los objetos no tienen por qué ser instancias de clases.</li>
             <li>Valores indefinidos, nulos y NaN.</li>
@@ -524,15 +517,15 @@ class Complejo {
                 <section>
                     <h3>Declaraciones de tipo</h3>
                     <ul>
-                      <li>En Javascript no es necesario indicar el tipo de variable a la hora de declararla:
+                      <li>En Javascript no es necesario indicar el tipo de una variable a la hora de declararla:
                       <pre><code data-trim class="javascript">
   let x;
   const z = "It's something";
   let lista;
                       </code></pre></li>
-                      <li>El tipo de una variable puede cambiar durante la ejecución:
+                      <li class="fragment">Además, el tipo de una variable puede cambiar durante la ejecución del programa:
                       <pre><code class="language-javascript" data-trim data-noescape>
-                        let x = 3;        // Empieza siendo un entero
+                        let x = 3;        // 'x' empieza siendo un entero
                         x = "Francisca";  // ...luego una cadena
                         x = [1, 4, 5];    // ...y luego un array
                       </code></pre>
@@ -552,7 +545,7 @@ class Complejo {
                     <li>Lenguajes de tipado <strong>dinámico</strong> (Python, JavaScript, Lua)  
                       <ul>
                         <li>Se comprueba la coherencia de tipos durante la ejecución del programa.</li>
-                        <li>En JavaScript, la expresión <code>2.5 + "Hola"</code> solo fallará cuando se tenga que evaluar durante la ejecución del programa.</li>
+                        <li>En JavaScript, la validez de la expresión <code>2.5 + "Hola"</code> solo se comprobará cuando se tenga que evaluar durante la ejecución del programa.</li>
                       </ul>
                     </li>
                     </ul>
@@ -592,7 +585,7 @@ const str2 = str1.slice(0, 3);      <span class="arrow_box_left caja_codigo">No 
 console.log(str1);  // &rarr; Cadena1
 console.log(str2);  // &rarr; Cad
                     </code></pre>
-                  <li>Las comparaciones entre tipos primitivos se hacen por <strong>valor</strong>, no por referencia
+                  <li class="fragment">Las comparaciones entre tipos primitivos se hacen por <strong>valor</strong>, no por referencia
                         <pre><code data-trim data-noescape class="javascript">
 const str1 = "Cadena";
 const str2 = "Cadena";
@@ -622,7 +615,6 @@ const x = {
     edad: 54
 };
                    </code></pre>
-                    <p>Aquí se definen los atributos <strong>al crear el objeto</strong>.</p>
                     <div class="fragment">
                         <p>El literal <code>{}</code> representa un objeto vacío (sin atributos)</p>
                         <pre><code data-trim class="javascript">
@@ -677,7 +669,7 @@ console.log(y);
                 <ul>
                     <li>La función <code>Object.keys()</code> devuelve un array con los nombres de propiedades de un objeto:
                     <pre><code data-trim class="javascript">
-let x = {
+const x = {
     nombre: "Ana María",
     apellidos: "Gamboa Esteban",
     edad: 54
@@ -702,9 +694,9 @@ if ("edad" in x) {
                     </ul>
                     <p></p>
                     <pre><code data-trim data-noescape class="javascript">
-let coords1 = { x: 20, y: 30 };
-let coords2 = { x: 20, y: 30 };
-let coords3 = coords1;
+const coords1 = { x: 20, y: 30 };
+const coords2 = { x: 20, y: 30 };
+const coords3 = coords1;
 
 console.log(coords1 === coords2);
     <span class="fragment">// &rarr; false</span>
@@ -729,7 +721,7 @@ console.log(coords1 === coords3);
                     </code></pre>
                     </li>
                     <li>Dentro de un método, la variable <code>this</code> hace referencia al objeto sobre el cual se realiza la llamada al método:
-                    <pre><code class="language-kotlin" data-trim data-noescape>
+                    <pre><code class="language-javascript" data-trim data-noescape>
                       <span class="hl">coords</span>.imprimir();      // 'this' toma el valor 'coords'
                     </code></pre>
                     </li>
@@ -751,8 +743,8 @@ console.log(coords1 === coords3);
                         <h3>El valor indefinido (<code style="text-transform:none">undefined</code>)</h3>
                         <p>Se utiliza para las variables no inicializadas y para atributos no existentes dentro de objetos.</p>
                         <pre><code data-trim class="javascript">
-let coordenadas = { x: 5, y: 6 };
-let v;
+const coordenadas = { x: 5, y: 6 };
+const v;
 console.log(v);                 // &rarr; undefined
 console.log(coordenadas.z);     // &rarr; undefined
                         </code></pre>
@@ -761,7 +753,7 @@ console.log(coordenadas.z);     // &rarr; undefined
                         <h3>El valor nulo (<code style="text-transform:none">null</code>)</h3>
                         <p>Se utiliza para denotar una referencia a objeto nula.</p>
                         <pre><code data-trim class="javascript">
-let x = null;   // La variable 'x' esta inicializada, pero a una
+const x = null;   // La variable 'x' esta inicializada, pero a una
                 // referencia nula.
 console.log(x); // &rarr; null
                         </code></pre>
@@ -895,7 +887,7 @@ function imprime_args(p1, p2, p3) {
 }
                     </code></pre>                      
                       </li>
-                      <li>La llamada <code>imprime_args(1, "bar", true)</code> imprime el siguiente resultado:
+                      <li class="fragment">La llamada <code>imprime_args(1, "bar", true)</code> imprime el siguiente resultado:
                       <pre><code class="no-highlight">p1: 1
 p2: bar
 p3: true                      </code></pre></li>
@@ -994,15 +986,16 @@ function pintar_circulo(x, y, <span class="hl">color = "negro"</span>, <span cla
                       }
                     </code></pre>
                     </li>
-                    <li>El valor de <code>this</code> se determina exclusivamente en el momento de llamar al método, independientemente de dónde está declarado.</li>
-                    
+                    <div class="info_box fragment">
+                    El valor de <code>this</code> se determina exclusivamente en el momento de llamar al método, independientemente de dónde está declarado.
+                    </div>
                   </ul>
                 </section>
                 
                 <section>
                   <h3>Ejemplo</h3>
                   <ul>
-                    <li>Asignamos el método <code>imprimir</code> de <code>coords</code> a una variable <code>f</code>, y llamamos a esa función:
+                    <li>Transplantamos el método <code>imprimir</code> de <code>coords</code> a otro objeto:
                   <pre><code class="language-javascript" data-trim data-noescape>
                     const coords = {
                       ...
@@ -1011,9 +1004,9 @@ function pintar_circulo(x, y, <span class="hl">color = "negro"</span>, <span cla
                       }
                     }
                     
-                    const otro = { x: 40, y: 50, f: coords.imprimir };
-                    otro.f();       // 'this' toma el valor 'otro'
-                                    // Imprime: "Coordenadas: (40, 50)"
+                    <span class="fragment">const otro = { x: 40, y: 50, f: coords.imprimir };</span>
+                    <span class="fragment">otro.f();</span>       <span class="fragment">// 'this' toma el valor 'otro'</span>
+                                    <span class="fragment">// Imprime: "Coordenadas: (40, 50)"</span>
                   </code></pre>
                     </li>
                     <li>Independientemente de que <code>imprimir</code> pertenezca al objeto <code>coords</code>, al llamar a esa función con otro receptor (<code>otro</code>), la referencia <code>this</code> apunta a <code>otro</code>.</li>
@@ -1022,7 +1015,8 @@ function pintar_circulo(x, y, <span class="hl">color = "negro"</span>, <span cla
                 
                 <section>
                   <h3>¿Y si no hay receptor?</h3>
-                  <pre><code class="language-javascript" data-trim data-noescape>
+                  <ul>
+                    <li>Guardamos el método <code>imprimir</code> en una variable:                  <pre><code class="language-javascript" data-trim data-noescape>
                     const coords = {
                       ...
                       imprimir() {
@@ -1031,10 +1025,10 @@ function pintar_circulo(x, y, <span class="hl">color = "negro"</span>, <span cla
                     }
                     
                     const f = coords.imprimir;
-                    f();       // 'this' toma el valor 'undefined'
+                    f();       <span class="fragment">// 'this' toma el valor 'undefined'</span>
                   </code></pre>
-                  <ul>
-                    <li>Cuando una función se llama sin objeto receptor, el valor de <code>this</code> es <code>undefined</code>.</li>
+                </li>
+                    <li class="fragment">Cuando una función se llama sin objeto receptor, el valor de <code>this</code> es <code>undefined</code>.</li>
                   </ul>
                 </section>
                 
@@ -1048,13 +1042,13 @@ function pintar_circulo(x, y, <span class="hl">color = "negro"</span>, <span cla
                       }
                     </code></pre>
                     </li>
-                    <li>Si a esa función se le llama con un objeto receptor, el objeto <code>this</code> apuntará a ese objeto. Si no, tomará el valor <code>undefined</code>.
-                    <pre><code class="language-kotlin" data-trim data-noescape>
-                      f();      // 'this' toma el valor 'undefined',
-                                // por lo que 'this.x' falla
+                    <li class="fragment">Si a esa función se le llama con un objeto receptor, el objeto <code>this</code> apuntará a ese objeto. Si no, tomará el valor <code>undefined</code>.
+                    <pre><code class="language-javascript" data-trim data-noescape>
+                      f();      <span class="fragment">// 'this' toma el valor 'undefined',</span>
+                                <span class="fragment">// por lo que 'this.x' falla</span>
                       
                       const o = { x: 30, g: f };
-                      o.g();    // 'this' toma el valor 'o'
+                      o.g();    <span class="fragment">// 'this' toma el valor 'o'</span>
                     </code></pre>
                     </li>
                   </ul>                  
@@ -1070,7 +1064,7 @@ function pintar_circulo(x, y, <span class="hl">color = "negro"</span>, <span cla
                       console.log(a.map(str.charAt));
                     </code></pre>
                     </li>
-                    <li>Aunque el método <code>charAt</code> pasado a <code>map</code> pertenezca al objeto <code>str</code>, este método se va a llamar dentro de <code>map</code> sin objeto receptor.
+                    <li class="fragment">Aunque el método <code>charAt</code> pasado a <code>map</code> pertenezca al objeto <code>str</code>, este método se va a llamar dentro de <code>map</code> sin objeto receptor.
                     <pre><code class="no-highlight" data-trim data-noescape>
 Uncaught TypeError: String.prototype.charAt called on null or undefined
     at charAt (<anonymous>)
@@ -1083,15 +1077,15 @@ Uncaught TypeError: String.prototype.charAt called on null or undefined
                   <h3>¿Cómo se soluciona?</h3>
                   <ul>
                     <li>Evitando pasar directamente métodos como parámetros a funciones de orden superior.</li>
-                    <li>Utilizando, en su lugar, &lambda;-expresiones para que quede claro quién es el objeto receptor.</li>
+                    <li class="fragment">Utilizando, en su lugar, &lambda;-expresiones para que quede claro quién es el objeto receptor.
                     <pre><code class="language-javascript" data-trim data-noescape>
                       const a = [1, 3, 2];
                       const str = "Madrid";
                       console.log(a.map(x => str.charAt(x)));
                           // ['a', 'r', 'd']
-                    </code></pre>
+                    </code></pre></li>
                     </li>
-                    <li>Otra alternativa: método <code>bind()</code>  <a href="https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">[+]</a></li>
+                    <li class="fragment">Otra alternativa: método <code>bind()</code>  <a href="https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">[+]</a></li>
                   </ul>
                 </section>
               </section>
@@ -1174,7 +1168,7 @@ class Complejo {
                    
                     </li>
                   </ul>
-                  <p><img src="12/ComplejoPrototipo3.svg"></img></p>
+                  <p><img src="12/ComplejoPrototipo3.svg" width="40%"></img></p>
                 </section>
                 
                 <section>
@@ -1231,10 +1225,10 @@ class Empleado extends Persona {
                 <section>
                   <h3>Objetos <code>prototype</code> conocidos</h3>
                   <ul>
-                    <li>Todas las cadenas tienen a <code>String.prototype</code> como prototipo.</li>
-                    <li>Todos los números tienen a <code>Number.prototype</code> como prototipo.</li>
-                    <li>Todos los arrays tienen a <code>Array.prototype</code> como prototipo.</li>
-                    <li>Todas las funciones tienen a <code>Function.prototype</code> como prototipo.</li>
+                    <li>Las cadenas tienen a <code>String.prototype</code> como prototipo.</li>
+                    <li>Los números tienen a <code>Number.prototype</code> como prototipo.</li>
+                    <li>Los arrays tienen a <code>Array.prototype</code> como prototipo.</li>
+                    <li>Las funciones tienen a <code>Function.prototype</code> como prototipo.</li>
                     <li>Todo lo anterior tiene a <code>Object.prototype</code> como prototipo.</li>
                   </ul>
                 </section>
@@ -1243,12 +1237,12 @@ class Empleado extends Persona {
                   <h3>¿Para qué sirve esto?</h3>
                   <ul>
                     <li>Los objetos <code>prototype</code> son extensibles.</li>
-                    <li>Si añadimos un método a un prototipo, este método estará disponible para cualquier instancia que apunte a ese prototipo.
+                    <li class="fragment">Si añadimos un método a un prototipo, este método estará disponible para cualquier instancia que apunte a ese prototipo.
                     <ul>
-                      <li>No solo las instancias futuras, sino también las ya existentes.</li>
+                      <li class="fragment">No solo las instancias futuras, sino también las ya existentes.</li>
                     </ul>
                     </li>
-                    <li>Con esto tenemos un mecanismo similar a los métodos extensión de Kotlin.</li>
+                    <li class="fragment">Con esto tenemos un mecanismo similar a los métodos extensión de Kotlin.</li>
                   </ul>
                 </section>
                 
@@ -1261,7 +1255,7 @@ String.prototype.endsWithVowel = function() {
    );
 }</code></pre>
 
-                <pre><code class="language-javascript" data-trim data-noescape>
+                <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
                   "Hola".endsWithVowel();     // &rarr; true
                 </code></pre>
                 </section>
@@ -1273,7 +1267,7 @@ String.prototype.endsWithVowel = function() {
                       return this + 1;
                     }
                   </code></pre>
-                  <pre><code class="language-javascript" data-trim data-noescape>
+                  <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
                     const x = 4;
                     console.log(x.increment());   // Imprime '5'
                   </code></pre>
@@ -1291,25 +1285,28 @@ String.prototype.endsWithVowel = function() {
                 
                 <section>
                   <h3>Funciones anónimas</h3>
-                  <p>Hay dos maneras de definir funciones anónimas:</p>
+                  <p>Hay dos maneras de definir &lambda;-expresiones:</p>
                     <ol style="width:100%">
-                      <li>Mediante <code>function</code>:</li>
+                      <li>Mediante <code>function</code>:
                       <pre><code class="language-javascript" data-trim data-noescape>
                         function(<span class="hl"><em>args</em></span>) { <span class="hl"><em>body</em></span> }
-                      </code></pre>
+                      </code></pre></li>
+                      <div class="fragment">
                       Por ejemplo:
                       <pre><code class="language-javascript" data-trim data-noescape>
                         [1, 2, 3].map(function(x) { return x * 2; });
                       </code></pre>
-                      
-                      <li>Mediante la flecha (<code>=></code>):</li>
+                      </div>
+                      <li class="fragment">Mediante la flecha (<code>=></code>):
                       <pre><code class="language-javascript" data-trim data-noescape>
                         (<span class="hl"><em>args</em></span>) => { <span class="hl"><em>body</em></span> }
-                      </code></pre>
+                      </code></pre></li>
+                      <div class="fragment">
                       Por ejemplo:
                       <pre><code class="language-javascript" data-trim data-noescape>
                         [1, 2, 3].map(x => { return x * 2; });
                       </code></pre>
+                      </div>
                     </ol>                  
                 </section>
                 
@@ -1327,23 +1324,23 @@ String.prototype.endsWithVowel = function() {
                 <section>
                   <h3><code>function</code> y <code>=></code> no son equivalentes</h3>
                   <ul>
-                    <li>Recordemos que toda función tiene una variable <code>this</code> en ámbito.                    
+                    <li class="fragment">Recordemos que toda función tiene una variable <code>this</code> en ámbito.                    
                     </li>
-                    <li>Supongamos la siguiente función anónima:
+                    <li class="fragment">Supongamos la siguiente función anónima:
                     <pre><code class="language-javascript" data-trim data-noescape>
                       function() { return this.x; }
                     </code></pre>
                     </li>
-                    <li>Cuando llamemos a esta función, el valor de <code>this</code> será el del objeto receptor de esa llamada.
+                    <li class="fragment">Cuando llamemos a esta función, el valor de <code>this</code> será el del objeto receptor de esa llamada.
                     <pre><code class="language-javascript" data-trim data-noescape>
                       const o = { x: 10 };
                       o.f = function() { return this.x; };
-                      console.log(o.f());     // En este caso, `this` apunta a `o`
-                                              // Imprime '10'
+                      console.log(o.f());     <span class="fragment">// En este caso, `this` apunta a `o`</span>
+                                              <span class="fragment">// Imprime '10'</span>
                     </code></pre>
-                    <pre><code class="language-kotlin" data-trim data-noescape>
+                    <pre><code class="language-javascript" data-trim data-noescape>
                       f = function() { return this.x; };
-                      console.log(f());     // En este caso `this` es `undefined`
+                      console.log(f());     <span class="fragment">// En este caso `this` es `undefined`</span>
                     </code></pre>
                     </li>
                   </ul>
@@ -1357,7 +1354,7 @@ String.prototype.endsWithVowel = function() {
                       () => this.x
                     </code></pre>
                     </li>
-                    <li>Cuando llamemos a esta función, el valor de <code>this</code> será el del contexto en el que se encuentre la &lambda;-expresión.
+                    <li class="fragment">Cuando llamemos a esta función, el valor de <code>this</code> será el del contexto en el que se encuentre la &lambda;-expresión.
                     <pre><code class="language-javascript" data-trim data-noescape>
                       const coords = {
                         x: 10,
@@ -1368,7 +1365,7 @@ String.prototype.endsWithVowel = function() {
                         }
                       }
                     </code></pre>
-                    <pre><code class="language-kotlin" data-trim data-noescape>
+                    <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
                       coords.g()    // Imprime '10'
                     </code></pre>
                     </li>
@@ -1379,21 +1376,21 @@ String.prototype.endsWithVowel = function() {
                   <h3>Resumen</h3>
                   <ul>
                     <li>Una función anónima definida mediante <code>function</code> introduce siempre un contexto nuevo para <code>this</code>.</li>
-                    <li>Una función anónima definida mediante <code>=></code> reutiliza el mismo contexto de <code>this</code> en el que está definida.</li>
+                    <li>Una función anónima definida mediante <code>=></code> utiliza el mismo <code>this</code> que el del contexto en el que está definida.</li>
                   </ul>
                 </section>
                 
                 <section>
                   <h3>Resumen (en la práctica)</h3>
                   <ul>
-                    <li>Utiliza <code>function</code> cuando definas métodos en una clase o en un prototipo:
+                    <li class="fragment">Utiliza <code>function</code> cuando definas métodos en una clase o en un prototipo:
                     <pre><code class="language-javascript" data-trim data-noescape>
                       Number.prototype.multiplyByTwo = function() {
                         return this * 2;
                       }
                     </code></pre>
                     </li>
-                    <li>Utiliza <code>=></code> cuando pases funciones anónimas como parámetros a funciones de orden superior (<code>map</code>, <code>filter</code>, etc.)
+                    <li class="fragment">Utiliza <code>=></code> cuando pases funciones anónimas como parámetros a funciones de orden superior (<code>map</code>, <code>filter</code>, etc.)
                     <pre><code class="language-javascript" data-trim data-noescape>
                       [1, 6, 4, 7].filter(x => x % 2 == 0);
                     </code></pre>
