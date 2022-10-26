@@ -1,0 +1,391 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Proyectos con Node.js</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Proyectos con Node.js</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Instalación y uso de Node.js</li>
+            <li>El gestor de paquetes npm</li>
+          </ol>
+      </section>
+      
+    <section>
+      <section>
+        <h2>Instalación y uso de Node.js</h2>
+      </section>
+      <section>
+        <h3>Node.js</h3>
+        <p><a href="https://nodejs.org/">https://nodejs.org/</a></p>
+        
+        <ul>
+          <li>Node.js (o simplemente Node) es un entorno de ejecución que permite ejecutar <strong>Javascript</strong> fuera del navegador.</li>
+          <li>Se distribuye bajo una <a href="https://es.wikipedia.org/wiki/Licencia_MIT">licencia MIT</a>.</li>
+          <li>Principalmente dirigido a servidores web, pero puede utilizarse para implementar cualquier tipo de aplicación.</li>
+        </ul> 
+      </section>
+      
+      
+      <section>
+        <h3>Versiones</h3>
+                
+                <ul>
+                    <li><strong>v14.17.3 LTS</strong>, que está instalada en los laboratorios.</li>
+                    <li><strong>v19.0.0</strong>, que es la versión más reciente.</li>
+                </ul>
+                <p>LTS = <em>Long Term Support</em></p>
+                <ul>
+                  <li>Las versiones LTS tienen suporte garantizado durante 18 meses a partir del momento en el que se convierten en LTS.</li>
+                  <li>Los cambios en el número mayor de versión pueden romper la compatibilidad con programas existentes.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Instalación</h3>
+                <p>Puede descargarse desde:</p>
+                <p><a href="https://nodejs.org/en/download/releases/">https://nodejs.org/en/download/releases/</a></p>
+                <ul>
+                    <li class="fragment">Las versiones para Windows y Mac incluyen un instalador.</li>
+                    <li class="fragment">Desde GNU/Linux se puede:
+                        <ul>
+                            <li>Utilizar el gestor de paquetes de la distribución.</li>
+                            <li>Utilizar <strong>nvm</strong> (<a href="http://nvm.sh">http://nvm.sh</a>), que permite mantener varias versiones de Node en un mismo sistema.</li>
+                            <li>Descargar los binarios desde la URL anterior.</li>
+                        </ul>
+                    </li>
+                </ul>
+      </section>
+      
+                <section>
+                    <h3>Ejecución de un script</h3>
+                    <p>Basta con teclear:</p>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# node <em>nombre_script.js</em>
+                </code></pre>
+                    <div class="fragment">
+                        <p>Si se desea ejecutar el intérprete (REPL):</p>
+                        <pre><code data-trim data-noescape class="no-highlight">
+# node
+                </code></pre>
+                    </div>
+                    <div class="fragment">
+                        <p>REPL = <em>Read-Eval-Print Loop</em></p>
+                        <p>El intérprete permite evaluar las expresiones Node que se introduzcan por teclado.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Ejemplo de sesión con el intérprete</h3>
+                    <pre><code data-trim data-noescape class="no-highlight">
+# <span class="hl">node</span>
+> <span style="color:#720">5 + 6</span>
+11
+> <span style="color:#720">let x = 4 + 5</span>
+undefined
+> <span style="color:#720">console.log("Hola");</span>
+Hola
+undefined
+> <span style="color:#720">x</span>
+9
+> <span style="color:#720">function suma(x,y) {</span>
+..... <span style="color:#720">return x + y;</span>
+..... <span style="color:#720">}</span>
+undefined
+> <span style="color:#720">suma(4, 5)</span>
+9
+> <span style="color:#720">.exit</span>
+                </code></pre>
+                </section>
+
+                <section>
+                    <h3>Comandos del intérprete</h3>
+                    <ul>
+                        <li>
+                            <code>.exit</code><br> Sale del intérprete.
+                        </li>
+                        <li>
+                            <code>.load <em>script.js</em></code><br> Ejecuta las sentencias del fichero dado.
+                        </li>
+                        <li>
+                            <code>.save <em>script.js</em></code><br> Guarda todas las expresiones evaluadas en un fichero.
+                        </li>
+                        <li>
+                            <code>.break</code><br> Cancelar introducción de expresión actual. Útil cuando se queda algún paréntesis abierto en la entrada.
+                        </li>
+                    </ul>
+                </section>
+      
+          </section>
+          
+
+          <section>
+                <section>
+                  <h2>El gestor de paquetes <code>npm</code></h2>
+                </section>
+          
+                <section>
+                    <h3>NPM (Node Package Manager)</h3>
+                    <ul>
+                      <li>Es una herramienta que se incluye con la distribución de Node. Permite:
+                      <ul>
+                        <li>Crear proyectos vacíos.</li>
+                        <li>Gestionar las librerías de las que hace uso un proyecto, consultando una base de datos pública (<a href="https://registry.npmjs.org/">NPM Registry</a>) que indica desde dónde descargarlas.</li>
+                        <li>Gestionar <em>scripts</em>: arranque del sistema, parada, ejecución de tests, etc.</li>
+                      </ul>
+                      </li>
+                      <li>Más información: <a href="https://www.npmjs.com/">https://www.npmjs.com/</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Creación de un proyecto con <code>npm</code></h3>
+                    <ol>
+                      <li>Crear un directorio vacío.</li>
+                      <li>Desde ese directorio, ejecutar desde la línea de comandos:
+                    <pre><code data-trim class="no-highlight">
+# npm init
+                </code></pre>
+                      </li>
+                      <li>Se solicitará información sobre los datos del proyecto:
+<pre style="font-size:40%"><code class="no-highlight" data-trim data-noescape>
+name: (project-test) <span class="hl" style="color:#20A">miproyecto</span>
+version: (1.0.0) <span class="hl" style="color:#20A">&#x21b2; (Pulsar intro)</span>
+description: <span class="hl" style="color:#20A">Esto es un proyecto de prueba</span>
+entry point: (index.js) <span class="hl" style="color:#20A">app.js</span>
+test command: <span class="hl" style="color:#20A">&#x21b2;</span>
+git repository: <span class="hl" style="color:#20A">&#x21b2;</span>
+keywords: <span class="hl" style="color:#20A">node proyecto pdap prueba</span>
+author: <span class="hl" style="color:#20A">Manuel Montenegro</span>
+license: (ISC) <span class="hl" style="color:#20A">MIT</span>
+About to write to /home/manuel/Docencia/PDAP/Pruebas/project-test
+/package.json:
+...
+Is this ok? (yes) <span class="hl" style="color:#20A">yes</span>
+  
+</code></pre>
+                      </li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h3>Creación de un proyecto con <code>npm</code></h3>
+                <ul>
+                  <li>Se creará un fichero <code>package.json</code> con el siguiente contenido:</li>
+                    <pre style="font-size:40%"><code data-trim class="json">
+{
+  "name": "miproyecto",
+  "version": "1.0.0",
+  "description": "Esto es un proyecto de prueba",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "proyecto",
+    "pdap",
+    "prueba"
+  ],
+  "author": "Manuel Montenegro",
+  "license": "MIT"
+}
+                </code></pre>
+                </ul>
+                </section>
+
+                <section>
+                    <h3>El fichero <code>package.json</code></h3>
+                    <ul>
+                        <li>
+                            Atributo <code>scripts</code>: permite añadir comandos para arrancar el programa, detenerlo, etc.<br> Por ejemplo, podemos añadir:
+                            <pre style="font-size:40%"><code data-trim data-noescape class="json">
+...
+  "scripts": {
+    <span class="hl">"test": "mocha",</span>
+    <span class="hl">"start": "node app.js"</span>
+  }, 
+...
+                        </code></pre> para poder arrancar el sistema mediante
+                            <pre><code data-trim class="no-highlight">
+# npm start                        
+                        </code></pre> o ejecutar los test mediante
+                            <pre><code data-trim class="no-highlight">
+# npm test
+                        </code></pre>
+
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Instalar dependencias con <code>npm</code></h3>
+                    <ul>
+                      <li>La herramienta <code>npm</code> permite gestionar las dependencias de un proyecto.</li>
+                      <li>Puede descargar paquetes desde un repositorio público, e incorporarlos en nuestro proyecto.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Instalar dependencias con <code>npm</code></h3>
+                    <ul>
+                      <li>Para descargar e instalar un paquete en un proyecto, ejecutar lo siguiente desde el directorio raíz del proyecto:
+                    <pre><code data-trim data-noescape class="no-highlight">
+# npm install <em>nombre_paquete</em> 
+                </code></pre>
+                      </li>
+                      <li>Por ejemplo, para incorporar el paquete <code>immutable</code> en nuestro proyecto:
+                        <pre><code data-trim class="no-highlight">
+# npm install immutable
+                </code></pre>
+                      </li>
+                      <li>Descargará la versión más reciente del paquete y la instalará bajo la carpeta <code>node_modules</code> del proyecto (creándola si es necesario)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Instalar dependencias con <code>npm</code></h3>
+                    <ul>
+                      <li>El comando <code>npm install</code> no solo instala el paquete especificado, sino también sus dependencias.</li>
+                      <li>Por ejemplo al instalar <code>marble</code>:
+                      <pre><code data-trim data-noescape class="no-highlight">
+# npm install marble
+                </code></pre>
+                      </li>
+                      <li>Se instala el paquete <code>marble</code> y todo su árbol de dependencias bajo la carpeta <code>node_modules</code>:</li>
+                    </ul>
+                    <p></p>
+                    <div class="fragment">
+                        <p></p>
+                        
+                        <p></p>
+                        <pre><code data-trim class="no-highlight" style="background:#F0F0F0;color:blue">
+node_modules
+├── marble
+├── rxjs
+├── bootstrap-sass
+├── mathsass
+...                
+                </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Dependencias en <code>package.json</code></h3>
+                    <ul>
+                      <li>El fichero <code>package.json</code> contiene las dependencias de un fichero, junto con la versión instalada.</li>
+                      <li>El comando <code>npm install</code> actualiza automáticamente este fichero.
+                    <pre style="font-size:40%"><code data-trim data-noescape class="json">
+{
+  "name": "mi_proyecto",
+  "version": "1.0.0",
+  "description": "Prueba de uso de paquetes",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Manuel Montenegro",
+  "license": "ISC",
+  "dependencies": {
+    <span class="hl">"immutable": "^4.1.0"</span>,
+    <span class="hl">"marble": "^3.5.7"</span>
+  }
+}                
+                </code></pre>
+                    </li></ul>
+                </section>
+
+            <section>
+                <h3>Distribución de un proyecto</h3>
+                <ul>
+                  <li>Cuando se quiere distribuir un proyecto o publicar en un repositorio (p.ej. <em>GitHub</em>), <strong>no es necesario</strong> incluir el directorio
+                    <code>node_modules</code> con las dependencias.</li>
+                  <li>Basta con indicar las dependencias en el <code>package.json</code>, y distribuir este último junto con el proyecto.</li>
+                  <li>Mediante el comando:
+                    <pre><code data-trim class="no-highlight">
+# npm install
+                </code></pre>
+                se reconstruirá la carpeta <code>node_modules</code> a partir de la información contenida en <code>package.json</code>, descargando los paquetes que sean necesarios.
+                  </li>
+                </ul>
+            </section>
+
+                <section>
+                    <h3>Otras opciones de <code>npm</code></h3>
+                    <ul>
+                        <li>
+                            <code>npm ls</code><br> Muestra el árbol de dependencias del proyecto actual.
+                        </li>
+                        <li>
+                            <code>npm search <em>term</em></code><br> Busca los paquetes del repositorio <em>node</em> cuyo nombre contenga <code>term</code>.
+                        </li>
+                        <li>
+                            <code>npm update <em>nombre_paquete</em></code><br> Actualiza un paquete a la útima versión disponible.
+                        </li>
+                        <li>
+                            <code>npm dedupe</code><br> Reorganiza la carpeta <code>node_modules</code> para evitar duplicidades.
+                        </li>
+                        <li>
+                            <code>npm publish</code><br> Sube los datos del proyecto actual en el <em>NPM Registry</em>.
+                        </li>
+                    </ul>
+                </section>
+
+            </section>
+      
+            
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
