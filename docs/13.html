@@ -1,0 +1,696 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>JavaScript funcional</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">JavaScript funcional</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Ajuste de patrones</li>
+            <li>Inmutabilidad</li>
+            <li>Tipos de datos persistentes</li>
+            <li>Funciones de orden superior</li>
+            <li>Tipos anulables</li>
+          </ol>
+      </section>
+      
+    <section>
+      <section>
+        <h2>Ajuste de patrones</h2>
+      </section>
+      
+      <section>
+        <h3>Desestructuración de un array</h3>
+        <ul>
+          <li>Ya conocemos la notación basada en corchetes para crear un array:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const xs = [1, "a", 23, true];
+            const pair = [5, 6];
+          </code></pre>
+          </li>
+          <li>Es posible utilizar la misma notación en el lado izquierdo de una asignación para obtener los elementos de un array:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const [a, b, c, d] = xs;
+                // a = 1, b = "a", c = 23, d = true
+            const [x, y] = pair;
+                // x = 5, y = 6;
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Desestructuración de un array</h3>
+        <ul>
+          <li>Si el patrón del lado izquierdo tiene menos elementos que el array del lado derecho, solo se ajustan los primeros elementos:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const [a, b] = [1, 6, 5, 7];
+                // a = 1, b = 6
+          </code></pre>
+          </li>
+          <li>Si el patrón tiene más elementos que el array del lado derecho, las variables sobrantes toman el valor <code>undefined</code>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const [a, b, c] = [1, 2];
+                //  a = 1, b = 2, c = undefined
+          </code></pre>
+          </li>
+        </ul>
+      </section> 
+      
+      <section>
+        <h3>Desestructuración de un array</h3>
+        <ul>
+          <li>Es posible utilizar el <em>spread operator</em> (<code>...</code>) al final de un patrón para capturar los elementos restantes en otro array:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const xs = [1, 2, 3, 4, 5];
+            const [a, b, <span class="hl">...resto</span>] = xs;
+              //  a = 1, b = 2, resto = [3, 4, 5]
+          </code></pre>
+          </li>
+          <li>De este modo, podemos tratar los arrays de manera similar a las listas persistentes (<code>head</code> y <code>tail</code>):
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const l = [1, 2, 3, 4, 5];
+            const [head, ...tail] = l;
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Desestructuración de un array</h3>
+        <ul>
+          <li>El patrón puede tener &laquo;huecos&raquo;, que no quedan asignados a ninguna variable:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const l = [1, 2, 3, 4, 5];
+            
+                 <span class="arrow_box_down fragment">Hueco</span>
+            const [x, , y, ...resto] = l;
+              // x = 1, y = 3, resto = [4, 5]
+          </code></pre>
+          </li>          
+        </ul>
+      </section>      
+      
+     
+      <section>
+        <h3>Desestructuración de objetos</h3>
+        <ul>
+          <li>Conocemos la sintaxis de creación de objetos:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const coord = {x: 10, y: 20};
+            const persona = {nombre: "Gerardo", edad: 34};
+          </code></pre>
+          </li>
+          <li>Existe una sintaxis similar para desestructurar objetos:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const {x: a, y: b} = coord;
+                // a = 10, b = 20
+                
+            const {nombre: n} = persona;            
+                // n = "Gerardo"
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Desestructuración de objetos</h3>
+        <ul>
+          <li>Si el nombre de la variable se llama igual que el nombre de la propiedad a ajustar, podemos utilizar una sintaxis simplificada:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const coord = {x: 10, y: 20, z: 5};
+            
+            const {y: y, x: x} = coord;
+                // y = 20, x = 10
+                
+            const {y, x} = coord;
+                // Equivale a lo anterior            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Desestructuración de objetos</h3>
+        <ul>
+          <li>Al igual que los arrays, puede utilizarse la desestructuración en los parámetros de funciones, y de &lambda;-expresiones:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            function sumaEdades(personas) {
+              return personas.map(({ edad }) => edad)
+                             .reduce((ac, x) => ac + x, 0);
+            }
+            
+            personas = [
+              {nombre: "Pedro", edad: 10},
+              {nombre: "Clara", edad: 12},
+              {nombre: "Juana", edad: 14},
+              {nombre: "Ángel", edad: 11}
+            ];
+            
+            console.log(sumaEdades(personas));   // &rarr; 47            
+          </code></pre>            
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Desestructuración de objetos</h3>
+        <ul>
+          <li>También es aplicable el spread operator (<code>...</code>) para obtener las propiedades no ajustadas en el resto del patrón:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const coord = {x: 10, y: 20, z: 5};
+            const {y, x, ...resto} = coord;
+              // x = 10, y = 20, resto = {z: 5}
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+    </section>
+    <section>
+      
+      <section>
+        <h2>Immutabilidad</h2>
+      </section>
+      
+      
+      <section>
+        <h3>Valores mutables</h3>
+        <ul>
+          <li>Los objetos y los arrays de JavaScript son mutables, aunque las variables que apunten a ellos sean <code>const</code>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const a = [1, 4, 7];
+            a.push(20);
+            a[0] = 23;
+            console.log(a);     // &rarr; [23, 4, 7, 20]
+            
+            const b = {x: 10, y: 20};
+            b.z = 30;
+            console.log(b);     // &rarr; {x: 10, y: 20, z: 30}
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Congelar un objeto o un array</h3>
+        <ul>
+          <li>El método <code>Object.freeze()</code> permite &laquo;congelar&raquo; el array u objeto pasado como parámetro.</li>
+          <li>No es posible modificar ni añadir elementos a un objeto u array congelado.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const a = [1, 4, 7];
+            <span class="hl">Object.freeze(a);</span>
+            
+            const b = {x: 10, y: 20};
+            <span class="hl">Object.freeze(b);</span>
+          </code></pre>
+          o bien,
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const a = Object.freeze([1, 4, 7]);
+            const b = Object.freeze({x: 10, y: 20});
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Cómo se modifica un objeto inmutable?</h3>
+        <ul>
+          <li>Creando una copia cuyos atributos son idénticos a los del original, excepto aquellos que queramos cambiar.</li>
+          <li>El <em>spread operator</em> (<code>...</code>) nos ayuda en este caso.</li>
+          <li>Si <code>o</code> es un objeto, la expresión <code>{...o, x: v}</code> crea otro objeto con los mismos atributos que <code>o</code>, pero cambiando (o añadiendo) el atributo <code>x</code>, que toma el valor <code>v</code>.
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+          <pre><code class="language-javascript" data-trim data-noescape>
+            function moveRight(coords, offset) {
+              return {...coords, x: coords.x + offset};
+            }
+          </code></pre>
+          
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const c = {x: 10, y: 15};
+            console.log(moveRight(c, 2));      // &rarr; {x: 12, y: 15}
+            console.log(moveRight(c, 5));      // &rarr; {x: 15, y: 15}
+          </code></pre>        
+      </section>
+      
+      
+      <section>
+        <h3>Mutabilidad en arrays</h3>
+        <ul>
+          <li>Los métodos para añadir y eliminar elementos de un array son operaciones mutables:
+          <ul>
+            <li><code>push</code>, <code>pop</code>, <code>shift</code>, <code>unshift</code>, <code>reverse</code>, <code>sort</code>, <code>splice</code>.</li>
+          </ul>
+          </li>
+          <li>Hay otros métodos que no mutan el array, sino que devuelven una copia modificada:
+          <ul>
+            <li><code>slice</code>, <code>concat</code>, <code>map</code>, <code>filter</code>.</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operaciones inmutables en arrays</h3>
+        <ul>
+          <li>El <em>spread operator</em> aplicado sobre arrays nos permite realizar muchas de las operaciones anteriores, pero sin mutar el array:
+          <ul>
+            <li>Añadir elementos al final de un array:
+            <pre><code class="language-javascript" data-trim data-noescape>
+              const xs = [1, 2, 3];
+              const ys = [...xs, "a", "b"]       // ys = [1, 2, 3, "a", "b"]
+            </code></pre>
+            </li>
+            <li>Añadir elementos al principio de un array:
+            <pre><code class="language-javascript" data-trim data-noescape>
+              const zs = ["a", "b", ...xs];     // zs = ["a", "b", 1, 2, 3]
+            </code></pre>
+            </li>
+          </ul>
+          </li>
+        </ul>
+        
+      </section>
+      
+      <section>
+        <h3>Operaciones inmutables en arrays</h3>
+        <ul style="width:100%">
+          <li>Otras operaciones inmutables sobre arrays:
+          <ul>
+            <li>Quitar elementos del inicio de un array:
+            <pre><code class="language-javascript" data-trim data-noescape>
+              const xs = [1, 2, 3];
+              const [ , ...tail] = xs;
+                    // tail = [2, 3]
+            </code></pre>
+            o bien
+            <pre><code class="language-javascript" data-trim data-noescape>
+              const tail = xs.slice(1);
+                    // tail = [2, 3];
+            </code></pre>
+            </li>
+            <li>Quitar elementos del final de un array:
+            <pre><code class="language-javascript" data-trim data-noescape>
+              const init = xs.slice(0, -1);
+                    // init = [1, 2];
+            </code></pre>
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Operaciones inmutables en arrays</h3>
+        <ul style="width:100%">
+          <li>Otras operaciones inmutables sobre arrays:
+          <ul>
+            <li>Concatenar varios arrays:
+            <pre><code class="language-javascript" data-trim data-noescape>
+              const xs = [1, 2, 3];
+              const ys = ["a", "b"];
+              const zs = [true, false];
+              const todo = [...xs, ...ys, ...zs];
+                  // todo = [1, 2, 3, "a", "b", true, false]
+            </code></pre>
+            </li>
+            <li>Ordenar un array:
+            <pre><code class="language-javascript" data-trim data-noescape>
+              const xs = [5, 3, 2, 10, 8];
+              const ys = [...xs].sort();
+            </code></pre>
+            La notación <code>[...xs]</code> crea una copia del array <code>xs</code> y <code>sort()</code> modifica la copia, ordenándola.
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operaciones inmutables en arrays</h3>
+        <ul>
+          <li>¡Cuidado con la ordenación mediante <code>sort()</code>!
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const xs = [5, 3, 2, 10, 8];
+            const ys = [...xs].sort();
+            console.log(ys);      // &rarr; [ 10, 2, 3, 5, 8 ]
+          </code></pre>
+          </li>
+          <li>Por defecto, utiliza el orden lexicográfico sobre cadenas.</li>
+          <li>Para ordenar un array de números, es necesario pasar a <code>sort</code> una función de comparación.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const xs = [5, 3, 2, 10, 8];
+            const ys = [...xs].sort((x, y) => x - y);
+            console.log(ys);      // &rarr; [ 2, 3, 5, 8, 10 ]
+          </code></pre>          
+          </li>          
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Tipos de datos persistentes</h2>
+      </section>
+      
+      
+      <section>
+        <h3>Librería <em>Immutable.js</em></h3>
+        <p><a href="https://immutable-js.com/">https://immutable-js.com/</a></p>        <ul>
+          <li>Proporciona implemementaciones de tipos de datos persistentes: listas, pilas, colas, conjuntos, diccionarios, etc.</li>
+          <li>Incorporación a un proyecto mediante <code>npm</code>:
+          <pre><code class="no-highlight" data-trim data-noescape>
+            npm install immutable
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3><em>Immutable.js</em> - listas</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+        import { List } from "immutable"
+
+        const xs = List.of(1, 6, 5, 3, 10);
+        const ys = xs.push(20);
+
+        console.log(xs.toString());   // &rarr; [1, 6, 5, 3, 10]
+        console.log(ys.toString());   // &rarr; [1, 6, 5, 3, 10, 20]
+
+        const zs = xs.concat(ys);
+        console.log(zs.toString());
+            // &rarr; [1, 6, 5, 3, 10, 1, 6, 5, 3, 10, 20]
+        </code></pre>
+        <p>Más información: <a href="https://immutable-js.com/docs/v4.1.0/List/">List</a></p>
+      </section>
+      
+      <section>
+        <h3><em>Immutable.js</em> - diccionarios</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+        import { Map } from "immutable"
+        
+        const m1 = Map({x: 10, y: 20, z: 30})
+        
+        console.log(m1.get("x"));  // &rarr; 10
+        
+        const m2 = m1.set("z", 40);
+        console.log(m1.toString()); // &rarr; {x: 10, y: 20, z: 30}
+        console.log(m2.toString()); // &rarr; {x: 10, y: 20, z: 40}
+        </code></pre>
+                <p>Más información: <a href="https://immutable-js.com/docs/v4.1.0/Map/">Map</a></p>
+
+      </section>
+      
+      
+      <section>
+        <h3><em>Immutable.js</em> - conjuntos</h3>
+        
+        <pre><code class="language-javascript" data-trim data-noescape>
+        import { Set, List } from "immutable"
+        
+        const s1 = Set.of("A", "E", "I", "O", "U");
+        const s2 = s1.map(x => x.toLowerCase());
+        const vowels = s1.union(s2);
+        console.log(vowels.toString());
+              // { "A", "a", "E", "e", "I", "i", "O", "o", "U", "u" }
+              
+        // Esta función determina cuántas vocales hay en la cadena pasada
+        // como parámetro
+        function cuantasVocales(str) {
+            return List(str).count(x => vowels.has(x))
+        }
+
+        console.log(cuantasVocales("Hola, mundo"));   // &rarr; 4      
+        </code></pre>
+                        <p>Más información: <a href="https://immutable-js.com/docs/v4.1.0/Set/">Set</a></p>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Funciones de orden superior</h2>
+      </section>
+
+      
+      <section>
+        <h3>Funciones de orden superior sobre arrays</h3>
+        <ul>
+          <li><code>foreach(f)</code><br/>          
+          Ejecuta la función <code>f</code> para cada elemento de un array.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            [1, 2, 3].forEach(x => console.log(x))
+          </code></pre>
+          </li>
+          <li><code>map(f)</code><br/>
+          Invoca <code>f</code> para cada elemento de un array, y construye otro array con los resultados devueltos por <code>f</code>.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            [1, 5, 3].map(x => x * 2)   // &rarr; [2, 10, 6]
+          </code></pre>
+          </li>
+          <li><code>filter(f)</code>
+          Devuelve otro array con los elementos para los que <code>f</code> devuelve <code>true</code>.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            [1, 6, 3, 2].filter(x => x % 2 === 0)   // &rarr; [6, 2]
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+
+      
+      <section>
+        <h3>Funciones de orden superior sobre arrays</h3>
+        <ul>
+          <li><code>flatMap(f)</code><br/>
+          Igual que <code>map</code>, pero concatena los arrays devueltos por <code>f</code>.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            [1, 5, 4].flatMap(x => [x, x])    // &rarr; [1, 1, 5, 5, 4, 4]
+          </code></pre>
+          </li>
+          <li><code>find(f)</code><br/>
+          Devuelve el primer elemento del array para el que <code>f</code> devuelve <code>true</code>.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            ["Clara", "Ricardo", "Adrián"].find(x => x.startsWith("R")) 
+                  // &rarr; "Ricardo"
+          </code></pre>
+          </li>
+          <li><code>findIndex(f)</code><br/>
+          Igual que <code>find</code>, pero devuelve el índice del elemento buscado dentro del array.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            ["Clara", "Ricardo", "Adrián"].findIndex(x => x.startsWith("R")) // &rarr; 1
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Funciones de orden superior sobre arrays</h3>
+        <ul>
+          <li><code>every(f)</code><br/>
+          Devuelve <code>true</code> si <code>f</code> devuelve <code>true</code> para todos los elementos del array.
+          </li>
+          <li><code>some(f)</code><br/>
+          Devuelve <code>true</code> si <code>f</code> devuelve <code>true</code> para alguno de los elementos del array.
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¡Cuidado con los parámetros!</h3>
+          <ul>
+            <li>En todas las funciones de orden superior anteriores, la función <code>f</code> pasada como parámetro recibe:
+            <ul>
+              <li>El elemento correspondiente del array</li>
+              <li>Su índice</li>
+              <li>Una referencia al array completo</li>
+            </ul>
+            </li>
+            <li>Ejemplo:
+        <pre><code class="language-javascript" data-trim data-noescape>
+         ["Juana", "Miguel", "Ángel"].forEach((x, i) => {
+            console.log(`${i}: ${x}`);
+         }); 
+         
+         // Imprime:
+         //   0: Juana
+         //   1: Miguel
+         //   2: Ángel
+        </code></pre>
+            </li>
+          </ul>        
+      </section>
+      
+      <section>
+        <h3>¡Cuidado con los parámetros!</h3>
+        <p>¿Qué imprime lo siguiente?</p>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          ["Juana", "Miguel", "Ángel"].forEach(console.log);
+        </code></pre>
+        <pre><code class="no-highlight" data-trim data-noescape>
+        Juana 0 [ 'Juana', 'Miguel', 'Ángel' ]
+        Miguel 1 [ 'Juana', 'Miguel', 'Ángel' ]
+        Ángel 2 [ 'Juana', 'Miguel', 'Ángel' ]
+        </code></pre>
+        <p>¿Y lo siguiente?</p>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          console.log(["1", "5", "3"].map(parseInt))
+        </code></pre>
+        <pre><code class="no-highlight" data-trim data-noescape>
+        [1, NaN, NaN]
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>¡Cuidado con los parámetros!</h3>
+        <ul>
+          <li>Para evitar los problemas anteriores, podemos encapsular las funciones anteriores en &lambda;-expresiones:
+        <pre><code class="language-javascript" data-trim data-noescape>
+          ["Juana", "Miguel", "Ángel"].forEach(x => console.log(x));
+        </code></pre>
+        <pre><code class="no-highlight" data-trim data-noescape>
+        Juana
+        Miguel
+        Ángel
+        </code></pre>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          console.log(["1", "5", "3"].map(x => parseInt(x)))
+        </code></pre>
+        <pre><code class="no-highlight" data-trim data-noescape>
+        [1, 5, 3]
+        </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Funciones de plegado (<em>fold</em>)</h3>
+        <ul>
+          <li><code>reduce(f, ini)</code><br/>
+          <code>reduce(f)</code><br/>
+          Recorre un array de izquierda a derecha, propagando un valor acumulador. Si no se especifica un valor inicial será el primer elemento del array.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            [1, 6, 3, 2].reduce((ac, x) => ac + x)    // &rarr; 12
+            [1, 6, 3, 2].reduce((ac, x) => ac.unshift(x), List.of())
+                  // &rarr; [2, 3, 6, 1]
+          </code></pre>
+          </li>
+          <li><code>reduceRight(f, ini)</code><br/>
+          <code>reduceRight(f)</code><br/>
+          Igual que el anterior, pero recorre el array de derecha a izquierda.
+          </li>          
+        </ul>
+      </section>
+      
+    </section>
+    <section>
+      <section>
+        <h2>Valores anulables</h2>
+      </section>
+      
+      <section>
+        <h3>Valores anulables</h3>
+        <ul>
+          <li>En JavaScript puede utilizarse <code>null</code> o <code>undefined</code> para expresar la ausencia de valores.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            [1, 3, 7].find(x => x % 2 === 0)   // &rarr; undefined
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El operador <code>?.</code></h3>
+        <ul>
+          <li>La expresión <code>x?.f</code> se evalúa a <code>x.f</code> si <code>x</code> es distinto de <code>undefined</code> o <code>null</code>, o igual a <code>x</code> en otro caso.
+          <pre><code class="language-javascript" data-trim data-noescape>
+          const m1 = Map({23: {nombre: "Fran"}, 15: {nombre: "Rosario"}})
+          
+          m1[23].nombre     // &rarr; "Fran"
+          m1[10].nombre     // &rarr; ERROR
+          
+          m1[23]?.nombre     // &rarr; "Fran"
+          m1[10]?.nombre     // &rarr; undefined
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El operador <code>??</code></h3>
+        <ul>
+          <li>La expresión <code>x ?? y</code> se evalúa a <code>x</code> si <code>x</code> es distinto de <code>undefined</code> o <code>null</code>, o igual a <code>y</code> en otro caso.
+          <pre><code class="language-javascript" data-trim data-noescape>
+          const z = [1, 3, 7].find(x => x % 2 === 0) ?? "No encontrado"
+              // &rarr; z = "No encontrado"
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+
+    </section>
+      
+
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
