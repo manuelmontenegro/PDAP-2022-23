@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="500px"
+   height="133px"
+   version="1.1"
+   style="background-color: rgb(255, 255, 255);"
+   id="svg30"
+   sodipodi:docname="Asincrona.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview32"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="2.85"
+     inkscape:cx="351.92982"
+     inkscape:cy="65.263158"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g28" />
+  <defs
+     id="defs2" />
+  <g
+     transform="translate(0.5,0.5)"
+     id="g28">
+    <path
+       d="M 8 21 L 481.63 21"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path4" />
+    <path
+       d="M 486.88 21 L 479.88 24.5 L 481.63 21 L 479.88 17.5 Z"
+       fill="#000000"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path6" />
+    <path
+       d="M 168 91 L 337.25 91 L 358 111 L 337.25 131 L 168 131 L 188.75 111 Z"
+       fill="#dae8fc"
+       stroke="#6c8ebf"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path8" />
+    <path
+       d="M 28 1 L 117.25 1 L 138 21 L 117.25 41 L 28 41 L 48.75 21 Z"
+       fill="#fff2cc"
+       stroke="#d6b656"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path16" />
+    <path
+       d="M 158 1 L 247.25 1 L 268 21 L 247.25 41 L 158 41 L 178.75 21 Z"
+       fill="#d5e8d4"
+       stroke="#82b366"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path24" />
+    <path
+       d="m 138.22697,21.069468 v 79.877182 q 0,9.98465 16.31542,9.98465 h 32.63084"
+       fill="none"
+       stroke="#000000"
+       stroke-miterlimit="10"
+       pointer-events="none"
+       id="path26"
+       style="stroke-width:1.27634" />
+    <text
+       xml:space="preserve"
+       style="font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;stroke-width:3.77953"
+       x="262.44064"
+       y="107.53334"
+       id="text369"><tspan
+         sodipodi:role="line"
+         id="tspan367"
+         x="262.44064"
+         y="107.53334"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:'Raleway Bold'">Lectura de fichero</tspan><tspan
+         sodipodi:role="line"
+         x="262.44064"
+         y="124.19997"
+         id="tspan371"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:'Raleway Bold'">asíncrona</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;stroke-width:3.77953"
+       x="84.877083"
+       y="24.453325"
+       id="text369-3"><tspan
+         sodipodi:role="line"
+         x="84.877083"
+         y="24.453325"
+         id="tspan371-7"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:'Raleway Bold'">Bloque 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:Raleway;text-align:center;text-anchor:middle;fill:#000000;stroke-width:3.77953"
+       x="216.287"
+       y="24.453325"
+       id="text369-3-5"><tspan
+         sodipodi:role="line"
+         x="216.287"
+         y="24.453325"
+         id="tspan371-7-3"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:'Raleway Bold'">Bloque 2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;font-family:Raleway;-inkscape-font-specification:'Raleway Bold';text-align:center;text-anchor:middle;fill:#000000;stroke-width:3.77953"
+       x="307.74423"
+       y="165.24698"
+       id="text499"><tspan
+         sodipodi:role="line"
+         id="tspan497"
+         x="307.74423"
+         y="165.24698" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:Raleway;-inkscape-font-specification:'Raleway Bold';text-align:center;text-anchor:middle;fill:#000000;stroke-width:3.77953"
+       x="449.70251"
+       y="38.544685"
+       id="text503"><tspan
+         sodipodi:role="line"
+         id="tspan501"
+         x="449.70251"
+         y="38.544685"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.6667px;font-family:Raleway;-inkscape-font-specification:Raleway">tiempo de ejecución</tspan></text>
+  </g>
+</svg>

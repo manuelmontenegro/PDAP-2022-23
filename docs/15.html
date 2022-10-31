@@ -1,0 +1,472 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Programación asíncrona</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Programación asíncrona</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Operaciones síncronas y asíncronas</li>
+            <li>Funciones callback</li>
+            <li>Las funciones asíncronas son contagiosas</li>
+            <li>Inconvenientes de la funciones callback</li>
+          </ol>
+      </section>
+
+    <section>
+      
+      <section>
+        <h2>Operaciones síncronas y asíncronas</h2>
+      </section>
+      
+      <section>
+        <h3>¿Qué es una operación asíncrona?</h3>
+        <ul>
+          <li>Cuando un programa realiza una operación <strong>síncrona</strong>, el programa detiene su ejecución hasta que dicha operación haya terminado.
+          <ul>
+            <li>En este caso, decimos que una operación síncrona es <em>bloqueante</em>, porque el programa queda &laquo;bloqueado&raquo; esperando a que la operación termine.</li>
+          </ul>
+          </li>
+          <li>Por el contrario, cuando un programa invoca una operación <strong>asíncrona</strong>, el programa continúa su ejecución mientras la operación se realiza.
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Modelo asíncrono</h3>
+        <ul>
+          <li>Node utiliza un modelo <strong>asíncrono</strong> de E/S con el fin de permitir el desarrollo de aplicaciones con alta capacidad de respuesta.</li>
+          <li>Este modelo resulta muy útil en un contexto de aplicaciones web, donde un servidor web ha de procesar miles de peticiones por segundo.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>E/S síncrona vs asíncrona</h3>
+        <ul>
+          <li>Por ejemplo, supongamos que leemos el contenido de un fichero de manera síncrona:
+          <pre><code class="no-highlight" data-trim data-noescape>
+            Bloque 1
+            Lectura de fichero síncrona
+            Bloque 2
+          </code></pre>
+          </li>
+          <li>El <code>Bloque 2</code> no se ejecuta hasta que se ha terminado de leer el fichero:</li>
+        </ul>
+        <p><img src="15/Sincrona.svg" width="100%"></p>
+      </section>
+      
+      <section>
+        <h3>E/S síncrona vs asíncrona</h3>
+        <ul>
+          <li>Supongamos que la lectura se realiza asíncronamente:
+          <pre><code class="no-highlight" data-trim data-noescape>
+            Bloque 1
+            Lectura de fichero asíncrona
+            Bloque 2
+          </code></pre>
+          </li>
+          <li>El <code>Bloque 2</code> se ejecuta mientras se está realizando la lectura:</li>
+        </ul>
+        <p><img src="15/Asincrona.svg" width="80%"></p>
+      </section>
+      
+      <section>
+        <h3>Lectura de fichero en Node.js</h3>
+        <ul>
+          <li>El módulo <code>fs</code> de Node.js proporciona operaciones para manejar ficheros.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            import fs from "node:fs"
+          </code></pre>
+          </li>
+          <li>Dentro de este módulo hay dos funciones para leer el contenido de un fichero:
+          <ul>
+            <li><code>fs.readFileSync(fichero, opcs)</code><br/>
+            Lectura síncrona
+            </li>
+            <li><code>fs.readFile(fichero, opcs, callback)</code><br/>
+            Lectura asíncrona
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Lectura síncrona en Node.js</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          import fs from "node:fs"
+
+          try {
+              const contenido = fs.readFileSync("FichTexto.txt", 
+                                              { encoding: "utf-8" });
+              console.log("Fichero leído correctamente:");
+              console.log(contenido);
+          } catch (err) {
+              console.log("Se ha producido un error:");
+              console.log(err.message);
+          }          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Operaciones síncronas</h3>
+        <div style="background:#EDF; padding:20px 2px 20px 20px">
+                        <ul>
+                            <li>Bloquean la ejecución del programa mientras se ejecutan.</li>
+                            <li><strong>Devuelven</strong> el resultado de la operación.</li>
+                            <li>En caso de error, lanzan <strong>excepciones</strong>.</li>
+                        </ul>
+                    </div>
+      </section>
+      
+      <section>
+        <h3>Lectura asíncrona en Node.js</h3>
+        <p><img src="15/Asincrona.svg" width="80%"></p>
+        <p>Si la ejecución del programa continúa sin esperar a que la operación de lectura asíncrona termine...</p>
+        <ul>
+          <li>¿Cómo sabemos cuándo ha terminado la operación?</li>
+          <li>¿Cómo obtenemos el resultado de esa operación?</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Modelos de cómputo asíncrono</h3>
+        <ul>
+          <li>Modelo basado en funciones <strong>callback</strong>.</li>
+          <li>Modelo basado en <strong>promesas</strong>.</li>
+          <li>Modelo basado <code>async</code>/<code>await</code>.</li>
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      
+      
+      <section>
+        <h2>Funciones <em>callback</em></h2>
+      </section>
+
+      
+      <section>
+        <h3>Funciones callback</h3>
+        <p style="background: #AFA; padding:20px 2px 20px 20px">Una función <strong>callback</strong> es una función definida por el programador, pero que no está pensada para ser llamada directamente por este, sino por otro componente del sistema.</p>        
+      </section>
+      
+      <section>
+        <h3>Función <code>readFile()</code> asíncrona</h3>
+        <p><code>fs.readFile(fichero, opcs, <span class="hl">callback</span>)</code></p>
+        <ul>
+          <li>La función <code>readFile()</code> asíncrona recibe un tercer parámetro, que es una función <code>callback</code>.
+          </li>
+          <li><code>readFile()</code> llamará a la función <code>callback</code> cuando haya finalizado la lectura del fichero.</li>  
+            <li>La función <code>callback</code> es definida por el programador que llama a la función <code>readFile()</code>, y en ella se determinan las acciones a realizar con el resultado de la operación.</li>
+        </ul>
+      </section>
+      
+      <section>      
+        <h3>Función <code>readFile()</code> asíncrona</h3>
+        <p><code>fs.readFile(fichero, opcs, (<span class="hl">err</span>, <span class="hl">result</span>) => {...})</code></p>
+        <ul>
+          <li>La función <em>callback</em> recibe dos parámetros:
+        <ul>
+                        <li>Un objeto de la clase <code>Error</code>, en el caso en que la lectura haya fallado.<br>
+                            <span style="font-size:70%">Si no ha fallado, este parámetro toma el valor <code>null</code>.</span>
+                        </li>
+                        <li>El contenido del fichero leído, en el caso en que se haya leído correctamente.<br>
+                            <span style="font-size:70%">Si la lectura ha fallado, este parámetro toma el valor <code>undefined</code>.</span></li>
+                    </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Lectura asíncrona en Node.js</h3>
+<pre><code class="language-javascript" data-trim data-noescape>
+import fs from "node:fs"
+
+console.log("Antes de readFile");
+fs.readFile("FichTexto.txt", 
+            { encoding: "utf-8" },
+            (err, contenido) => {
+                if (err) {
+                    console.log("Se ha producido un error:");
+                    console.log(err.message);
+                } else {
+                    console.log("Fichero leído correctamente:");
+                    console.log(contenido);
+                }        
+            }
+);                
+console.log("Después de readFile");       
+</code></pre>                
+      </section>
+      
+      <section>
+        <h3>Lectura asíncrona en Node.js</h3>
+        <p>Resultado de ejecución:</p>
+        <pre><code class="no-highlight" data-trim data-noescape>
+        Antes de readFile
+        Después de readFile     <span class="arrow_box_left">Se ejecuta antes de la función callback!</span>
+        Fichero leído correctamente:
+        ...          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Operaciones asíncronas mediante funciones callback</h3>
+                    <div style="background:#EDF; padding:20px 2px 20px 20px">
+                        <ul>
+                            <li><strong>No bloquean</strong> la ejecución del programa.<br>
+                                <span style="font-size:60%">Porque el programa continúa su ejecución mientras la lectura se realiza.</span>
+                            </li>
+                            <li><strong>No devuelven</strong> ningún valor.<br>
+                                <span style="font-size:60%">El resultado de la operación se pasa como parámetro a la función <em>callback</em>.</span>
+                            </li>
+                            <li><strong>No</strong> lanzan <strong>excepciones</strong>.<br>
+                                <span style="font-size:60%">En caso de error, es la función <em>callback</em> quien recibe la excepción como primer parámetro.</span></li>
+                        </ul>
+                    </div>
+        </section>
+        
+        <section>
+          <h3>Sobre la concurrencia</h3>
+          <ul>
+            <li>Aunque las operaciones asíncronas se realizan de manera concurrente, el código JavaScript siempre se ejecuta en <strong>una única hebra</strong>.</li>
+            <li>Cuando una operación asíncrona finaliza e invoca a la función <em>callback</em>, el código de esta última no se ejecuta de manera concurrente con el resto del programa JavaScript, sino que se guarda en una cola, esperando a que el código ejecutándose actualmente finalice.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Un error frecuente</h3>
+          <p>¡Cuidado con el siguiente código!</p>
+          <pre><code class="language-javascript" data-trim data-noescape>
+let contenidoFichero;
+
+fs.readFile("FichTexto.txt", { encoding: "utf-8" },
+            (err, result) => {
+                if (!err) {
+                    // Asignamos el contenido a la variable
+                    // externa
+                    contenidoFichero = result;
+                }        
+            });
+
+console.log(contenidoFichero); // ¿Qué se imprime aquí?            
+          </code></pre>
+        </section>
+        
+        <section>
+          <h3>Un error frecuente</h3>
+          <p><img src="15/AsincronaMal.svg" width="80%"></p>
+          <ul>
+            <li>La sentencia <code>console.log(contenidoFichero)</code>
+            se ejecuta antes de la función <code>callback</code> pasada como parámetro a <code>readFile</code>, aunque la lectura se haya hecho de manera rapidísima.
+            </li>
+            
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Moraleja</h3>
+                    <p>Si un fragmento del programa depende del resultado de una llamada asíncrona, no debe ir tras dicha llamada:</p>
+                    <pre><code data-trim data-noescape class="javascript">
+fs.readFile("fich.txt", (err, result) => {
+    ...
+});
+<span class="hl" style="background-color:#FBB">// hacer algo con 'result'</span>
+                                </code>
+                                </pre>
+                    <div class="fragment">
+                        Debe ir dentro de la función callback:
+                        <pre><code data-trim data-noescape class="javascript">
+fs.readFile("fich.txt", (err, result) => {
+    <span class="hl" style="background-color:#BFB">// hacer algo con 'result'</span>
+    ...
+});
+
+                </code></pre>
+                    </div>
+        </section>
+
+    </section>
+    <section>
+        
+      <section>
+        <h2>Las funciones asíncronas son &laquo;contagiosas&raquo;</h2>
+      </section>
+
+        
+        <section>
+          <h3>Las funciones asíncronas son &laquo;contagiosas&raquo;</h3>
+          <ul>
+            <li>Si una función <code>f</code> hace uso de otra función <code>g</code> asíncrona,  entonces <code>f</code> <strong>también</strong> ha de ser <strong>asíncrona</strong>, salvo que:
+            <ul>
+              <li>el resultado de <code>f</code> no dependa del resultado de <code>g</code>, y además,</li>
+              <li>la ejecución de <code>f</code> pueda finalizar sin que <code>g</code> haya terminado.</li>
+            </ul>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <ul>
+            <li>Queremos implementar una función <code>numLineas()</code> que reciba el nombre de un fichero y devuelva el número de líneas que contiene.
+            
+            <pre><code class="language-javascript" data-trim data-noescape>
+function numLineas(fich) {
+    fs.readFile(fich, {encoding: 'utf8'}, (err, result) => {
+        if (err) {
+            console.log('Error al leer el fichero');
+        } else {
+            const numL = result.split(/\n\r|\n|\r/).length;
+            ...    <span class="arrow_box_left">¿Cómo devolvemos numL?</span>
+        }
+    })
+}              
+            </code></pre>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <ul>
+            <li>No podemos realizar lo siguiente, ya que <code>return</code> corresponde a la función <em>callback</em> pasada a <code>readFile</code>, no a la función <code>numLineas</code>:</li>
+          </ul>
+             <pre><code class="language-javascript" data-trim data-noescape>
+function numLineas(fich) {
+    fs.readFile(fich, {encoding: 'utf8'}, (err, result) => {
+        if (err) {
+            console.log('Error al leer el fichero');
+        } else {
+            const numL = result.split(/\n\r|\n|\r/).length;
+            return numL;  <span class="arrow_box_left">Incorrecto</span>
+        }
+    })
+}</code></pre>
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <ul>
+            <li>La función <code>numLineas</code> ha de recibir una función <code>callback</code> a la que pasará el resultado.</li>
+            <li>Por tanto, <code>numLineas</code> ha de ser asíncrona.</li>
+            <li>Utilizando el mismo convenio que el resto de funciones asíncronas, la función callback tendrá dos parámetros <code>err</code> y <code>result</code>.</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <pre><code class="language-javascript" data-trim data-noescape>
+function numLineas(fich, <span class="hl">callback</span>) {
+    fs.readFile(fich, {encoding: 'utf8'}, (err, result) => {
+        if (err) {
+            callback(err);        <span class="arrow_box_left">Llamada a callback con error</span>
+        } else {
+            const numL = result.split(/\n\r|\n|\r/).length;
+            callback(null, numL); <span class="arrow_box_left">Llamada a callback con resultado</span>
+        }
+    });
+}            
+          </code></pre>
+        </section>
+        
+        <section>
+          <h3>Ejemplo</h3>
+          <p>Uso de <code>numLineas</code>:</p>
+          <pre><code class="language-javascript" data-trim data-noescape>
+            numLineas("ejemplo.txt", (err, n) => {
+                if (err) {
+                    console.log('Error al leer el fichero');
+                } else {
+                    console.log(`Número de líneas: ${n}`);
+                }
+            })
+          </code></pre>
+        </section>
+
+        
+    </section>
+    <section>
+    
+      <section>
+        <h2>Inconvenientes de las funciones <em>callback</em></h2>
+      </section>
+
+        
+        <section>
+          <h3>Inconvenientes de las funciones <em>callback</em></h3>
+          <ul>
+            <li>El uso de funciones <em>callback</em> para manejar funciones asíncronas es el más sencillo conceptualmente, pero tiene varios inconvenientes:
+            <ul>
+              <li>Excesivo anidamiento de <em>callback</em> cuando se ejecutan varias funciones asíncrona en secuencia (<em>callback hell</em>).</li>
+              <li>Requiere propagar explícitamente los errores producidos.</li>
+              <li>Si hay que ejecutar un número indeterminado de operaciones asíncronas, la complejidad es aún mayor.</li>
+            </ul>
+            </li>
+            <li>Las <strong>promesas</strong> (<em>promises</em>) de JavaScript solucionan estos inconvenientes.</li>
+          </ul>
+          
+        </section>
+    </section>
+        
+        
+        
+            
+    </div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
