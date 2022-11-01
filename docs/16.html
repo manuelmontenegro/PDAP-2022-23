@@ -1,0 +1,519 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Promesas en JavaScript</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Promesas en JavaScript</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>¿Qué es una promesa?</li>
+            <li>Promesas en Node.js</li>
+            <li>Estados de una promesa</li>
+            <li>Métodos sobre promesas</li>
+            <li>Encadenamiento de llamadas</li>
+            <li>Creación de promesas</li>
+            <li>Métodos útiles</li>
+          </ol>
+      </section>
+      
+    <section>
+      <section>
+        <h2>¿Qué es una promesa?</h2>
+      </section>
+
+      <section><h3>¿Qué es una promesa?</h3>
+        <ul>
+          <li>Es un objeto que encapsula un valor aún desconocido, debido a que el cómputo de ese valor aún no ha finalizado.</li>
+          <li>Cuando un programador tiene una promesa que encapsula un valor, puede indicar las acciones que deben realizarse cuando se haya terminado de calcular el valor.</li>
+        </ul>
+      </section>
+      
+      <section><h3>¿Para qué sirven?</h3>
+        <ul>
+          <li>Algunas operaciones asíncronas devuelven promesas que encapsulan el resultado de la operación.</li>
+          <li>El uso de promesas es más cómodo que el manejo de funciones <em>callback</em>.</li>
+        </ul>
+      </section>
+      
+      <section><h3>Promesas en lenguajes de programación</h3>
+        <p>Pueden recibir otros nombres: <em>future</em>, <em>deferred</em>, <em>delay</em>, etc.</p>
+        <ul>
+          <li>JavaScript: clase <code>Promise</code></li>
+          <li>Java: clase <code>Future&lt;T&gt;</code></li>
+          <li>Python: clase <code>Future</code></li>
+          <li>C++: clase <code>std::future&lt;T&gt;</code></li>
+          <li>C#: clase <code>Task&lt;T&gt;</code></li>
+        </ul>
+      </section>
+    
+    </section>
+    <section>
+    
+      <section>
+        <h2>Promesas en Node.js</h2>
+      </section>
+      
+      <section><h3>Promesas en Node.js</h3>
+      <ul>
+        <li>Tradicionalmente, las funciones asíncronas de la librería estándar de Node.js utilizan <em>callbacks</em>.</li>
+        <li>Desde la versión 14 de Node.js, algunas funciones también proporcionan una API basada en promesas.</li>
+        <li>Por ejemplo:
+          <ul>
+            <li>Módulo <code>fs</code>: funciones de acceso a ficheros, utilizando interfaz basada en <em>callbacks</em>.</li>
+            <li>Módulo <code>fs/promises</code>: funciones de acceso a ficheros, utilizando la misma interfaz que <code>fs</code>, pero basada en promesas.</li>
+          </ul>
+        </li>
+      </ul>
+      </section>
+      
+      <section><h3>Ejemplo: <code>readFile()</code> con promesas</h3>
+      <pre><code class="language-javascript" data-trim data-noescape>
+        import fs from 'node:fs/promises'
+        
+        const p = fs.readFile('ejemplo.txt', { encoding: 'utf8' });
+      </code></pre>
+      <ul>
+        <li>La función <code>readFile</code> devuelve una promesa, que se almacena en la variable <code>p</code>.</li>
+        <li>Esta promesa encapsula el resultado de <code>readFile</code>, que es el contenido del fichero <code>ejemplo.txt</code>.</li>
+      </ul>
+      <p><img src="16/variableP.svg"></p>
+      </section>
+      
+      <section><h3>Ejemplo: <code>readFile()</code> con promesas</h3>
+      <pre><code class="language-javascript" data-trim data-noescape>
+        import fs from 'node:fs/promises'
+        
+        const p = fs.readFile('ejemplo.txt', { encoding: 'utf8' });
+        console.log('El programa sigue...')
+        ...
+      </code></pre>
+      <ul>
+        <li>Mientras se resuelve el valor de la promesa <code>p</code>, la ejecución del programa continua.</li>
+        <li>Cuando la lectura del fichero haya finalizado, la promesa pasará a estar <strong>cumplida</strong>:</li>
+      </ul>
+      <p><img src="16/variableP2.svg"></p>      
+      </section>
+      
+      <section><h3>Ejemplo: <code>readFile()</code> con promesas</h3>
+      <ul>
+        <li>Podemos utilizar el método <code>then()</code> de las promesas para indicar qué debe hacerse con el resultado de <code>readFile()</code>.
+        <pre><code class="language-javascript" data-trim data-noescape>
+        const p = fs.readFile('ejemplo.txt', { encoding: 'utf8' });
+        ...
+        p.then(str => {
+            console.log("Leído fichero:")
+            console.log(str);
+        });          
+        </code></pre>
+        </li>        
+        <li>El método <code>then()</code> recibe una función. Esta función recibe el valor encapsulado por la promesa.</li>
+      </ul>
+        <p><img src="16/variablePThen.svg"></p>
+      </section>
+      
+      <section><h3>Promesas vs callbacks</h3>
+      <ul>
+        <li>En el modelo basado en <em>callbacks</em>, las acciones a realizar tras la lectura se indican en la llamada a <code>readFile()</code>:
+        <pre><code class="language-javascript" data-trim data-noescape>
+          fs.readFile('ejemplo.txt', { encoding: 'utf8' }, <span class="hl">str => { ... }</span>);
+        </code></pre>
+        </li>
+        <li>En el modelo basado en promesas, las acciones a realizar tras la lectura se indican mediante el método <code>then</code> de la promesa devuelta por <code>readFile()</code>.
+        <pre><code class="language-javascript" data-trim data-noescape>
+          const p = fs.readFile('ejemplo.txt', { encoding: 'utf8' });
+          p.then(<span class="hl">str => { ... }</span>);
+        </code></pre>
+        </li>
+      </ul>
+      <p style="font-style:italic">Pero las diferencias van mucho más allá...</p>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Estados de una promesa</h2>
+      </section>
+      
+      <section><h3>Estados de una promesa</h3>
+      <ul style="font-size:90%">
+        <li>Una promesa comienza en el estado <strong>pendiente</strong>, que significa que aún no se ha calculado el valor contenido en ella.</li>
+        <li>Tras finalizar el cómputo de ese valor, la promesa pasa a estar  <strong>cumplida</strong>.</li>
+        <li>Por el contrario, si ha habido un error al calcular el valor, la promesa pasa a estar <strong>rechazada</strong>.</li>
+      </ul>
+      <p><img src="16/EstadosPromesa.svg"></p>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Métodos sobre promesas</h2>
+      </section>
+      
+      
+      <section><h3>Métodos sobre promesas</h3>
+        <ul>
+          <li><code>then()</code></li>
+          <li><code>catch()</code></li>
+          <li><code>finally()</code></li>
+        </ul>
+      </section>
+      
+      <section><h3>Método <code>then()</code></h3>
+        <p><img src="16/variablePThen.svg"></p>
+        <ul>
+          <li>Recibe una función <code>f</code>, que se ejecuta cuando la promesa esté cumplida. La función <code>f</code> recibe el valor encapsulado por la promesa.</li>
+          <li>Si la promesa ya estaba cumplida en el momento de llamar a <code>then()</code>, la función <code>f</code> se ejecutará igualmente.</li>
+          <li>Si la promesa pasó del estado <em>pendiente</em> a <em>rechazada</em>, no se ejecuta <code>f</code>.</li>
+        </ul>
+      </section>
+      
+      <section><h3>Método <code>catch()</code></h3>
+        <p><img src="16/variablePCatch.svg"></p>
+        <ul>
+          <li>Recibe una función <code>f</code>, que se ejecuta si la promesa pasa a ser rechazada. La función <code>f</code> recibe el motivo del rechazo (normalmente un objeto de tipo <code>Error</code>).</li>
+          <li>Si la promesa ya estaba rechazada en el momento de llamar a <code>catch()</code>, la función <code>f</code> se ejecutará igualmente.</li>
+          <li>Si la promesa está <em>cumplida</em>, no se ejecuta <code>f</code>.</li>
+        </ul>
+      </section>
+      
+      
+      <section><h3>Método <code>finally()</code></h3>
+        <p><img src="16/variablePFinally.svg"></p>
+        <ul>
+          <li>Recibe una función <code>f</code> que se ejecuta cuando la promesa pase a estar cumplida o rechazada. La función <code>f</code> no recibe ningún parámetro.</li>
+          <li>Si la promesa ya estaba en uno de esos dos estados en el momento de llamar a <code>finally()</code>, se llama a <code>f</code> igualmente.</li>
+          <li>Sirve para evitar duplicar código en las llamadas <code>then()</code> y <code>catch()</code> cuando sendos <em>callback</em> realizan lo mismo.</li>
+        </ul>
+      </section>
+      
+      
+      <section><h3>Ejemplo</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          const pr = fs.readFile('example.txt', {encoding: 'utf8'});
+          pr.then(str => {
+              console.log('Leído:');
+              console.log(str);
+          });
+          pr.catch(error => {
+              console.log(`Ha ocurrido un error: ${error.message}`);
+          })
+        </code></pre>
+      </section>
+      
+      <section><h3>Operaciones asíncronas mediante promesas</h3>
+                    <div style="background:#EDF; padding:20px 2px 20px 20px">
+                        <ul>
+                            <li><strong>No bloquean</strong> la ejecución del programa.<br>
+                                <span style="font-size:60%">Porque el programa continúa su ejecución mientras la operación se realiza.</span>
+                            </li>
+                            <li><strong>Devuelven</strong> una <strong>promesa</strong>.<br>
+                                <span style="font-size:60%">La promesa contiene el resultado de la operación.</span>
+                            </li>
+                            <li><strong>No</strong> lanzan <strong>excepciones</strong>.<br>
+                                <span style="font-size:60%">En caso de error, la promesa pasa a estar <em>rechazada</em>.</span></li>
+                        </ul>
+                </div>
+        </section>      
+    
+    </section>
+    <section>
+    
+      <section>
+        <h2>Encadenamiento de llamadas</h2>
+      </section>
+    
+      <section><h3>Encadenamiento de llamadas</h3>
+        <ul>
+          <li>Suponemos una llamada <code>p.then(f)</code></li>
+          <li>La llamada a <code>then()</code> devuelve otra promesa, que depende del estado de <code>p</code> y del valor devuelto por <code>f</code>.
+          <ul>
+            <li>Si <code>f</code> devuelve una promesa <code>p'</code>, la llamada a <code>then()</code> devuelve una promesa con el mismo estado y valor que <code>p'</code>.</li>
+            <li>Si <code>f</code> devuelve un valor <code>v</code> distinto de una promesa, la llamada a <code>then()</code> devuelve una promesa cumplida que encapsula el valor <code>v</code>.</li>
+            <li>Si <code>f</code> lanza una excepción, la llamada a <code>then()</code> devuelve una promesa rechazada cuyo motivo es la excepción lanzada.</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section><h3>Ejemplo</h3>
+        <ul>
+          <li>Supongamos que queremos contar el número de líneas de un fichero y guardar este número en otro fichero.
+          <ol style="margin-top:0.5em">
+            <li>Leemos el fichero de entrada:
+            <pre><code class="language-javascript" data-trim data-noescape>
+const p1 = fs.readFile('ejemplo.txt', {encoding: 'utf8'});
+            </code></pre></li>
+            <li>Calculamos el número de líneas:
+            <pre><code class="language-javascript" data-trim data-noescape>
+const p2 = p1.then(str => str.split(/\n\r|\n|\r/).length);
+            </code></pre>
+            </li>
+            <li>Escribimos el resultado en el fichero de salida:
+            <pre><code class="language-javascript" data-trim data-noescape>
+const p3 = p2.then(num => fs.writeFile('resultado.txt', 
+                                      `Número de líneas: ${num}`));
+            </code></pre></li>
+            <li>Mostramos mensaje de confirmación:
+            <pre><code class="language-javascript" data-trim data-noescape>
+p3.then(() => console.log('Fichero resultado.txt escrito correctamente'));
+            </code></pre></li>
+          </ol>
+          </li>          
+        </ul>
+      </section>
+      
+      <section><h3>Ejemplo</h3>
+        <ul>
+          <li>Todas estas operaciones se pueden agrupar en una cadena de llamadas a <code>then()</code>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+fs.readFile('ejemplo.txt', {encoding: 'utf8'})
+    .then(str => str.split(/\n\r|\n|\r/).length)
+    .then(num => fs.writeFile('resultado.txt', 
+                              `Número de líneas: ${num}`))
+    .then(() => console.log('Fichero escrito correctamente'));</code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section><h3>Encadenar <code>then()</code> con <code>catch()</code></h3>
+        <ul>
+          <li>De modo similar, si hacemos una llamada <code>p.then(f)</code>, y la promesa <code>p</code> está rechazada, la llamada a <code>then()</code> devuelve <code>p</code>.</li>
+          <li>Esto nos permite encadenar llamadas a <code>then()</code> con llamadas a <code>catch()</code>.</li>
+        </ul>
+      </section>
+      
+      <section><h3>Ejemplo</h3>
+          <pre><code class="language-javascript" data-trim data-noescape>
+fs.readFile('ejemplo.txt', {encoding: 'utf8'})
+    .then(str => str.split(/\n\r|\n|\r/).length)
+    .then(num => fs.writeFile('resultado.txt', 
+                              `Número de líneas: ${num}`))
+    .then(() => console.log('Fichero escrito correctamente'))
+    <span class="hl">.catch(err => console.log(`Error: ${err.message}`));</span>
+    </code></pre>
+    
+      <ul>
+        <li>La función <em>callback</em> pasada a <code>catch()</code> se ejecutará si alguna de las promesas anteriores ha sido rechazada.</li>
+      </ul>
+      </section>
+      
+      
+      <section><h3>Las promesas son &laquo;contagiosas&raquo;</h3>
+      <ul>
+        <li>Al igual que con las funciones asíncronas basadas en <em>callbacks</em>, si el resultado de una función <code>f</code> depende del valor contenido en una promesa, esa función  <code>f</code> también ha de devolver una promesa.</li>
+      </ul>
+      </section>
+      
+      <section><h3>Ejemplo</h3>
+      <ul>
+        <li>Creamos una función <code>numLineas()</code> que devuelve el número de líneas de un fichero pasado como parámetro:
+        <pre><code class="language-javascript" data-trim data-noescape>
+function numLineas(fich) {
+    return fs.readFile(fich, {encoding: 'utf8'})
+             .then(str => str.split(/\n\r|\n|\r/).length);
+}          
+        </code></pre>
+        </li>
+        <li>La función <code>numLineas</code> debe devolver una promesa.</li>
+        <li>Ejemplo de uso:
+        <pre><code class="language-javascript" data-trim data-noescape>
+numLineas('ejemplo.txt').then(n => console.log(`Tiene ${n} líneas`));
+        </code></pre>
+        </li>
+      </ul>
+      </section>
+
+    </section>
+    <section>
+
+      <section>
+        <h2>Creación de promesas</h2>
+      </section>
+    
+      <section><h3>Creación de promesas</h3>
+        <ul>
+          <li><code>Promise.resolve(v)</code><br>
+          Crea una promesa cumplida con el valor <code>v</code>.
+          </li>
+          <li><code>Promise.reject(err)</code><br>
+          Crea una promesa rechazada con el motivo <code>err</code>.
+          </li>
+        </ul>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          Promise.resolve(5).then(n => console.log(n));   // &rarr; 5
+          
+          Promise.reject(new Error('Ups!'))
+                 .catch(err => console.log(err.message)); // &rarr; Ups!
+        </code></pre>
+      </section>
+      
+      <section><h3>Creación de promesas: constructor</h3>
+        <ul>
+          <li>Alternativamente, podemos crear promesas mediante el constructor de la clase <code>Promise</code>.</li>
+          <li>El constructor de la clase <code>Promise</code> recibe una función que realiza las operaciones asíncronas. Esta función recibe dos parámetros:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const p = new Promise((resolve, reject) => { ... });
+          </code></pre>
+          </li>
+          <li>Los parámetros <code>resolve</code> y <code>reject</code> son, a su vez, funciones.</li>
+        </ul>
+      </section>
+      
+      <section><h3>Creación de promesas: constructor</h3>
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const p = new Promise((resolve, reject) => { ... });
+          </code></pre>
+        <ul>
+          <li>La función pasada como parámetro al constructor de <code>Promise</code> debe llamar a la función <code>resolve</code> cuando la promesa se haya cumplido, o llamar a la función <code>reject</code> cuando se haya rechazado.</li>
+          <li><code>resolve</code> recibe el valor resuelto dentro de la promesa.</li>
+          <li><code>reject</code> recibe el motivo del rechazo.</li>
+        </ul>
+      </section>
+      
+      <section><h3>Ejemplo</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          // La siguiente promesa se cumple transcurrido un segundo, devolviendo
+          // la cadena "OK":
+          const p = new Promise((resolve, reject) => {
+              setTimeout(() => resolve('OK'), 1000)
+          });
+          
+          // Imprimimos el valor devuelto cuando la promesa finalice:
+          p.then(str => console.log(str));  
+        </code></pre>
+      </section>
+
+    </section>
+    <section>
+
+      <section>
+        <h2>Métodos útiles</h2>
+      </section>
+
+      <section><h3>El método <code>Promise.all()</code></h3>
+        <ul>
+          <li>Recibe un array de promesas y devuelve una promesa.</li>
+          <li>Si todas las promesas del array se cumplen, la promesa devuelta quedará cumplida, y su valor será un array con los valores devueltos por cada una de las promesas.</li>
+          <li>Si una de las promesas del array es rechazada, la promesa devuelta también será rechazada.</li>
+        </ul>
+      </section>
+      
+      <section><h3>Ejemplo</h3>
+      <ul>
+        <li>El siguiente fragmento obtiene el número de líneas de los ficheros <code>fich1.txt</code>, <code>fich2.txt</code> y <code>fich3.txt</code> y suma las tres cantidades:</li>
+      </ul>
+      <pre><code class="language-javascript" data-trim data-noescape>
+        const ps = [numLineas('fich1.txt'),
+                    numLineas('fich2.txt'),
+                    numLineas('fich3.txt')]
+        
+        Promise.all(ps)
+            .then(([n1, n2, n3]) => console.log(n1 + n2 + n3))
+            .catch(err => console.log(`Error: ${err.message}`));
+        
+      </code></pre>
+      </section>
+      
+      <section><h3>El método <code>Promise.any()</code></h3>
+        <ul>
+          <li>Recibe un array de promesas y devuelve una promesa.</li>
+          <li>Cuando alguna de las promesas del array se cumpla con un determinado valor <code>v</code>, la promesa devuelta por <code>any()</code> quedará cumplida con ese mismo valor <code>v</code>.</li>
+          <li>Si todas las promesas del array son rechazadas, la promesa devuelta también será rechazada.</li>
+        </ul>
+      </section>
+      
+      <section><h3>Variantes</h3>
+        <ul>
+          <li><code>Promise.allSettled()</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled">[+]</a>
+          
+          </li>
+          <li><code>Promise.race()</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race">[+]</a>
+          </li>
+        </ul>
+      </section>
+    </section>
+
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:70%">
+                <ul>
+                    <li>A. Rauschmayer
+                        <br>
+                        JavaScript for impatient programmers (2022)<br>
+                        Capítulo 40<br>
+                        <span style="font-size:40%">https://exploringjs.com/impatient-js/index.html</span>
+                    </li>
+
+                    <li style="">
+                    Using Promises
+                    <br/>
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference">Mozilla Developer Network</a>
+                        <br> <span style="font-size:40%">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference</span>
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://exploringjs.com/impatient-js/img-homepage/cover-homepage.jpg" style="width:50%; border:none"><br/>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/MDN_Web_Docs_logo.svg" style="width:40%; border:none">
+            </div>
+        </section>    
+    
+    </div>
+
+    
+    
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
