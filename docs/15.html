@@ -59,11 +59,11 @@
         <h3>¿Qué es una operación asíncrona?</h3>
         <ul>
           <li>Cuando un programa realiza una operación <strong>síncrona</strong>, el programa detiene su ejecución hasta que dicha operación haya terminado.
-          <ul>
+          <ul class="fragment">
             <li>En este caso, decimos que una operación síncrona es <em>bloqueante</em>, porque el programa queda &laquo;bloqueado&raquo; esperando a que la operación termine.</li>
           </ul>
           </li>
-          <li>Por el contrario, cuando un programa invoca una operación <strong>asíncrona</strong>, el programa continúa su ejecución mientras la operación se realiza.
+          <li class="fragment">Por el contrario, cuando un programa invoca una operación <strong>asíncrona</strong>, el programa continúa su ejecución mientras la operación se realiza.
           </li>
         </ul>
       </section>
@@ -86,9 +86,9 @@
             Bloque 2
           </code></pre>
           </li>
-          <li>El <code>Bloque 2</code> no se ejecuta hasta que se ha terminado de leer el fichero:</li>
+          <li class="fragment">El <code>Bloque 2</code> no se ejecuta hasta que se ha terminado de leer el fichero:</li>
         </ul>
-        <p><img src="15/Sincrona.svg" width="100%"></p>
+        <p class="fragment"><img src="15/Sincrona.svg" width="100%"></p>
       </section>
       
       <section>
@@ -101,9 +101,9 @@
             Bloque 2
           </code></pre>
           </li>
-          <li>El <code>Bloque 2</code> se ejecuta mientras se está realizando la lectura:</li>
+          <li class="fragment">El <code>Bloque 2</code> se ejecuta mientras se está realizando la lectura:</li>
         </ul>
-        <p><img src="15/Asincrona.svg" width="80%"></p>
+        <p class="fragment"><img src="15/Asincrona.svg" width="80%"></p>
       </section>
       
       <section>
@@ -111,15 +111,15 @@
         <ul>
           <li>El módulo <code>fs</code> de Node.js proporciona operaciones para manejar ficheros.
           <pre><code class="language-javascript" data-trim data-noescape>
-            import fs from "node:fs"
+            import fs from 'node:fs'
           </code></pre>
           </li>
-          <li>Dentro de este módulo hay dos funciones para leer el contenido de un fichero:
+          <li class="fragment">Dentro de este módulo hay dos funciones para leer el contenido de un fichero:
           <ul>
-            <li><code>fs.readFileSync(fichero, opcs)</code><br/>
+            <li class="fragment"><code>fs.readFileSync(fichero, opcs)</code><br/>
             Lectura síncrona
             </li>
-            <li><code>fs.readFile(fichero, opcs, callback)</code><br/>
+            <li class="fragment"><code>fs.readFile(fichero, opcs, callback)</code><br/>
             Lectura asíncrona
             </li>
           </ul>
@@ -131,15 +131,15 @@
       <section>
         <h3>Lectura síncrona en Node.js</h3>
         <pre><code class="language-javascript" data-trim data-noescape>
-          import fs from "node:fs"
+          import fs from 'node:fs'
 
           try {
-              const contenido = fs.readFileSync("FichTexto.txt", 
-                                              { encoding: "utf-8" });
-              console.log("Fichero leído correctamente:");
+              const contenido = fs.readFileSync('ejemplo.txt', 
+                                                { encoding: "utf-8" });
+              console.log('Fichero leído correctamente:');
               console.log(contenido);
           } catch (err) {
-              console.log("Se ha producido un error:");
+              console.log('Se ha producido un error:');
               console.log(err.message);
           }          
         </code></pre>
@@ -161,8 +161,8 @@
         <p><img src="15/Asincrona.svg" width="80%"></p>
         <p>Si la ejecución del programa continúa sin esperar a que la operación de lectura asíncrona termine...</p>
         <ul>
-          <li>¿Cómo sabemos cuándo ha terminado la operación?</li>
-          <li>¿Cómo obtenemos el resultado de esa operación?</li>
+          <li class="fragment">¿Cómo sabemos cuándo ha terminado la operación?</li>
+          <li class="fragment">¿Cómo obtenemos el resultado de esa operación?</li>
         </ul>
       </section>
       
@@ -196,7 +196,7 @@
           <li>La función <code>readFile()</code> asíncrona recibe un tercer parámetro, que es una función <code>callback</code>.
           </li>
           <li><code>readFile()</code> llamará a la función <code>callback</code> cuando haya finalizado la lectura del fichero.</li>  
-            <li>La función <code>callback</code> es definida por el programador que llama a la función <code>readFile()</code>, y en ella se determinan las acciones a realizar con el resultado de la operación.</li>
+            <li class="fragment">La función <code>callback</code> debe ser definida por el programador que llama a la función <code>readFile()</code>, y en ella se determinan las acciones a realizar a partir del resultado de la operación <code>readFile()</code>.</li>
         </ul>
       </section>
       
@@ -204,13 +204,13 @@
         <h3>Función <code>readFile()</code> asíncrona</h3>
         <p><code>fs.readFile(fichero, opcs, (<span class="hl">err</span>, <span class="hl">result</span>) => {...})</code></p>
         <ul>
-          <li>La función <em>callback</em> recibe dos parámetros:
+          <li class="fragment">La función <em>callback</em> recibe dos parámetros:
         <ul>
-                        <li>Un objeto de la clase <code>Error</code>, en el caso en que la lectura haya fallado.<br>
-                            <span style="font-size:70%">Si no ha fallado, este parámetro toma el valor <code>null</code>.</span>
+                        <li class="fragment">Un objeto de la clase <code>Error</code>, en el caso en que la lectura haya fallado.<br>
+                            <span style="font-size:70%" class="fragment">Si no ha fallado, este parámetro toma el valor <code>null</code>.</span>
                         </li>
-                        <li>El contenido del fichero leído, en el caso en que se haya leído correctamente.<br>
-                            <span style="font-size:70%">Si la lectura ha fallado, este parámetro toma el valor <code>undefined</code>.</span></li>
+                        <li class="fragment">El contenido del fichero leído, en el caso en que se haya leído correctamente.<br>
+                            <span style="font-size:70%" class="fragment">Si la lectura ha fallado, este parámetro toma el valor <code>undefined</code>.</span></li>
                     </ul>
           </li>
         </ul>
@@ -219,22 +219,22 @@
       <section>
         <h3>Lectura asíncrona en Node.js</h3>
 <pre><code class="language-javascript" data-trim data-noescape>
-import fs from "node:fs"
+import fs from 'node:fs'
 
-console.log("Antes de readFile");
-fs.readFile("FichTexto.txt", 
-            { encoding: "utf-8" },
+console.log('Antes de readFile');
+fs.readFile('FichTexto.txt', 
+            { encoding: 'utf-8' },
             (err, contenido) => {
                 if (err) {
-                    console.log("Se ha producido un error:");
+                    console.log('Se ha producido un error:');
                     console.log(err.message);
                 } else {
-                    console.log("Fichero leído correctamente:");
+                    console.log('Fichero leído correctamente:');
                     console.log(contenido);
                 }        
             }
 );                
-console.log("Después de readFile");       
+console.log('Después de readFile');       
 </code></pre>                
       </section>
       
@@ -243,7 +243,7 @@ console.log("Después de readFile");
         <p>Resultado de ejecución:</p>
         <pre><code class="no-highlight" data-trim data-noescape>
         Antes de readFile
-        Después de readFile     <span class="arrow_box_left">Se ejecuta antes de la función callback!</span>
+        Después de readFile     <span class="arrow_box_left fragment">Se imprime esto antes de la función callback!</span>
         Fichero leído correctamente:
         ...          
         </code></pre>
@@ -254,7 +254,7 @@ console.log("Después de readFile");
                     <div style="background:#EDF; padding:20px 2px 20px 20px">
                         <ul>
                             <li><strong>No bloquean</strong> la ejecución del programa.<br>
-                                <span style="font-size:60%">Porque el programa continúa su ejecución mientras la lectura se realiza.</span>
+                                <span style="font-size:60%">Porque el programa continúa su ejecución mientras la operación asíncrona se realiza.</span>
                             </li>
                             <li><strong>No devuelven</strong> ningún valor.<br>
                                 <span style="font-size:60%">El resultado de la operación se pasa como parámetro a la función <em>callback</em>.</span>
@@ -269,7 +269,7 @@ console.log("Después de readFile");
           <h3>Sobre la concurrencia</h3>
           <ul>
             <li>Aunque las operaciones asíncronas se realizan de manera concurrente, el código JavaScript siempre se ejecuta en <strong>una única hebra</strong>.</li>
-            <li>Cuando una operación asíncrona finaliza e invoca a la función <em>callback</em>, el código de esta última no se ejecuta de manera concurrente con el resto del programa JavaScript, sino que se guarda en una cola, esperando a que el código ejecutándose actualmente finalice.</li>
+            <li>Cuando una operación asíncrona finaliza e invoca a la función <em>callback</em>, el código de esta última no se ejecuta de manera concurrente con el resto del programa JavaScript, sino que se guarda en una cola, esperando a que finalice el código ejecutándose actualmente.</li>
           </ul>
         </section>
         
@@ -279,7 +279,7 @@ console.log("Después de readFile");
           <pre><code class="language-javascript" data-trim data-noescape>
 let contenidoFichero;
 
-fs.readFile("FichTexto.txt", { encoding: "utf-8" },
+fs.readFile('FichTexto.txt', { encoding: 'utf-8' },
             (err, result) => {
                 if (!err) {
                     // Asignamos el contenido a la variable
@@ -297,7 +297,7 @@ console.log(contenidoFichero); // ¿Qué se imprime aquí?
           <p><img src="15/AsincronaMal.svg" width="80%"></p>
           <ul>
             <li>La sentencia <code>console.log(contenidoFichero)</code>
-            se ejecuta antes de la función <code>callback</code> pasada como parámetro a <code>readFile</code>, aunque la lectura se haya hecho de manera rapidísima.
+            se ejecuta antes de la función <code>callback</code> pasada como parámetro a <code>readFile()</code>, aunque la lectura se haya hecho de manera instantánea.
             </li>
             
           </ul>
@@ -307,7 +307,7 @@ console.log(contenidoFichero); // ¿Qué se imprime aquí?
           <h3>Moraleja</h3>
                     <p>Si un fragmento del programa depende del resultado de una llamada asíncrona, no debe ir tras dicha llamada:</p>
                     <pre><code data-trim data-noescape class="javascript">
-fs.readFile("fich.txt", (err, result) => {
+fs.readFile('fich.txt', (err, result) => {
     ...
 });
 <span class="hl" style="background-color:#FBB">// hacer algo con 'result'</span>
@@ -316,7 +316,7 @@ fs.readFile("fich.txt", (err, result) => {
                     <div class="fragment">
                         Debe ir dentro de la función callback:
                         <pre><code data-trim data-noescape class="javascript">
-fs.readFile("fich.txt", (err, result) => {
+fs.readFile('fich.txt', (err, result) => {
     <span class="hl" style="background-color:#BFB">// hacer algo con 'result'</span>
     ...
 });
@@ -348,16 +348,16 @@ fs.readFile("fich.txt", (err, result) => {
         <section>
           <h3>Ejemplo</h3>
           <ul>
-            <li>Queremos implementar una función <code>numLineas()</code> que reciba el nombre de un fichero y devuelva el número de líneas que contiene.
+            <li>Queremos implementar una función <code>numLineas()</code> que reciba el nombre de un fichero y devuelva el número de líneas que contiene:
             
-            <pre><code class="language-javascript" data-trim data-noescape>
+            <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
 function numLineas(fich) {
     fs.readFile(fich, {encoding: 'utf8'}, (err, result) => {
         if (err) {
             console.log('Error al leer el fichero');
         } else {
             const numL = result.split(/\n\r|\n|\r/).length;
-            ...    <span class="arrow_box_left">¿Cómo devolvemos numL?</span>
+            ...    <span class="arrow_box_left fragment">¿Cómo devolvemos numL?</span>
         }
     })
 }              
@@ -389,7 +389,7 @@ function numLineas(fich) {
           <ul>
             <li>La función <code>numLineas</code> ha de recibir una función <code>callback</code> a la que pasará el resultado.</li>
             <li>Por tanto, <code>numLineas</code> ha de ser asíncrona.</li>
-            <li>Utilizando el mismo convenio que el resto de funciones asíncronas, la función callback tendrá dos parámetros <code>err</code> y <code>result</code>.</li>
+            <li>Utilizando el mismo convenio que el resto de funciones asíncronas, la función <em>callback</em> tendrá dos parámetros: <code>err</code> y <code>result</code>.</li>
           </ul>
         </section>
         
@@ -399,10 +399,10 @@ function numLineas(fich) {
 function numLineas(fich, <span class="hl">callback</span>) {
     fs.readFile(fich, {encoding: 'utf8'}, (err, result) => {
         if (err) {
-            callback(err);        <span class="arrow_box_left">Llamada a callback con error</span>
+            callback(err);        <span class="arrow_box_left fragment">Llamada a callback con error</span>
         } else {
             const numL = result.split(/\n\r|\n|\r/).length;
-            callback(null, numL); <span class="arrow_box_left">Llamada a callback con resultado</span>
+            callback(null, numL); <span class="arrow_box_left fragment">Llamada a callback con resultado</span>
         }
     });
 }            
@@ -413,7 +413,7 @@ function numLineas(fich, <span class="hl">callback</span>) {
           <h3>Ejemplo</h3>
           <p>Uso de <code>numLineas</code>:</p>
           <pre><code class="language-javascript" data-trim data-noescape>
-            numLineas("ejemplo.txt", (err, n) => {
+            numLineas('ejemplo.txt', (err, n) => {
                 if (err) {
                     console.log('Error al leer el fichero');
                 } else {
@@ -442,7 +442,7 @@ function numLineas(fich, <span class="hl">callback</span>) {
               <li>Si hay que ejecutar un número indeterminado de operaciones asíncronas, la complejidad es aún mayor.</li>
             </ul>
             </li>
-            <li>Las <strong>promesas</strong> (<em>promises</em>) de JavaScript solucionan algunos de estos inconvenientes.</li>
+            <li class="fragment">Las <strong>promesas</strong> (<em>promises</em>) de JavaScript solucionan algunos de estos inconvenientes.</li>
           </ul>
           
         </section>
