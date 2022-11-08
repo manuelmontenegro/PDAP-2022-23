@@ -1,0 +1,17 @@
+% Ejemplo de contador (3)
+
+---T----T-----
+title = ini$:
+
+------F-----F-
+title = para$:
+
+
+> merge(ini$, para$)
+
+---T--F-T---F-
+
+> startWith(false)
+
+F--T--F-T---F-
+title = activo$:

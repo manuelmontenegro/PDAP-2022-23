@@ -1,0 +1,20 @@
+% Ejemplo de contador (4)
+
+[styles]
+event_radius = 32
+
+----a---b---c---d--
+a := _
+b := _
+c := _
+d := _ 
+
+---T--F-------T----
+
+> withLatestFrom()
+
+----a---b---c---d--
+a := [ _, T ]
+b := [ _, F ]
+c := [ _, F ]
+d := [ _, T ]

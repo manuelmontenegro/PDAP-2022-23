@@ -1,0 +1,37 @@
+% Ejemplo de contador (5)
+
+[styles]
+event_radius = 32
+
+----a---b---c---d--
+title = interval(..)
+a := 
+b := 
+c := 
+d :=  
+
+--------------a----
+title = parada$
+a := ""
+
+> takeUntil
+
+----a---b---c-|----
+a := 
+b := 
+c := 
+
+> scan(ac => ac + 1, 0)
+
+----a---b---c-|----
+a := 1
+b := 2
+c := 3
+
+> startWith(0)
+
+e---a---b---c-|----
+e := 0
+a := 1
+b := 2
+c := 3

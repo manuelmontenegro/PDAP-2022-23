@@ -1,0 +1,20 @@
+% Diagrama de zip
+
+[styles]
+event_radius = 25
+
+--a----b-----c-d---|
+a := 1
+b := 2
+c := 3
+d := 4
+
+--a-----b--c----d--|
+
+> zip()
+
+--a-----b----c--d--|
+a := [1,a]
+b := [2,b]
+c := [3,c]
+d := [4,d]

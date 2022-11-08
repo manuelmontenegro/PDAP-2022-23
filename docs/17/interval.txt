@@ -1,0 +1,9 @@
+% Operador interval
+
+> interval(1000)
+
+--a--b--c--d--
+a := 
+b := 
+c := 
+d := 

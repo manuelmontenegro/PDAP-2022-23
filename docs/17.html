@@ -225,7 +225,7 @@ click$.subscribe(({x, y}) => console.log(`Click en (${x},${y})`));
       <section>
         <h3>Ejemplo</h3>
         <ul>
-          <li>Continuando con el ejemplo anterior, nos quedamos solamente con las diez primeras pulsaciones del ratón.</li>
+          <li>Modificamos el ejemplo anterior para capturar solamente las diez primeras pulsaciones del ratón.</li>
         </ul>
         <pre><code class="language-javascript" data-trim data-noescape>
 import { fromEvent, map, filter, take } from 'rxjs';
@@ -256,6 +256,428 @@ click$.subscribe(({x, y}) => console.log(`Click en (${x},${y})`));
           <li>Similar a <code>reduce</code>, pero el observable resultante emite los valores intermedios del acumulador.</li>
         </ul>
         <img src="17/scan.svg">
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Supongamos que queremos contar el número de pulsaciones de ratón sobre el área sombreada:
+          <pre><code class="language-javascript" data-trim data-noescape>
+import { fromEvent, map, filter, take, scan } from 'rxjs';
+...
+
+const click$ = fromEvent(area, 'click');
+const cont$ = click$.pipe(scan((ac, _) => ac + 1, 0));
+
+cont$.subscribe(cont => console.log(`Contador: ${cont}`));
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El operador <code>zip</code></h3>
+        <ul>
+          <li>Combina varios observables en uno solo.</li>
+          <li>Cada valor del resultado es una agrupación formada a partir de los valores emitidos por cada observable.</li>
+        </ul>
+        <p><img src="17/zip.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Combinamos los dos observables anteriores:
+          <ul>
+            <li><code>coord$</code>: coordenadas de cada pulsación</li>
+            <li><code>cont$</code>: número de pulsaciones</li>
+          </ul>          
+          </li>
+        </ul>
+        <p><img src="17/clicks3.svg" width="60%"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+
+import { fromEvent, map, filter, take, scan, zip } from 'rxjs';
+
+const area = document.getElementById('areaClicks');
+
+const coord$ = fromEvent(area, 'click').pipe(
+    map(evt => ({x: evt.offsetX, y: evt.offsetY})),
+    filter(({x, y}) => x < area.clientWidth / 2)
+);
+
+const cont$ = coord$.pipe(scan((ac, _) => ac + 1, 0));
+
+zip(coord$, cont$)
+    .pipe(take(10))
+    .subscribe(([{x, y}, cont]) => {
+        console.log(`Pulsación en (${x}, ${y}) / contador = ${cont}`);
+    });
+        </code></pre>
+      </section>
+      
+      
+      <section>
+        <h3>Lectura de ficheros mediante observables</h3>
+        <ul>
+          <li>Es posible utilizar observables para gestionar otros tipos de eventos, no necesariamente relacionados con las interfaces gráficas de usuario.</li>
+          <li>Por ejemplo, podemos implementar una función <code>fromFile(filename)</code> que devuelva un observable con las líneas del fichero <code>fileName</code>.</li>
+          <li>De momento, solamente veremos cómo utilizar <code>fromFile</code>. Su implementación se explicará más adelante.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Supongamos que <code>ej1.txt</code> tiene el siguiente contenido:
+        <pre><code class="no-highlight" data-trim data-noescape>
+          L1
+          L2
+          L3
+        </code></pre></li>
+          <li>La llamada a <code>fromFile("ej1.txt")</code> devuelve el siguiente observable, que emite valores a medida que se leen las líneas del fichero:</li>
+        </ul>
+        <p>
+          <img src="17/fromFile.svg">
+        </p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Podemos utilizar este observable, por ejemplo, para leer el número de líneas del fichero:
+          <pre><code class="language-javascript" data-trim data-noescape>
+        fromFile('ejemplo1.txt')
+            .pipe(reduce((ac, _) => ac + 1, 0))
+            .subscribe(numL => console.log(`Número de líneas: ${numL}`));
+          </code></pre>
+          </li>
+        </ul>
+        <p><img src="17/numLineas.svg"></p>
+      </section>
+      
+      
+      <section>
+        <h3>Creación de observables: <code>of</code> y <code>from</code></h3>
+        <ul>
+          <li><code>of(x1,...,xn)</code> produce un observable que emite los valores pasados como parámetro:
+          <p style="text-align:center"><img src="17/of.svg"></p>
+          </li>
+          <li><code>from(xs)</code> produce un observable a partir de los elementos de un array, un objeto iterable, o una promesa:
+          <p style="text-align:center"><img src="17/from.svg"></p>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Observables de observables</h3>
+        <ul>
+          <li>Es posible definir observables cuyos eventos producidos son también observables.</li>
+          <li>Por ejemplo:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            of('F1.txt', 'F2.txt', 'F3.txt').pipe(map(f => fromFile(f)))
+          </code></pre>
+          </li>
+        </ul>
+        <p><img src="17/deobservables.svg" width="70%"></p>
+      </section>
+      
+      <section>
+        <h3>Observables de orden superior</h3>
+        <ul>
+          <li>Un observable de <strong>orden superior</strong> es aquel cuyos elementos son también observables.
+          <p><img src="17/ordensuperior.svg"></p>
+          </li>
+          <li>Existen operadores que transforman observables de orden superior en observables de primer orden.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operador <code>concatAll()</code></h3>
+        <ul>
+          <li>Concatena los valores de un observable de orden superior, comenzando con los del primer observable, luego los del segundo, etc.
+          <p><img src="17/concatAll.svg"></p>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operador <code>mergeAll()</code></h3>
+        <ul>
+          <li>Concatena los valores de un observable de orden superior, mezclando los valores a medida que se van produciendo por cada observable.
+          <p><img src="17/mergeAll.svg"></p>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operadores <code>concatMap</code> y <code>mergeMap</code></h3>
+        <ul>
+          <li>Combinan el operador <code>map</code> con los dos anteriores:
+          <ul>
+            <li><code>concatMap(f) = map(f) + concatAll()</code></li>
+            <li><code>mergeMap(f) = map(f) + mergeAll()</code></li>
+          </ul>
+          </li>
+          <li>Por ejemplo, si queremos sumar de la cantidad total de líneas de una serie de ficheros:
+          <pre><code class="language-javascript" data-trim data-noescape>
+          of('ejemplo1.txt', 'ejemplo2.txt', 'ejemplo3.txt').pipe(
+              mergeMap(f => fromFile(f)),
+              reduce((ac, _) => ac + 1, 0)
+          ).subscribe(numL => console.log(numL));
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <p>Partimos del siguiente documento HTML:</p>
+        <pre><code class="language-html" data-trim data-noescape>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Contador&lt;/title&gt;
+        &lt;meta charset="utf8"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Contador: &lt;span id="contador"&gt;##&lt;/span&gt;&lt;/h1&gt;
+        &lt;button id="iniciar"&gt;Iniciar&lt;/button&gt;
+        &lt;button id="parar"&gt;Parar&lt;/button&gt;
+        &lt;script src="main.js"&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;          
+        </code></pre>
+        <img style="border:1px solid black" src="17/Contador.png">
+      </section>
+      
+      <section>
+        <h3>El operador <code>interval</code></h3>
+        <ul>
+          <li>Recibe una cantidad de tiempo <code>t</code> y devuelve un observable que emite un evento cada <code>t</code> milisegundos.
+                  <p style="text-align:center"><img src="17/interval.svg"></p>
+          </li>
+          <li>El valor emitido es un contador que se incrementa, pero no lo utilizaremos en este ejemplo.</li>
+        </ul>        
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          const contador$ = interval(1000).pipe(
+              scan(ac => ac + 1, 0)
+          );          
+          contador$.subscribe(c => textoContador.innerText = `${c}`);
+        </code></pre>
+        <p><img src="17/contador1.svg"></p>
+      </section>
+      
+      <section>
+        <h3>El operador <code>startWith</code></h3>
+        <ul>
+          <li>Dado un observable, produce otro igual, pero añadiendo un evento al inicio.</li>
+        </ul>
+        <p><img src="17/startWith.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <div style="display:flex">
+          <div style="width:50%;margin-top:2em">
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const contador$ = interval(1000)
+                .pipe(
+                    scan(ac => ac + 1, 0),
+                    startWith(0)
+                );          
+          </code></pre>
+          </div>
+          <div>
+          <p><img src="17/contador2.svg"></p>
+          </div>
+        </div>
+      </section>
+      
+      <section>
+        <h3>Inicio y parada del contador</h3>
+        <ul style="width:100%">
+          <li>Creamos un observable para cada botón:
+          <ul>
+            <li>El botón <em>Iniciar</em> emite valores <code>true</code>.</li>
+            <li>El botón <em>Parar</em> emite valores <code>false</code>.</li>
+          </ul>
+          <pre><code class="language-javascript" data-trim data-noescape>
+const ini$ = fromEvent(botonIniciar, 'click').pipe(map(() => true));
+const fin$ = fromEvent(botonParar, 'click').pipe(map(() => false));
+          </code></pre>
+          </li>
+          <li>Mezclando ambos, obtenemos un observable que nos dice si el incremento está activo o inactivo:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const activo$ = merge(ini$, fin$).pipe(startWith(false));
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El operador <code>merge()</code></h3>
+        <img src="17/contador3.svg">
+      </section>
+      
+      <section>
+        <h3>Habilitar y deshabilitar botones</h3>
+        <ul>
+          <li>Cada vez que se emite un evento en <code>activo$</code>, podemos actualizar la interfaz para habilitar y deshabilitar los botones:
+          <pre><code class="language-javascript" data-trim data-noescape>
+activo$.subscribe(act => {
+    botonIniciar.disabled = act;
+    botonParar.disabled = !act;
+});
+
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Cuándo incrementar el contador?</h3>
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const contador$ = interval(1000)
+                .pipe(
+                    scan(ac => ac + 1, 0),
+                    startWith(0)
+                );          
+          </code></pre>
+        <ul>
+          <li>De momento, nuestro contador se incrementa con cada evento <code>interval</code>.</li>
+          <li>En realidad solo hemos de incrementarlo si, en el momento de producirse el evento, el último valor emitido por el observable <code>activo$</code> es <code>true</code>.</li>
+        </ul>        
+      </section>
+      
+      <section>
+        <h3>Operador <code>withLatestFrom</code></h3>
+        <ul>
+          <li>Dado dos observables <code>o1</code> y <code>o2</code>, produce cada uno de los valores emitidos por <code>o1</code> asociado al último valor emitido por <code>o2</code> en ese momento:</li>
+          <p><img src="17/withLatestFrom.svg"></p>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>En nuestro caso, queremos combinar los valores del observable producido por <code>interval</code> con los últimos valores emitidos por el observable <code>activo$</code>.</li>
+        </ul>
+        <p><img src="17/contador4.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Una vez hecha esta combinación, modificamos la función pasada a <code>scan</code> para que solo incremente el contador si el último valor emitido por <code>activo$</code> es <code>true</code>:</li>
+        </ul>
+        <pre><code class="language-javascript" data-trim data-noescape>
+const contador$ = interval(1000).pipe(
+    withLatestFrom(activo$),
+    scan((ac, [_, activo]) => activo ? ac + 1 : ac, 0),
+    startWith(0)
+);
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Contador con reinicio</h3>        
+        <pre><code class="language-html" data-trim data-noescape>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Contador&lt;/title&gt;
+        &lt;meta charset="utf8"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Contador: &lt;span id="contador"&gt;0&lt;/span&gt;&lt;/h1&gt;
+        &lt;button id="reiniciar"&gt;Reiniciar&lt;/button&gt;
+        &lt;script src="main.js"&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;          
+        </code></pre>
+        <img style="border:1px solid black" src="17/ContadorReinicio.png">
+      </section>
+      
+      <section>
+        <h3>El operador <code>takeUntil</code></h3>
+        <ul>
+          <li>Dados dos observables <code>o1</code> y <code>o2</code>, devuelve un observable que emite los mismos valores de <code>o1</code>, pero solo hasta que <code>o2</code> emite su primer evento.</li>
+        </ul>
+        <p><img src="17/takeUntil.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Creamos una función <code>contadorHasta</code> que emite un observable con un contador que se incrementa cada segundo hasta que el observable pasado como parámetro emita un evento:</li>
+          <pre><code class="language-javascript" data-trim data-noescape>
+function contadorHasta(parada$) {
+    return interval(1000).pipe(
+        takeUntil(parada$),
+        scan(ac => ac + 1, 0),
+        startWith(0)
+    )
+}            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <img src="17/contador5.svg" width="60%">
+      </section>
+      
+      <section>
+        <h3>Contador con reinicio</h3>
+        <ul>
+          <li>Si <code>reini$</code> es el observable que representa las pulsaciones del botón <em>Reiniciar</em>, podemos transformar cada pulsación en un observable que representa la evolución del contador:</li>
+          
+          <pre><code class="language-javascript" data-trim data-noescape>
+const contador$ = reini$.pipe(
+    map(() => contadorHasta(reini$)),
+    concatAll()
+) // También podría haberse utilizado concatMap
+          </code></pre>          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Contador con reinicio</h3>
+        <p><img src="17/contador6.svg"></p>
+      </section>
+      
+      
+      <section>
+        <h3>Contador con reinicio</h3>
+        <ul>
+          <li>Para hacer que el contador se inicie automáticamente, añadimos un valor ficticio al principio de nuestro observable <code>reini$</code>:</li>
+          <pre><code class="language-javascript" data-trim data-noescape>
+const contador$ = reini$.pipe(
+    startWith(true),  // Cualquier otro valor distinto de 'true' sirve,
+                      // porque no lo utilizamos en el 'map'
+    map(() => contadorHasta(reini$)),
+    concatAll()
+)
+          </code></pre>
+          o bien:
+          <pre><code class="language-javascript" data-trim data-noescape>
+const contador$ = reini$.pipe(
+    startWith(true),
+    concatMap(() => contadorHasta(reini$)),
+)            
+          </code></pre>
+        </ul>
       </section>
     
     </div>

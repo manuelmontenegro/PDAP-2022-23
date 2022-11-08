@@ -1,0 +1,12 @@
+% Diagrama de of
+
+[styles]
+event_radius = 25
+
+--a-b-c-d-e-f--
+a := xs[0]
+b := xs[1]
+c := xs[2]
+d := xs[3]
+e := xs[4]
+f := xs[5]

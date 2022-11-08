@@ -1,0 +1,13 @@
+% Diagrama de fromFile
+
+
+
+--a---b-----c---|
+a := L1
+b := L2
+c := L3
+
+> reduce((ac, _) => ac + 1, 0)
+
+----------------a|
+a := 3

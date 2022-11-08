@@ -1,0 +1,8 @@
+% Operación startWith
+
+---a-b--c--d--|
+
+> startWith(x)
+
+x--a-b--c--d--|
+

@@ -1,0 +1,19 @@
+% Operador takeUntil
+
+----a---b---c---d--
+title = o1
+a := 
+b := 
+c := 
+d :=  
+
+--------------a---b
+title = o2
+
+> takeUntil
+
+----a---b---c-|----
+a := 
+b := 
+c := 
+d := 

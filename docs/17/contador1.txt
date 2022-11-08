@@ -1,0 +1,18 @@
+% Ejemplo de contador (1)
+
+> interval(1000)
+
+--a--b--c--d--
+a := 
+b := 
+c := 
+d := 
+
+> scan(ac => ac + 1, 0)
+
+--a--b--c--d--
+a := 1
+b := 2
+c := 3
+d := 4
+

@@ -1,0 +1,36 @@
+% Operador mergeAll
+
+[styles]
+event_radius = 30
+
+
+x = -a---b-----c---
+a := F1L1
+b := F1L2
+c := F1L3
+
+y = --d---------e----
+d := F2L1
+e := F2L2
+
+z = -f-----g--h--
+f := F3L1
+g := F3L2
+h := F3L3
+i := F3L4
+
+
+--x------y-------z-------|
+
+> mergeAll()
+
+--a---b----d-c----f--e--g--h--|
+a := F1L1
+b := F1L2
+c := F1L3
+d := F2L1
+e := F2L2
+f := F3L1
+g := F3L2
+h := F3L3
+i := F3L4

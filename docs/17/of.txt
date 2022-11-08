@@ -1,0 +1,9 @@
+% Diagrama de of
+
+--a-b-c-d-e-f--
+a := x1
+b := x2
+c := x3
+d := x4
+e := x5
+f := x6

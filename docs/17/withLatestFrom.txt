@@ -1,0 +1,17 @@
+% Operador withLatestFrom
+
+[styles]
+event_radius = 30
+
+-----a----b--------c---|
+
+
+---1---------2--3------|
+
+
+> withLatestFrom()
+
+-----a----b--------c---|
+a := [a,1]
+b := [b,1]
+c := [c,3]
