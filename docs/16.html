@@ -633,7 +633,7 @@
       
       <section><h3>Método <code>finally()</code></h3>
         <p><img src="16/variablePFinally.svg"></p>
-        <ul>
+        <ul style="font-size:90%">
           <li>Recibe una función <code>f</code> que se ejecutará cuando la promesa pase a estar cumplida o rechazada. La función <code>f</code> no recibe ningún parámetro.</li>
           <li class="fragment">Si la promesa ya estaba en uno de esos dos estados en el momento de llamar a <code>finally()</code>, se llama a <code>f</code> igualmente.</li>
           <li class="fragment">Sirve para evitar código duplicado en las llamadas <code>then()</code> y <code>catch()</code> cuando sendos <em>callback</em> realizan lo mismo.</li>
