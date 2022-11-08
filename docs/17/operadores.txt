@@ -1,0 +1,32 @@
+% Diagrama geńerico de transformaciones
+
+--a--b-----c---d-e---
+title = origen$
+a :=
+b :=
+c :=
+d :=
+e :=
+
+> operador1()
+
+-------a----b--c-----
+a :=
+b :=
+c :=
+
+> operador2()
+
+i-----j-----k----l---
+i :=
+j :=
+k :=
+l :=
+
+> ...
+
+-----j-----k----l---
+title = destino$
+j :=
+k :=
+l :=

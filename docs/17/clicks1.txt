@@ -1,0 +1,9 @@
+% Diagrama de clicks
+
+--a--b-----c---d-e---
+title = click$
+a := clk1
+b := clk2
+c := clk3
+d := clk4
+e := clk5

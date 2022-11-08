@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Introducción a la programación reactiva con RxJS</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Introducción a la programación reactiva con RxJS</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li></li>
+          </ol>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <p>Comenzamos con la siguiente página HTML:</p>
+        <div style="display:flex">
+          <div style="width:50%"><p><code>index.html</code></p>
+            <pre style="font-size:40%"><code class="language-html" data-trim data-noescape>
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Captura de eventos&lt;/title&gt;
+            &lt;link rel="stylesheet" href="index.css"/&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+            &lt;div id="areaClicks"&gt;&lt;/div&gt;
+            &lt;script src="main.js"&gt;&lt;/script&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;          
+            </code></pre>
+          </div>
+          <div style="width:50%"><p><code>index.css</code></p>
+            <pre style="font-size:40%"><code class="language-css" data-trim data-noescape>    
+#areaClicks {
+    width: 600px;
+    height: 300px;
+    background-color: lightblue;
+}          
+            </code></pre>
+            <img src="17/Ventana1.png" width="80%">            
+          </div>          
+        </div>
+      </section>
+
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Ya en JavaScript, obtenemos una referencia al elemento DOM correspondiente al área sombreada <code>&lt;div&gt;</code> de la página:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const area = document.getElementById('areaClicks');
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Detección de pulsaciones</h3>
+        <ul>
+          <li>Construimos un observable a partir de las pulsaciones de ratón realizadas sobre el área sombreada:
+          <pre><code class="language-javascript" data-trim data-noescape data-line-numbers="1,4">
+import { fromEvent } from 'rxjs';
+
+const area = document.getElementById('areaClicks');
+const click$ = fromEvent(area, 'click');            
+          </code></pre>
+          <p style="text-align:center"><img src="17/clicks1.svg"></p>
+          </li>
+          <li>Por convenio, los nombres de las variables que contienen observables finalizan en <code>$</code>.</li>
+          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El método <code>fromEvent</code></h3>
+        <ul>
+          <li><code>fromEvent(e, type)</code><br/>
+          Construye un observable a partir de los eventos de tipo <code>type</code> que se producen en el elemento <code>e</code> de la página.
+          </li>
+          <li>Cada elemento del observable creado es un objeto de la interfaz <code>Event</code> de JavaScript.</li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Suscripción a un observable</h3>
+        <p style="text-align:center;margin:0px"><img src="17/clicks1.svg"></p>
+        <ul>
+          <li>Mediante el método <code>subscribe()</code> de los observables, podemos indicar las acciones a realizar cada vez que se produce un evento en <code>click$</code>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+click$.subscribe((click) => console.log('Click! ', click));
+          </code></pre>
+          </li>
+          <li>La función pasada a <code>subscribe()</code> recibe el objeto <code>MouseEvent</code> correspondiente a cada pulsación.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operadores RxJS</h3>
+        <ul>
+          <li>Permiten transformar un observable en otro.</li>
+          <li>Son operaciones puras: generan un nuevo observable sin alterar el original</li>
+          <li>Para aplicar una secuencia de operadores a un observable se utiliza el método <code>pipe()</code>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const destino$ = origen$.pipe(
+                operacion1(),
+                operacion2(),
+                ...
+            )
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operadores RxJS</h3>
+        <img src="17/operadores.svg" width="50%">
+      </section>
+      
+      <section>
+        <h3>El operador <code>map</code></h3>
+        <ul>
+          <li>Produce un observable aplicando una función a cada elemento del observable original.         
+          </li>          
+        </ul>
+        <p><img src="17/map.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Obtenemos un observable con las coordenadas cada pulsación del ratón:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            import { fromEvent, map } from 'rxjs';
+            ...
+            const click$ = fromEvent(area, 'click').pipe(
+                map(evt => ({x: evt.offsetX, y: evt.offsetY}))
+            );
+            
+            click$.subscribe(({x, y}) => console.log(`Click en (${x},${y})`));
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <img src="17/clicks2.svg">
+      </section>
+      
+      
+      <section>
+        <h3>El operador <code>filter</code></h3>
+        <ul>
+          <li>Produce un observable a partir de los eventos de otro, para los que la función booleana pasada como parámetro devuelve true.</li>
+        </ul>
+        <p><img src="17/filter.svg"></p>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Supongamos que solo queremos informar de las pulsaciones de ratón que se producen en la mitad izquierda del área sombreada:
+          <pre><code class="language-javascript" data-trim data-noescape>
+import { fromEvent, map, filter } from 'rxjs';
+...
+const click$ = fromEvent(area, 'click').pipe(
+    map(evt => ({x: evt.offsetX, y: evt.offsetY})),
+    <span class="hl">filter(({x, y}) => x < area.clientWidth / 2)</span>
+);
+
+click$.subscribe(({x, y}) => console.log(`Click en (${x},${y})`));
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El operador <code>take</code></h3>
+        <ul>
+          <li>Aplicado a un número <code>n</code>, produce un observable con los <code>n</code> primeros valores del observable inicial.</li>
+        </ul>
+        <p><img src="17/take.svg"></p>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Continuando con el ejemplo anterior, nos quedamos solamente con las diez primeras pulsaciones del ratón.</li>
+        </ul>
+        <pre><code class="language-javascript" data-trim data-noescape>
+import { fromEvent, map, filter, take } from 'rxjs';
+...
+const click$ = fromEvent(area, 'click').pipe(
+    map(evt => ({x: evt.offsetX, y: evt.offsetY})),
+    filter(({x, y}) => x < area.clientWidth / 2),
+    <span class="hl">take(10)</span>
+);
+
+click$.subscribe(({x, y}) => console.log(`Click en (${x},${y})`));
+        </code></pre>
+      </section>
+        
+      <section>
+        <h3>El operador <code>reduce</code></h3>
+        <ul>
+          <li>Similar a la función <code>reduce</code> de JavaScript.</li>
+          <li>Mantiene un acumulador que se actualiza a medida que el observable origen produce valores.</li>
+          <li>Cuando el observable origen finaliza, se emite el valor final del acumulador.</li>
+        </ul>
+        <p><img src="17/reduce.svg"></p>
+      </section>
+      
+      <section>
+        <h3>El operador <code>scan</code></h3>
+        <ul>
+          <li>Similar a <code>reduce</code>, pero el observable resultante emite los valores intermedios del acumulador.</li>
+        </ul>
+        <img src="17/scan.svg">
+      </section>
+    
+    </div>
+
+    
+    
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
