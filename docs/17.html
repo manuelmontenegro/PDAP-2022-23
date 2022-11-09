@@ -57,8 +57,8 @@
       <section>
         <h3>¿Qué es la programación reactiva?</h3>
         <ul>
-          <li>Es un paradigma de programación que gira en torno a la <strong>evolución</strong> de las variables a lo largo del tiempo, y la <strong>propagación</strong> de los cambios que en ellas se producen.</li>
-          <li>Para ello se apoya en flujos de datos (<strong><em>data streams</em></strong>) que describen el valor de una variable a lo largo del tiempo.         </li>
+          <li>Es un paradigma de programación relacionado con la <strong>evolución</strong> de las variables a lo largo del tiempo, y la <strong>propagación</strong> de los cambios que en ellas se producen.</li>
+          <li>Consiste en representar flujos de datos (<strong><em>data streams</em></strong>) que describen el valor de una variable a lo largo del tiempo.         </li>
         </ul>
       </section>
       
@@ -70,7 +70,7 @@
           <li>En una hoja de cálculo, cada celda tiene un valor que puede depender de otras celdas.
           <p style="text-align:center"><img src="17/HojaCalculo.png"></p>
           </li>
-          <li>Las celdas <strong>se recalculan automáticamente</strong> cada vez que hay un cambio en las celdas de las que dependen.</li>
+          <li class="fragment">La celda <code>B2</code> <strong>se recalcula automáticamente</strong> cada vez que hay un cambio en alguna de las celdas de las que depende (<code>A1</code> o <code>A2</code>).</li>
         </ul>
       </section>
       
@@ -85,9 +85,9 @@
       <section>
         <h3>Propagación del cambio</h3>
         <ul>
-          <li>En programación orientada a objetos, el patrón de diseño más conocido para propagar los cambios de estado es el patrón <em>Observer</em>.</li>
-          <li>En este patrón, varios <em>observers</em> (o <em>listeners</em>) se registran en un <strong>observable</strong> para ser notificados de los cambios producidos en este último.</li>
-          <li>Cuando un observable modifica su estado, emite un <strong>evento  </strong> para que sus observadores puedan realizar las acciones oportunas.</li>
+          <li>En programación orientada a objetos, el patrón de diseño más conocido para propagar cambios de estado es el patrón <em class="fragment">Observer</em>.</li>
+          <li class="fragment">En este patrón, varios <em>observers</em> (o <em>listeners</em>) se registran en un <strong>observable</strong> para ser notificados de los cambios producidos en este último.</li>
+          <li class="fragment">Cuando un observable modifica su estado, emite un <strong>evento  </strong> para que sus observadores puedan realizar las acciones oportunas.</li>
         </ul>
       </section>
       
@@ -98,16 +98,16 @@
           </li>
         </ul>
         <div style="display:flex;align-items:center">
-        <p style="width:50%"><img src="17/canicas.svg"></p>
-        <p style="width:50%;background-color:#FFFFCC;padding:10px 0px">Las canicas representan los valores emitidos por cada observable a lo largo del tiempo.</p>
+        <p style="width:50%"><img src="17/canicas.svg" class="fragment"></p>
+        <p style="width:50%;background-color:#FFFFCC;padding:10px 0px" class="fragment">Las canicas representan los valores emitidos por cada observable a lo largo del tiempo.</p>
         </div>
       </section>
       
       <section>
         <h3>Programación reactiva</h3>
         <ul>
-          <li>Con este modelo basado en <strong>observables</strong>, la programación reactiva consiste en transformar y combinar observables para obtener otros observables como resultado.</li>
-          <li>
+          <li>Con este modelo basado en <strong>observables</strong>, la programación reactiva consiste en <strong>transformar</strong> y <strong>combinar</strong> observables para obtener otros observables como resultado.</li>
+          <li class="fragment">
         Cuando definimos un observable, estamos indicando el comportamiento dinámico que tendrá un determinado valor a lo largo de la ejecución del programa.
         </li>
         </ul>
@@ -126,7 +126,6 @@
         </div>
         <ul>
           <li><em>ReactiveX</em> es una librería basada en el uso de observables para componer programas asíncronos y basados en eventos.</li>
-          <li>Disponible en muchos lenguajes.</li>
         </ul>
       </section>
       
@@ -204,7 +203,7 @@
       <section>
         <h3>Ejemplo</h3>
         <ul>
-          <li>Ya en JavaScript, obtenemos una referencia al elemento DOM correspondiente al área sombreada <code>&lt;div&gt;</code> de la página:
+          <li>Obtenemos una referencia al elemento DOM correspondiente al área sombreada <code>&lt;div&gt;</code> de la página:
           <pre><code class="language-javascript" data-trim data-noescape>
             const area = document.getElementById('areaClicks');
           </code></pre>
@@ -223,9 +222,9 @@ import { fromEvent } from 'rxjs';
 const area = document.getElementById('areaClicks');
 const click$ = fromEvent(area, 'click');            
           </code></pre>
-          <p style="text-align:center"><img src="17/clicks1.svg"></p>
+          <p style="text-align:center" class="fragment"><img src="17/clicks1.svg"></p>
           </li>
-          <li>Por convenio, los nombres de las variables que contienen observables finalizan en <code>$</code>.</li>
+          <li class="fragment">Por convenio, los nombres de las variables que contienen observables finalizan en <code>$</code>.</li>
           
         </ul>
       </section>
@@ -236,7 +235,9 @@ const click$ = fromEvent(area, 'click');
           <li><code>fromEvent(e, type)</code><br/>
           Construye un observable a partir de los eventos de tipo <code>type</code> que se producen en el elemento <code>e</code> de la página.
           </li>
+          <div class="fragment">
           <li>Cada elemento del observable creado es un objeto de la interfaz <code>Event</code> de JavaScript.</li>
+          <li>En el caso de los eventos provenientes del ratón (<code>click</code>, por ejemplo) es un objeto de la clase <code>MouseEvent</code>.</li></div>
         </ul>
       </section>
       
@@ -245,21 +246,21 @@ const click$ = fromEvent(area, 'click');
         <h3>Suscripción a un observable</h3>
         <p style="text-align:center;margin:0px"><img src="17/clicks1.svg"></p>
         <ul>
-          <li>Mediante el método <code>subscribe()</code> de los observables, podemos indicar las acciones a realizar cada vez que se produce un evento en <code>click$</code>:
-          <pre><code class="language-javascript" data-trim data-noescape>
+          <li>Mediante el método <code>subscribe()</code> de los observables podemos indicar las acciones a realizar cada vez que se produce un evento en <code>click$</code>:
+          <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
 click$.subscribe((click) => console.log('Click! ', click));
           </code></pre>
           </li>
-          <li>La función pasada a <code>subscribe()</code> recibe el objeto <code>MouseEvent</code> correspondiente a cada pulsación.</li>
+          <li class="fragment">La función pasada a <code>subscribe()</code> recibe el objeto <code>MouseEvent</code> correspondiente a cada pulsación.</li>
         </ul>
       </section>
       
       <section>
         <h3>Operadores RxJS</h3>
         <ul>
-          <li>Permiten transformar un observable en otro.</li>
-          <li>Son operaciones puras: generan un nuevo observable sin alterar el original</li>
-          <li>Para aplicar una secuencia de operadores a un observable se utiliza el método <code>pipe()</code>:
+          <li>Permiten transformar un observable en otro, o combinar varios observables.</li>
+          <li>Son operaciones <strong>puras</strong>: generan un nuevo observable sin alterar el original.</li>
+          <li class="fragment">Para aplicar una secuencia de operadores a un observable se utiliza el método <code>pipe()</code>:
           <pre><code class="language-javascript" data-trim data-noescape>
             const destino$ = origen$.pipe(
                 operacion1(),
@@ -279,7 +280,7 @@ click$.subscribe((click) => console.log('Click! ', click));
       <section>
         <h3>El operador <code>map</code></h3>
         <ul>
-          <li>Produce un observable aplicando una función a cada elemento del observable original.         
+          <li>Produce un observable aplicando una función dada a cada valor del observable original.         
           </li>          
         </ul>
         <p><img src="17/map.svg"></p>
@@ -311,7 +312,7 @@ click$.subscribe((click) => console.log('Click! ', click));
       <section>
         <h3>El operador <code>filter</code></h3>
         <ul>
-          <li>Produce un observable a partir de los eventos de otro, para los que la función booleana pasada como parámetro devuelve true.</li>
+          <li>Produce un observable a partir de los eventos de otro, concretamente aquellos para los que la función booleana pasada como parámetro devuelve <code>true</code>.</li>
         </ul>
         <p><img src="17/filter.svg"></p>
       </section>
@@ -500,7 +501,7 @@ zip(coord$, cont$)
       <section>
         <h3>El operador <code>startWith</code></h3>
         <ul>
-          <li>Dado un observable, produce otro igual, pero añadiendo un evento al inicio.</li>
+          <li>Dado un observable, produce otro igual, pero añadiendo al inicio el valor pasado como parámetro.</li>
         </ul>
         <p><img src="17/startWith.svg"></p>
       </section>
@@ -525,18 +526,18 @@ zip(coord$, cont$)
       
       <section>
         <h3>Inicio y parada del contador</h3>
-        <ul style="width:100%">
+        <ul style="width:95%">
           <li>Creamos un observable para cada botón:
           <ul>
             <li>El botón <em>Iniciar</em> emite valores <code>true</code>.</li>
             <li>El botón <em>Parar</em> emite valores <code>false</code>.</li>
           </ul>
-          <pre><code class="language-javascript" data-trim data-noescape>
+          <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
 const ini$ = fromEvent(botonIniciar, 'click').pipe(map(() => true));
 const fin$ = fromEvent(botonParar, 'click').pipe(map(() => false));
           </code></pre>
           </li>
-          <li>Mezclando ambos, obtenemos un observable que nos dice si el incremento está activo o inactivo:
+          <li class="fragment">Mezclando ambos, obtenemos un observable que indica si el incremento está activo o inactivo:
           <pre><code class="language-javascript" data-trim data-noescape>
             const activo$ = merge(ini$, fin$).pipe(startWith(false));
           </code></pre>
@@ -552,7 +553,7 @@ const fin$ = fromEvent(botonParar, 'click').pipe(map(() => false));
       <section>
         <h3>Habilitar y deshabilitar botones</h3>
         <ul>
-          <li>Cada vez que se emite un evento en <code>activo$</code>, podemos actualizar la interfaz para habilitar y deshabilitar los botones:
+          <li>Cada vez que <code>activo$</code> emite un valor, podemos actualizar la interfaz para habilitar y deshabilitar los botones:
           <pre><code class="language-javascript" data-trim data-noescape>
 activo$.subscribe(act => {
     botonIniciar.disabled = act;
@@ -575,14 +576,14 @@ activo$.subscribe(act => {
           </code></pre>
         <ul>
           <li>De momento, nuestro contador se incrementa con cada evento <code>interval</code>.</li>
-          <li>En realidad solo hemos de incrementarlo si, en el momento de producirse el evento, el último valor emitido por el observable <code>activo$</code> es <code>true</code>.</li>
+          <li class="fragment">En realidad solo hemos de incrementarlo si, en el momento de producirse el evento <code>interval</code> , el último valor emitido por el observable <code>activo$</code> es <code>true</code>.</li>
         </ul>        
       </section>
       
       <section>
         <h3>Operador <code>withLatestFrom</code></h3>
         <ul>
-          <li>Dado dos observables <code>o1</code> y <code>o2</code>, produce cada uno de los valores emitidos por <code>o1</code> asociado al último valor emitido por <code>o2</code> en ese momento:</li>
+          <li>Dado dos observables <code>o1</code> y <code>o2</code>, produce los valores emitidos por <code>o1</code>, cada uno de ellos asociado al último valor emitido por <code>o2</code> en ese momento:</li>
           <p><img src="17/withLatestFrom.svg"></p>
         </ul>
       </section>
@@ -625,9 +626,9 @@ const contador$ = interval(1000).pipe(
       <section>
         <h3>Lectura de ficheros mediante observables</h3>
         <ul>
-          <li>Es posible utilizar observables para gestionar otros tipos de eventos, no necesariamente relacionados con las interfaces gráficas de usuario.</li>
+          <li>Es posible utilizar observables para gestionar otros tipos de eventos no relacionados con las acciones del usuario.</li>
           <li>Por ejemplo, podemos implementar una función <code>fromFile(filename)</code> que devuelva un observable con las líneas del fichero <code>fileName</code>.</li>
-          <li>De momento, solamente veremos cómo utilizar <code>fromFile</code>. Su implementación se explicará más adelante.</li>
+          <li class="fragment">De momento, solamente estudiaremos cómo utilizar <code>fromFile</code>. Su implementación se explicará más adelante.</li>
         </ul>
       </section>
       
@@ -640,9 +641,9 @@ const contador$ = interval(1000).pipe(
           L2
           L3
         </code></pre></li>
-          <li>La llamada a <code>fromFile("ej1.txt")</code> devuelve el siguiente observable, que emite valores a medida que se leen las líneas del fichero:</li>
+          <li class="fragment">La llamada a <code>fromFile("ej1.txt")</code> devuelve el siguiente observable, que emite valores a medida que se leen las líneas del fichero:</li>
         </ul>
-        <p>
+        <p class="fragment">
           <img src="17/fromFile.svg">
         </p>
       </section>
@@ -668,7 +669,7 @@ const contador$ = interval(1000).pipe(
           <li><code>of(x1,...,xn)</code> produce un observable que emite los valores pasados como parámetro:
           <p style="text-align:center"><img src="17/of.svg"></p>
           </li>
-          <li><code>from(xs)</code> produce un observable a partir de los elementos de un array, un objeto iterable, o una promesa:
+          <li class="fragment"><code>from(xs)</code> produce un observable a partir de los elementos de un array, un objeto iterable, o una promesa:
           <p style="text-align:center"><img src="17/from.svg"></p>
           </li>
         </ul>
@@ -678,13 +679,13 @@ const contador$ = interval(1000).pipe(
         <h3>Observables de observables</h3>
         <ul>
           <li>Es posible definir observables cuyos eventos producidos son también observables.</li>
-          <li>Por ejemplo:
+          <li class="fragment">Por ejemplo:
           <pre><code class="language-javascript" data-trim data-noescape>
             of('F1.txt', 'F2.txt', 'F3.txt').pipe(map(f => fromFile(f)))
           </code></pre>
           </li>
         </ul>
-        <p><img src="17/deobservables.svg" width="70%"></p>
+        <p class="fragment"><img src="17/deobservables.svg" width="70%"></p>
       </section>
       
       <section>
@@ -693,7 +694,7 @@ const contador$ = interval(1000).pipe(
           <li>Un observable de <strong>orden superior</strong> es aquel cuyos elementos son también observables.
           <p><img src="17/ordensuperior.svg"></p>
           </li>
-          <li>Existen operadores que transforman observables de orden superior en observables de primer orden.</li>
+          <li class="fragment">Existen operadores que transforman observables de orden superior en observables de primer orden.</li>
         </ul>
       </section>
       
@@ -724,7 +725,7 @@ const contador$ = interval(1000).pipe(
             <li><code>mergeMap(f) = map(f) + mergeAll()</code></li>
           </ul>
           </li>
-          <li>Por ejemplo, si queremos sumar de la cantidad total de líneas de una serie de ficheros:
+          <li class="fragment">Por ejemplo, si queremos sumar de la cantidad total de líneas de una serie de ficheros:
           <pre><code class="language-javascript" data-trim data-noescape>
           of('ejemplo1.txt', 'ejemplo2.txt', 'ejemplo3.txt').pipe(
               mergeMap(f => fromFile(f)),
