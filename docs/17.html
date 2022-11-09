@@ -42,11 +42,133 @@
       
       <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
           <ol class="contenidos">
-            <li></li>
+            <li>¿Qué es la programación reactiva?</li>
+            <li>ReactiveX y RxJS</li>
+            <li>Ejemplos</li>
+            <li>Resumen de operadores</li>
           </ol>
       </section>
       
+    <section>
+      <section>
+        <h2>¿Qué es la programación reactiva?</h2>
+      </section>
       
+      <section>
+        <h3>¿Qué es la programación reactiva?</h3>
+        <ul>
+          <li>Es un paradigma de programación que gira en torno a la <strong>evolución</strong> de las variables a lo largo del tiempo, y la <strong>propagación</strong> de los cambios que en ellas se producen.</li>
+          <li>Para ello se apoya en flujos de datos (<strong><em>data streams</em></strong>) que describen el valor de una variable a lo largo del tiempo.         </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo: hojas de cálculo</h3>
+        <ul>
+          <li>Las hojas de cálculo son uno de los ejemplos mas representativos de la programación reactiva.</li>
+          <li>En una hoja de cálculo, cada celda tiene un valor que puede depender de otras celdas.
+          <p style="text-align:center"><img src="17/HojaCalculo.png"></p>
+          </li>
+          <li>Las celdas <strong>se recalculan automáticamente</strong> cada vez que hay un cambio en las celdas de las que dependen.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: hojas de cálculo</h3>
+        <ul>
+          <li>En programación reactiva, los datos representan valores de las celdas a lo largo del tiempo.</li>          
+        </ul>
+        <p><img src="17/Cronograma.svg" width="90%"></p>
+      </section>
+      
+      <section>
+        <h3>Propagación del cambio</h3>
+        <ul>
+          <li>En programación orientada a objetos, el patrón de diseño más conocido para propagar los cambios de estado es el patrón <em>Observer</em>.</li>
+          <li>En este patrón, varios <em>observers</em> (o <em>listeners</em>) se registran en un <strong>observable</strong> para ser notificados de los cambios producidos en este último.</li>
+          <li>Cuando un observable modifica su estado, emite un <strong>evento  </strong> para que sus observadores puedan realizar las acciones oportunas.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Propagación del cambio</h3>
+        <ul>
+          <li>La manera habitual de representar eventos emitidos por un observable son los <strong>diagramas de canicas</strong> (<em>marble diagrams</em>).
+          </li>
+        </ul>
+        <div style="display:flex;align-items:center">
+        <p style="width:50%"><img src="17/canicas.svg"></p>
+        <p style="width:50%;background-color:#FFFFCC;padding:10px 0px">Las canicas representan los valores emitidos por cada observable a lo largo del tiempo.</p>
+        </div>
+      </section>
+      
+      <section>
+        <h3>Programación reactiva</h3>
+        <ul>
+          <li>Con este modelo basado en <strong>observables</strong>, la programación reactiva consiste en transformar y combinar observables para obtener otros observables como resultado.</li>
+          <li>
+        Cuando definimos un observable, estamos indicando el comportamiento dinámico que tendrá un determinado valor a lo largo de la ejecución del programa.
+        </li>
+        </ul>
+      </section>
+    </section>
+      
+    <section>
+      <section>
+        <h2>ReactiveRx y RXJS</h2>
+      </section>
+      <section>
+        <h3>ReactiveX</h3>
+        <div style="display:flex;align-items:center;justify-content:space-evenly">
+        <p><img src="https://avatars.githubusercontent.com/u/6407041?s=200&v=4"></p>
+        <p><a href="https://reactivex.io/">https://reactivex.io/</a></p>
+        </div>
+        <ul>
+          <li><em>ReactiveX</em> es una librería basada en el uso de observables para componer programas asíncronos y basados en eventos.</li>
+          <li>Disponible en muchos lenguajes.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>ReactiveX</h3>
+        <ul>
+          <li>Disponible en los siguientes lenguajes:
+          <ul>
+            <li>JavaScript - <a href="https://rxjs.dev/">RxJS</a>
+            <span class="arrow_box_left fragment" style="position:relative;left:3em">Este curso</a>            <li>Java/Kotlin - <a href="https://github.com/ReactiveX/RxJava">RxJava</a></li>
+
+            </li>
+            <li>C# - <a href="https://github.com/dotnet/reactive">Rx.NET</a></li>
+            <li>Python - <a href="https://github.com/ReactiveX/RxPY">RxPY</a></li>
+            <li>C++ - <a href="https://github.com/ReactiveX/RxCpp">RxCpp</a></li>
+            <li>Go - <a href="https://github.com/ReactiveX/RxGo">RxGo</a></li>
+            <li>Lua, Ruby, Swift, Dart, Elixir, etc.</li>
+            
+            
+          </ul>
+          </li>
+        </ul>
+      </section>
+    </section>
+    
+    <section>
+      <section>
+        <h2>Ejemplos</h2>
+      </section>
+    </section>
+      
+    <section>
+      <section>
+        <p class="info_box">Ejemplo 1:<br/>Capturar pulsaciones de ratón</p>
+        <div class="fragment">
+        <p style="font-style:italic">En este ejemplo estudiaremos los operadores básicos:</p>
+        <p><code>fromEvent</code>, <code>map</code>, <code>filter</code>, <code>take</code>, <code>reduce</code>, <code>scan</code>, <code>zip</code>
+        </div>
+      </section>
+      
+
+    
       <section>
         <h3>Ejemplo</h3>
         <p>Comenzamos con la siguiente página HTML:</p>
@@ -318,123 +440,20 @@ zip(coord$, cont$)
         console.log(`Pulsación en (${x}, ${y}) / contador = ${cont}`);
     });
         </code></pre>
-      </section>
-      
-      
+      </section>      
+    </section>
+    
+    
+    
+    <section>
       <section>
-        <h3>Lectura de ficheros mediante observables</h3>
-        <ul>
-          <li>Es posible utilizar observables para gestionar otros tipos de eventos, no necesariamente relacionados con las interfaces gráficas de usuario.</li>
-          <li>Por ejemplo, podemos implementar una función <code>fromFile(filename)</code> que devuelva un observable con las líneas del fichero <code>fileName</code>.</li>
-          <li>De momento, solamente veremos cómo utilizar <code>fromFile</code>. Su implementación se explicará más adelante.</li>
-        </ul>
+        <p class="info_box">Ejemplo 2:<br/>Temporizador básico</p>
+        <div class="fragment">
+        <p style="font-style:italic">En este ejemplo estudiaremos los observables que producen eventos a intervalos regulares y cuatro nuevos operadores:</p>
+        <p><code>interval</code>, <code>startWith</code>, <code>merge</code>, <code>withLatestFrom</code>
+        </div>
       </section>
-      
-      <section>
-        <h3>Ejemplo</h3>
-        <ul>
-          <li>Supongamos que <code>ej1.txt</code> tiene el siguiente contenido:
-        <pre><code class="no-highlight" data-trim data-noescape>
-          L1
-          L2
-          L3
-        </code></pre></li>
-          <li>La llamada a <code>fromFile("ej1.txt")</code> devuelve el siguiente observable, que emite valores a medida que se leen las líneas del fichero:</li>
-        </ul>
-        <p>
-          <img src="17/fromFile.svg">
-        </p>
-      </section>
-      
-      <section>
-        <h3>Ejemplo</h3>
-        <ul>
-          <li>Podemos utilizar este observable, por ejemplo, para leer el número de líneas del fichero:
-          <pre><code class="language-javascript" data-trim data-noescape>
-        fromFile('ejemplo1.txt')
-            .pipe(reduce((ac, _) => ac + 1, 0))
-            .subscribe(numL => console.log(`Número de líneas: ${numL}`));
-          </code></pre>
-          </li>
-        </ul>
-        <p><img src="17/numLineas.svg"></p>
-      </section>
-      
-      
-      <section>
-        <h3>Creación de observables: <code>of</code> y <code>from</code></h3>
-        <ul>
-          <li><code>of(x1,...,xn)</code> produce un observable que emite los valores pasados como parámetro:
-          <p style="text-align:center"><img src="17/of.svg"></p>
-          </li>
-          <li><code>from(xs)</code> produce un observable a partir de los elementos de un array, un objeto iterable, o una promesa:
-          <p style="text-align:center"><img src="17/from.svg"></p>
-          </li>
-        </ul>
-      </section>
-      
-      <section>
-        <h3>Observables de observables</h3>
-        <ul>
-          <li>Es posible definir observables cuyos eventos producidos son también observables.</li>
-          <li>Por ejemplo:
-          <pre><code class="language-javascript" data-trim data-noescape>
-            of('F1.txt', 'F2.txt', 'F3.txt').pipe(map(f => fromFile(f)))
-          </code></pre>
-          </li>
-        </ul>
-        <p><img src="17/deobservables.svg" width="70%"></p>
-      </section>
-      
-      <section>
-        <h3>Observables de orden superior</h3>
-        <ul>
-          <li>Un observable de <strong>orden superior</strong> es aquel cuyos elementos son también observables.
-          <p><img src="17/ordensuperior.svg"></p>
-          </li>
-          <li>Existen operadores que transforman observables de orden superior en observables de primer orden.</li>
-        </ul>
-      </section>
-      
-      <section>
-        <h3>Operador <code>concatAll()</code></h3>
-        <ul>
-          <li>Concatena los valores de un observable de orden superior, comenzando con los del primer observable, luego los del segundo, etc.
-          <p><img src="17/concatAll.svg"></p>
-          </li>
-        </ul>
-      </section>
-      
-      <section>
-        <h3>Operador <code>mergeAll()</code></h3>
-        <ul>
-          <li>Concatena los valores de un observable de orden superior, mezclando los valores a medida que se van produciendo por cada observable.
-          <p><img src="17/mergeAll.svg"></p>
-          </li>
-        </ul>
-      </section>
-      
-      <section>
-        <h3>Operadores <code>concatMap</code> y <code>mergeMap</code></h3>
-        <ul>
-          <li>Combinan el operador <code>map</code> con los dos anteriores:
-          <ul>
-            <li><code>concatMap(f) = map(f) + concatAll()</code></li>
-            <li><code>mergeMap(f) = map(f) + mergeAll()</code></li>
-          </ul>
-          </li>
-          <li>Por ejemplo, si queremos sumar de la cantidad total de líneas de una serie de ficheros:
-          <pre><code class="language-javascript" data-trim data-noescape>
-          of('ejemplo1.txt', 'ejemplo2.txt', 'ejemplo3.txt').pipe(
-              mergeMap(f => fromFile(f)),
-              reduce((ac, _) => ac + 1, 0)
-          ).subscribe(numL => console.log(numL));
-          </code></pre>
-          </li>
-        </ul>
-      </section>
-      
-      
+    
       <section>
         <h3>Ejemplo</h3>
         <p>Partimos del siguiente documento HTML:</p>
@@ -588,10 +607,149 @@ const contador$ = interval(1000).pipe(
     startWith(0)
 );
         </code></pre>
+      </section>    
+    </section>
+      
+    <section>
+      <section>
+        <p class="info_box">Ejemplo 3:<br/>Lectura de ficheros en Node.js</p>
+        <div class="fragment">
+        <p style="font-style:italic">Estudiamos cómo se crean observables a partir de una colección de elementos</p>
+        <p><code>of</code>, <code>from</code></p>
+        
+        <p style="font-style:italic">También presentamos los observables de orden superior, junto con sus operaciones asociadas.</p>
+        <p><code>concatAll</code>, <code>mergeAll</code>, <code>concatMap</code>, <code>mergeMap</code>
+        </div>
       </section>
       
       <section>
-        <h3>Contador con reinicio</h3>        
+        <h3>Lectura de ficheros mediante observables</h3>
+        <ul>
+          <li>Es posible utilizar observables para gestionar otros tipos de eventos, no necesariamente relacionados con las interfaces gráficas de usuario.</li>
+          <li>Por ejemplo, podemos implementar una función <code>fromFile(filename)</code> que devuelva un observable con las líneas del fichero <code>fileName</code>.</li>
+          <li>De momento, solamente veremos cómo utilizar <code>fromFile</code>. Su implementación se explicará más adelante.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Supongamos que <code>ej1.txt</code> tiene el siguiente contenido:
+        <pre><code class="no-highlight" data-trim data-noescape>
+          L1
+          L2
+          L3
+        </code></pre></li>
+          <li>La llamada a <code>fromFile("ej1.txt")</code> devuelve el siguiente observable, que emite valores a medida que se leen las líneas del fichero:</li>
+        </ul>
+        <p>
+          <img src="17/fromFile.svg">
+        </p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo</h3>
+        <ul>
+          <li>Podemos utilizar este observable, por ejemplo, para leer el número de líneas del fichero:
+          <pre><code class="language-javascript" data-trim data-noescape>
+        fromFile('ejemplo1.txt')
+            .pipe(reduce((ac, _) => ac + 1, 0))
+            .subscribe(numL => console.log(`Número de líneas: ${numL}`));
+          </code></pre>
+          </li>
+        </ul>
+        <p><img src="17/numLineas.svg"></p>
+      </section>
+      
+      
+      <section>
+        <h3>Creación de observables: <code>of</code> y <code>from</code></h3>
+        <ul>
+          <li><code>of(x1,...,xn)</code> produce un observable que emite los valores pasados como parámetro:
+          <p style="text-align:center"><img src="17/of.svg"></p>
+          </li>
+          <li><code>from(xs)</code> produce un observable a partir de los elementos de un array, un objeto iterable, o una promesa:
+          <p style="text-align:center"><img src="17/from.svg"></p>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Observables de observables</h3>
+        <ul>
+          <li>Es posible definir observables cuyos eventos producidos son también observables.</li>
+          <li>Por ejemplo:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            of('F1.txt', 'F2.txt', 'F3.txt').pipe(map(f => fromFile(f)))
+          </code></pre>
+          </li>
+        </ul>
+        <p><img src="17/deobservables.svg" width="70%"></p>
+      </section>
+      
+      <section>
+        <h3>Observables de orden superior</h3>
+        <ul>
+          <li>Un observable de <strong>orden superior</strong> es aquel cuyos elementos son también observables.
+          <p><img src="17/ordensuperior.svg"></p>
+          </li>
+          <li>Existen operadores que transforman observables de orden superior en observables de primer orden.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operador <code>concatAll()</code></h3>
+        <ul>
+          <li>Concatena los valores de un observable de orden superior, comenzando con los del primer observable, luego los del segundo, etc.
+          <p><img src="17/concatAll.svg"></p>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operador <code>mergeAll()</code></h3>
+        <ul>
+          <li>Concatena los valores de un observable de orden superior, mezclando los valores a medida que se van produciendo por cada observable.
+          <p><img src="17/mergeAll.svg"></p>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Operadores <code>concatMap</code> y <code>mergeMap</code></h3>
+        <ul>
+          <li>Combinan el operador <code>map</code> con los dos anteriores:
+          <ul>
+            <li><code>concatMap(f) = map(f) + concatAll()</code></li>
+            <li><code>mergeMap(f) = map(f) + mergeAll()</code></li>
+          </ul>
+          </li>
+          <li>Por ejemplo, si queremos sumar de la cantidad total de líneas de una serie de ficheros:
+          <pre><code class="language-javascript" data-trim data-noescape>
+          of('ejemplo1.txt', 'ejemplo2.txt', 'ejemplo3.txt').pipe(
+              mergeMap(f => fromFile(f)),
+              reduce((ac, _) => ac + 1, 0)
+          ).subscribe(numL => console.log(numL));
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+    </section>
+
+
+    <section>
+      <section>
+        <p class="info_box">Ejemplo 4:<br/>Temporizador con reinicio</p>
+        <div class="fragment">
+        <p style="font-style:italic">Seguimos con los observables de orden superior, y presentamos una nueva operación:</p>
+        <p><code>takeUntil</code></p>
+        </div>
+      </section>
+      
+    
+      <section>
+        <h3>Temporizador con reinicio</h3>        
         <pre><code class="language-html" data-trim data-noescape>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -635,7 +793,7 @@ function contadorHasta(parada$) {
       
       <section>
         <h3>Ejemplo</h3>
-        <img src="17/contador5.svg" width="60%">
+        <img src="17/contador5.svg" width="55%">
       </section>
       
       <section>
@@ -653,13 +811,13 @@ const contador$ = reini$.pipe(
       </section>
       
       <section>
-        <h3>Contador con reinicio</h3>
+        <h3>Temporizador con reinicio</h3>
         <p><img src="17/contador6.svg"></p>
       </section>
       
       
       <section>
-        <h3>Contador con reinicio</h3>
+        <h3>Temporizador con reinicio</h3>
         <ul>
           <li>Para hacer que el contador se inicie automáticamente, añadimos un valor ficticio al principio de nuestro observable <code>reini$</code>:</li>
           <pre><code class="language-javascript" data-trim data-noescape>
@@ -679,6 +837,193 @@ const contador$ = reini$.pipe(
           </code></pre>
         </ul>
       </section>
+    </section>
+    
+    <section>
+      <section>
+        <h2>Resumen de operadores</h2>
+      </section>
+      
+      
+      <section>
+        <h3>Funciones de creación</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>Doc.</th>
+            <th>Diag.</th>
+          </tr>
+          <tr>
+            <td><code>fromEvent</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/fromEvent">[+]</a></td>
+            <td style="text-align:center"></td>
+          </tr>
+          <tr>
+            <td><code>interval</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/interval">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#interval">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>of</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/of">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#of">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>from</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/from">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#from">[+]</a></td>
+          </tr>
+        </table>
+      </section>
+
+      <section>
+        <h3>Operadores de transformación</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>Doc.</th>
+            <th>Diag.</th>
+          </tr>
+          <tr>
+            <td><code>map</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/map">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#map">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>filter</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/filter">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#filter">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>take</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/take">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#take">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>reduce</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/reduce">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#reduce">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>scan</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/scan">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#scan">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>startWith</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/startWith">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#startWith">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>takeUntil</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/takeUntil">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#takeUntil">[+]</a></td>
+          </tr>
+        </table>
+      </section>
+      
+      <section>
+        <h3>Operadores de combinación</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>Doc.</th>
+            <th>Diag.</th>
+          </tr>
+          <tr>
+            <td><code>zip</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/zip">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#zip">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>merge</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/merge">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#merge">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>withLatestFrom</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/withLatestFrom">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#withLatestFrom">[+]</a></td>
+          </tr>
+        </table>
+      </section>
+      
+      <section>
+        <h3>Operadores sobre observables de orden superior</h3>
+        <table>
+          <tr>
+            <th></th>
+            <th>Doc.</th>
+            <th>Diag.</th>
+          </tr>
+          <tr>
+            <td><code>concatAll</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/concatAll">[+]</a></td>
+            <td style="text-align:center"></td>
+          </tr>
+          <tr>
+            <td><code>mergeAll</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/mergeAll">[+]</a></td>
+            <td style="text-align:center"></td>
+          </tr>
+          <tr>
+            <td><code>concatMap</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/concatMap">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#concatMap">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>mergeMap</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/mergeMap">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#mergeMap">[+]</a></td>
+          </tr>
+        </table>
+      </section>
+      
+      <section>
+        <h3>Recursos útiles</h3>
+        <ul>
+          <li>Referencia de operadores RxJS:<br/>
+          <a href="https://rxjs.dev/api">https://rxjs.dev/api</a>
+          </li>
+          <li>Árbol de decisión de operadores RxJS:<br/>
+          <a href="https://rxjs.dev/operator-decision-tree">https://rxjs.dev/operator-decision-tree</a>
+          </li>
+          <li>Diagramas de canicas interactivos:<br/>
+          <a href="https://rxmarbles.com/">https://rxmarbles.com/</a>
+          </li>
+        </ul>
+        <p>¡Hay más de 70 operadores!</p>
+      </section>
+    </section>
+    
+
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:70%">
+                <ul>
+                    <li>RxJS
+                        <br>
+                        <a href="https://rxjs.dev/">Documentación oficial</a><br>
+                        <span style="font-size:50%">https://rxjs.dev/</span>
+                    </li>
+
+                    <li>André Staltz<br>
+                        <a href="https://gist.github.com/staltz/868e7e9bc2a7b8c1f754">The introduction to Reactive Programming you've been missing</a><br>
+                        <span style="font-size:50%">https://gist.github.com/staltz/868e7e9bc2a7b8c1f754</span>
+                    </li>
+
+                    <li>
+                      Sergi Mansilla<br/>
+                      <a href="https://ucm.on.worldcat.org/oclc/1345473207">Reactive Programming with RxJS 5</a><br/>
+                        <span style="font-size:50%">https://ucm.on.worldcat.org/oclc/1345473207</span>
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="https://rxjs.dev/generated/images/marketing/home/Rx_Logo-512-512.png" style="width:50%; border:none"><br/>
+                <img src="https://coverart.oclc.org/ImageWebSvc/oclc/+-+2578290986_140.jpg?SearchOrder=+-+IG,OT,OS,AV,FA,GO&DefaultImage=N&client&allowDefault=true" style="width:50%; border:1px solid black">
+            </div>
+        </section>        
     
     </div>
 

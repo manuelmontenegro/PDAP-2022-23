@@ -1,0 +1,19 @@
+% Diagrama de canicas
+
+--a------d----
+title = Celda A1
+a := 25
+d := 12
+
+--b---c-------
+title = Celda A2
+b := 31
+c := 7
+
+> B2 = A1 + A2
+
+--a---b--c-----
+title = Celda B2
+a := 56
+b := 32
+c := 19
