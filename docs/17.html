@@ -838,7 +838,44 @@ const contador$ = reini$.pipe(
           </code></pre>
         </ul>
       </section>
+      
+      <section>
+        <h3>El operador <code>switchAll</code></h3>
+        <ul>
+          <li>Aplana un observable de orden superior, finalizando automáticamente un observable cuando comienza el siguiente.</li>
+        </ul>
+        <p><img src="17/switchAll.svg" width="70%"></p>
+      </section>
+      
+      <section>
+        <h3>Temporizador con reinicio</h3>
+        <ul>
+          <li>Con esto podemos simplificar el temporizador anterior, eliminando la necesidad de utilizar <code>takeUntil</code>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+function contador() {
+  return interval(1000).pipe(scan(ac => ac + 1, 0), startWith(0));
+}            
+
+const contador$ = reini$.pipe(
+  startWith(true),
+  map(() => contador()),
+  switchAll()
+);
+          </code></pre></li>
+        <li>o bien,
+        <pre><code class="language-javascript" data-trim data-noescape>
+  const contador$ = reini$.pipe(
+    startWith(true),
+    switchMap(() => contador())
+  );        
+        </code></pre></li>
+        </ul>        
+      </section>
     </section>
+    
+    
+    
+    
     
     <section>
       <section>
@@ -968,6 +1005,11 @@ const contador$ = reini$.pipe(
             <td style="text-align:center"></td>
           </tr>
           <tr>
+            <td><code>switchAll</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/switchAll">[+]</a></td>
+            <td style="text-align:center"></td>
+          </tr>
+          <tr>
             <td><code>concatMap</code></td>
             <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/concatMap">[+]</a></td>
             <td style="text-align:center"><a href="https://rxmarbles.com/#concatMap">[+]</a></td>
@@ -976,6 +1018,11 @@ const contador$ = reini$.pipe(
             <td><code>mergeMap</code></td>
             <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/mergeMap">[+]</a></td>
             <td style="text-align:center"><a href="https://rxmarbles.com/#mergeMap">[+]</a></td>
+          </tr>
+          <tr>
+            <td><code>switchMap</code></td>
+            <td style="text-align:center"><a href="https://rxjs.dev/api/index/function/switchMap">[+]</a></td>
+            <td style="text-align:center"><a href="https://rxmarbles.com/#switchMap">[+]</a></td>
           </tr>
         </table>
       </section>
