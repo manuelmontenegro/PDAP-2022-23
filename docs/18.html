@@ -69,7 +69,7 @@
         <ul>
           <li>Un observable puede emitir la notificación de completado (<em>completed</em>) cuando ha finalizado la secuencia de valores a emitir.
           <p style="text-align:center"><img src="18/completed.svg"></p></li>
-          <li>Si se produce un error durante la emisión de valores, puede emitirse una notificación de error.
+          <li class="fragment">Si se produce un error durante la emisión de valores, puede emitirse una notificación de error.
           <p style="text-align:center"><img src="18/error.svg"></p></li>
         </ul>
       </section>
@@ -80,10 +80,10 @@
           <li>Ya hemos visto funciones de RxJS destinadas a crear observables a partir de una lista de elementos:
           <ul>
             <li><code>of(x<sub>1</sub>, ..., x<sub>n</sub>)</code></li>
-            <li><code>from(xs)</code></li>
+            <li><code>from(arr)</code></li>
           </ul>
           </li>
-          <li>Otra forma de crear observables consiste en el uso del constructor de la clase <code>Observable</code>.</li>
+          <li>Otra forma de crear observables se basa en el uso del constructor de la clase <code>Observable</code>.</li>
         </ul>
       </section>
       
@@ -92,7 +92,7 @@
         <ul>
           <li>El constructor de <code>Observable</code> recibe una función como parámetro.</li>
           <li>Esta función es la que se encarga de emitir los valores a los suscriptores.</li>
-          <li>La función pasada como parámetro recibe, a su vez, un objeto con tres métodos:
+          <li class="fragment">La función pasada como parámetro recibe, a su vez, un objeto con tres métodos:
           <ul>
             <li><code>next(v)</code>, para emitir un valor <code>v</code>;</li>
             <li><code>complete()</code>, para emitir la notificación <em>completado</em>;</li>
@@ -113,7 +113,7 @@ const obsEjemplo$ = new Observable(s => {
 });
           
         </code></pre>
-        <p><img src="18/obsEjemplo.svg"></p>
+        <p class="fragment"><img src="18/obsEjemplo.svg"></p>
       </section>
       
       
@@ -125,13 +125,13 @@ const obsEjemplo$ = new Observable(s => {
 obsEjemplo$.subscribe(x => console.log(`Recibido: ${x}`));
 </code></pre>          
           </li>
-          <li>o bien, podemos utilizar los operadores ya conocidos:
+          <li class="fragment">o bien, podemos utilizar los operadores ya conocidos:
           <pre><code class="language-javascript" data-trim data-noescape>
 obsEjemplo$.pipe(map(x => x / 2))            
           </code></pre>
           </li>
         </ul>
-        <p><img src="18/obsEjemplo2.svg" width="30%"></p>
+        <p class="fragment"><img src="18/obsEjemplo2.svg" width="30%"></p>
       </section>
     </section>
     
@@ -145,13 +145,13 @@ obsEjemplo$.pipe(map(x => x / 2))
         <ul>
           <li><strong>Observables &laquo;fríos&raquo;</strong> - (<em>cold observables</em>)
           <ul>
-            <li>Para cada observador, existe un productor que proporciona los eventos al observador.</li>
-            <li>Cuando un observador se suscribe, obtiene todos los eventos del observable.</li>
+            <li class="fragment">Para cada observador, existe un productor que proporciona los eventos al observador.</li>
+            <li class="fragment">Cuando un observador se suscribe, obtiene todos los eventos del observable.</li>
           </ul>
           </li>
           <li><strong>Observables &laquo;calientes&raquo;</strong> - (<em>cold observables</em>)
           <ul>
-            <li>Existe un único productor que emite los eventos, y cada observador obtiene los eventos emitidos
+            <li class="fragment">Existe un único productor que emite los eventos, y cada observador obtiene los eventos emitidos
           a partir del momento en el que comienza a observar.</li>
           </ul>
         </ul>
@@ -160,7 +160,7 @@ obsEjemplo$.pipe(map(x => x / 2))
       <section>
         <h3>Observables fríos y calientes</h3>
         <blockquote style="font-size:70%">
-        <p>Let’s compare watching a movie on Netflix to going into a movie theater. Think of yourself as an observer. Anyone who decides to watch Mission: Impossible on Netflix will get the entire movie, regardless of when they hit the play button. Netflix creates a new producer to stream a movie just for you. This is a cold observable.</p>
+        <p>Let’s compare watching a movie on Netflix to going into a movie theater. Think of yourself as an observer. Anyone who decides to watch "Mission: Impossible" on Netflix will get the entire movie, regardless of when they hit the play button. Netflix creates a new producer to stream a movie just for you. This is a cold observable.</p>
 <p>If you go to a movie theater and the showtime is 4 p.m., the producer is created at 4 p.m., and the streaming begins. If some people (subscribers) are late to the show, they miss the beginning of the movie and can only watch it starting from the moment of arrival. This is a hot observable.</p>
         </blockquote>
         <p style="font-size:60%;text-align:right">Yakov Fain and Anton Moiseev<br/>Angular Development with TypeScript (Manning)</p>
@@ -176,17 +176,18 @@ obsEjemplo$.pipe(map(x => x / 2))
           const obs$ = of(10, 20, 30);
           </code></pre>
           </li>
-          <li>El observable <code>obs1$</code> emite los valores cada vez que se suscribe un observador:
+          <li>El observable <code>obs$</code> emite los valores cada vez que se suscribe un observador:
           <pre><code class="language-javascript" data-trim data-noescape>
             obs$.subscribe(x => console.log(`Observador 1 recibe: ${x}`));
-                  // Imprime:   Observador 1 recibe 10
+            <div class="fragment">      // Imprime:   Observador 1 recibe 10
                   //            Observador 1 recibe 20
                   //            Observador 1 recibe 30
-
+            </div>
             obs$.subscribe(x => console.log(`Observador 2 recibe: ${x}`));
-                  // Imprime:   Observador 2 recibe 10
+            <div class="fragment">      // Imprime:   Observador 2 recibe 10
                   //            Observador 2 recibe 20
                   //            Observador 2 recibe 30
+            </div>
           </code></pre>
           </li>
           
@@ -218,22 +219,20 @@ const obs$ = new Observable(s => {
           <li>Cada vez que se suscribe un observador, se ejecuta la función pasada como parámetro al constructor de <code>Observable</code>.</li>
         </ul>
         <pre><code class="language-javascript" data-trim data-noescape>
-obs$.subscribe(x => console.log(`Observador 1 recibe: ${x}`));
-console.log('---');
-obs$.subscribe(x => console.log(`Observador 2 recibe: ${x}`));          
+<span class="fragment" data-fragment-index="1">obs$.subscribe(x => console.log(`Observador 1 recibe: ${x}`));</span>
+<span class="fragment" data-fragment-index="3">console.log('---');</span>
+<span class="fragment" data-fragment-index="5">obs$.subscribe(x => console.log(`Observador 2 recibe: ${x}`));</span>
         </code></pre>
         <pre style="font-size:40%"><code class="no-highlight" data-trim data-noescape>
-Generando: 10
+<div class="fragment" data-fragment-index="2">Generando: 10
 Observador 1 recibe: 10
 Generando: 20
 Observador 1 recibe: 20
-Notificando fin de secuencia
----
-Generando: 10
+Notificando fin de secuencia</div><div class="fragment" data-fragment-index="4">---</div><div class="fragment" data-fragment-index="6">Generando: 10
 Observador 2 recibe: 10
 Generando: 20
 Observador 2 recibe: 20
-Notificando fin de secuencia          
+Notificando fin de secuencia</div>
         </code></pre>        
       </section>
       
@@ -247,12 +246,12 @@ const obs$ = interval(1000);
 // Se suscribe un observador:
 obs$.subscribe(x => console.log(`Suscriptor 1 recibe ${x}`));
 
-// 3.5 segundos después, se suscribe otro:
+<div class="fragment">// Unos segundos después, se suscribe otro:
 setTimeout(() => {
     obs$.subscribe(x => console.log(`Suscriptor 2 recibe ${x}`));
-}, 3500);            
+}, 3500);</div>
           </code></pre>
-        <pre style="font-size:40%"><code class="no-highlight" data-trim data-noescape>
+        <pre style="font-size:40%" class="fragment"><code class="no-highlight" data-trim data-noescape>
 <span style="color:red">Suscriptor 1 recibe 0</span>
 <span style="color:red">Suscriptor 1 recibe 1</span>
 <span style="color:red">Suscriptor 1 recibe 2</span>
@@ -272,7 +271,7 @@ setTimeout(() => {
           <li>Convierte un observable frío en uno caliente.</li>
           <li>El observable resultante comienza a emitir eventos cuando se conecta el primer observador.</li>          
         </ul>
-        <pre><code class="language-javascript" data-trim data-noescape>
+        <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
 const obs$ = interval(1000).pipe(<span class="hl">share()</span>);
 
 obs$.subscribe(x => console.log(`Suscriptor 1 recibe ${x}`));
@@ -281,7 +280,7 @@ setTimeout(() => {
     obs$.subscribe(x => console.log(`Suscriptor 2 recibe ${x}`));
 }, 3500);
         </code></pre>
-        <pre style="font-size:40%"><code class="no-highlight" data-trim data-noescape>
+        <pre style="font-size:40%" class="fragment"><code class="no-highlight" data-trim data-noescape>
 <span style="color:red">Suscriptor 1 recibe 0</span>
 <span style="color:red">Suscriptor 1 recibe 1</span>
 <span style="color:red">Suscriptor 1 recibe 2</span>
@@ -340,7 +339,7 @@ const observador = {
 }
 obs$.subscribe(observador);          
         </code></pre>
-        <pre><code class="no-highlight" data-trim data-noescape>
+        <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
 He recibido el valor 10
 He recibido el valor 20
 He recibido el valor 30
@@ -369,7 +368,7 @@ const suscripcion = obs$.subscribe((x) => {
     }
 });          
         </code></pre>
-        <pre><code class="no-highlight" data-trim data-noescape>
+        <pre class="fragment"><code class="no-highlight" data-trim data-noescape>
 Recibido: 0
 Recibido: 1
 Recibido: 2
@@ -388,10 +387,10 @@ Cancelando suscripción
         <h3>Sujetos</h3>
         <ul>
           <li>La manera más habitual de crear observadores calientes es mediante el uso de <strong>sujetos</strong> (<em>subjects</em>).</li>
-          <li>Un sujeto actúa como un observable, y permite emitir eventos a más de un observador.</li>
-          <li>La clase <code>Subject</code> hereda de <code>Observable</code>. Es decir, <strong>todo sujeto es un observable</strong>.
+          <li class="fragment">Un sujeto actúa como un observable, y permite emitir eventos a más de un observador.</li>
+          <li class="fragment">La clase <code>Subject</code> hereda de <code>Observable</code>. Es decir, <strong>todo sujeto es un observable</strong>.
           <ul>
-            <li>Por tanto, los sujetos tienen un método <code>subscribe()</code> y un método <code>pipe()</code> que permite aplicar los operadores vistos hasta ahora.</li>
+            <li class="fragment">Por tanto, los sujetos tienen un método <code>subscribe()</code> y un método <code>pipe()</code> que permite aplicar los operadores vistos hasta ahora.</li>
           </ul></li>
         </ul>
       </section>
@@ -404,7 +403,7 @@ Cancelando suscripción
             <li><code>subscribe()</code>: añade un nuevo observador al subjeto.</li>
           </ul>
           </li>
-          <li>Métodos de notificación:
+          <li class="fragment">Métodos de notificación:
           <ul>
             <li><code>next(v)</code>: notifica la emisión de un valor <code>v</code>.</li>
             <li><code>complete()</code>: notifica la finalización de emisión de eventos.</li>
@@ -446,17 +445,17 @@ suj$.subscribe(crearObservador('B'));
           <li>Cada vez que llamamos al método <code>next</code> del sujeto, los observadores imprimen el mensaje correspondiente:
           <pre><code class="language-javascript" data-trim data-noescape>
 suj$.next(10);
-    // Imprime: Observador A recibe 10
-    // Imprime: Observador B recibe 10
+<div class="fragment">    // Imprime: Observador A recibe 10
+    // Imprime: Observador B recibe 10</div>
 suj$.next(20);
-    // Imprime: Observador A recibe 20
-    // Imprime: Observador B recibe 20
+<div class="fragment">    // Imprime: Observador A recibe 20
+    // Imprime: Observador B recibe 20</div>
 suj$.next(30);
-    // Imprime: Observador A recibe 30
-    // Imprime: Observador B recibe 30
+<div class="fragment">    // Imprime: Observador A recibe 30
+    // Imprime: Observador B recibe 30</div>
 suj$.complete();
-    // Imprime: Observador A recibe finalización
-    // Imprime: Observador B recibe finalización
+<div class="fragment">    // Imprime: Observador A recibe finalización
+    // Imprime: Observador B recibe finalización</div>
           </code></pre>
           </li>
         </ul>
@@ -471,7 +470,7 @@ const suj$ = new Subject();
 suj$.next(10);
 suj$.next(20);
 
-suj$.subscribe(crearObservador('A'));
+suj$.subscribe(crearObservador('C'));
 suj$.next(30);
     // Imprime: Observador C recibe 30
 suj$.complete();            
@@ -505,10 +504,10 @@ suj$.complete();
         <ul>
           <li><code>ReplaySubject(n)</code>
           <ul>
-            <li>Proporciona a los nuevos observadores los últimos <code>n</code> eventos emitidos por eltt sujeto antes de la suscripción.</li>
+            <li>Proporciona a los nuevos observadores los últimos <code>n</code> eventos emitidos por el sujeto antes de la suscripción.</li>
           </ul>          
           </li>
-          <li><code>AsyncSubject</code>
+          <li class="fragment"><code>AsyncSubject</code>
           <ul>
             <li>Solamente proporciona un valor a los observables, que es el último que evento que se emitió antes de la notificación de completado.</li>
           </ul>
