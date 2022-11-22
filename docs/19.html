@@ -1,0 +1,358 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Observables, observadores y sujetos</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Programación reactiva con Cycle.js</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li></li>
+          </ol>
+      </section>
+      
+      <section>
+        <h3>En la semana anterior...</h3>
+        <ul>
+          <li>Presentamos algunos ejemplos sencillos de interfaces de usuario web en el <em>front-end</em> con JavaScript y RxJS.</li>
+          <li>Los eventos de la interfaz de usuario a lo largo del tiempo se representaban mediante observables.</li>
+          <li>A partir de esos observables, construíamos otros observables que representan el estado del programa.</li>
+          <li>Por último, nos subcribíamos al observable que define el estado del programa para actualizar la interfaz gráfica.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>En la semana anterior...</h3>
+        <p><img src="19/ModeloAnterior.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre><code class="language-html" data-trim data-noescape>
+    &lt;body&gt;
+        &lt;button class="incrementar"&gt;+&lt;/button&gt;
+        &lt;div class="contador"&gt;XX&lt;/div&gt;
+        &lt;button class="decrementar"&gt;-&lt;/button&gt;
+        &lt;script src="main.js"&gt;&lt;/script&gt;
+    &lt;/body&gt;          
+        </code></pre>
+        <p><img src="19/Contador.png" width="15%"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>Mediante <code>fromEvent</code> obtenemos observables que representan los eventos en cada botón.
+          <pre><code class="language-javascript" data-trim data-noescape>
+const incrementarDOM = document.querySelector('.incrementar');
+const decrementarDOM = document.querySelector('.decrementar');
+
+const evtIncrementar$ = fromEvent(incrementarDOM, 'click');
+const evtDecrementar$ = fromEvent(decrementarDOM, 'click');
+          </code></pre></li>
+          <img src="19/contador1.svg">          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>Vamos a transformar estos eventos en <strong>acciones</strong> más cercanas a la lógica del contador.</li>
+          <li>Cada pulsación del botón <code>+</code> se traduce a la acción <code>+1</code>.</li>
+          <li>Cada pulsación del botón <code>-</code> se traduce a la acción <code>-1</code>.</li>          
+        </ul>
+        <pre><code class="language-javascript" data-trim data-noescape>
+const incrementar$ = evtIncrementar$.pipe(map(evt => 1));
+const decrementar$ = evtDecrementar$.pipe(map(evt => -1));
+        </code></pre>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <p><img src="19/contador2.svg" width="60%"/></p>
+        <p><img src="19/contador3.svg" width="60%"/></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>Nuestro observable de acciones se obtiene mezclando los dos anteriores:
+          <pre><code class="language-javascript" data-trim data-noescape>
+const accion$ = merge(incrementar$, decrementar$);            
+          </code></pre>
+          </li>
+        </ul>
+        <p><img src="19/contador4.svg"></p>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>A partir del observable de acciones podemos construir el observable que define el estado actual del programa:
+          <pre><code class="language-javascript" data-trim data-noescape>
+const contador$ = accion$.pipe(
+    startWith(0),
+    scan((ac, comando) => ac + comando)
+);
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <p><img src="19/contador5.svg"></p>        
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>Por último, nos suscribimos a los cambios de estado del observable <code>contador$</code> para actualizar la interfaz:</li>
+        </ul>
+        <pre style="font-size:50%"><code class="language-javascript" data-trim data-noescape>
+const contadorDOM = document.querySelector('.contador');
+        
+// Cada vez que cambia el contador, actualizamos su valor en el DOM.
+contador$.subscribe(contador => contadorDOM.innerHTML = contador);
+
+// Cada vez que cambia el contador, comprobamos si hemos de deshabilitar o
+// habilitar el botón de decremento.
+contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
+          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Problemas</h3>
+          <p>Problemas de la actualización de la interfaz de usuario:</p>
+          <ul>
+            <li>No todo cambio de estado necesita actualizar la interfaz.<br/>
+            <p style="font-style:italic; color:blue">Por ejemplo, no es necesario cambiar siempre el atributo <code>disabled</code> del botón <code>-</code>.</p>
+            </li>
+            <li>La actualización de la interfaz puede ser mucho más compleja que la de los ejemplos vistos ahora.<br/>
+            <p style="font-style:italic; color:blue">Por ejemplo, si tenemos que visualizar una tabla a partir del contenido de un array.</p>
+            </li>
+          </ul>
+          </li>
+      </section>
+      
+      <section>
+        <h3>Alternativa</h3>
+        <ul>
+          <li>Podemos indicar, de una manera más declarativa, cómo se actualiza la interfaz.</li>          
+          <li>Para ello, definimos un observable que indique cómo representar el DOM de la página web a partir del estado.</li>
+        </ul>
+        <p><img src="19/EstadoDOM.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul style="width:95%">
+          <li>En nuestro ejemplo:
+          <p><img src="19/contador6.svg" width="100%"></p>
+          </li>
+        </ul>        
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          const DOM$ = contador$.pipe(
+              map(contador => 
+                &lt;div&gt;
+                  &lt;button class="incrementar"&gt;+&lt;/button&gt;
+                  &lt;div class="contador"&gt;<span class="hl">{contador}</span>&lt;/div&gt;
+                  &lt;button class="decrementar" disabled=<span class="hl">{contador === 0}</span>&gt;-&lt;/button&gt;
+                &lt;/div&gt;                  
+              )
+          );
+        </code></pre>
+        <p style="font-style:italic">¡Ojo! No es código real.</p>
+      </section>
+      
+      <section>
+        <h3>¿Y qué ganamos con esto?</h3>
+        <ul>
+          <li>Podemos subscribirnos al observable <code>DOM$</code> para actualizar la interfaz.</li>
+          <li>Cada vez que ese observable emite un valor, comparamos el DOM emitido con el DOM actualmente existente, y actualizamos <strong>solamente</strong> las partes del DOM que hayan cambiado.</li>
+        </ul>
+        <p class="info_box">Existen bibliotecas que hacen todo esto 🥳</p>
+      </section>
+      
+      
+      <section>
+        <h3>Cycle.js</h3>
+        <p><img src="19/logo_cyclejs.svg" width="10%"></p>
+        <p><a href="https://cycle.js.org/">https://cycle.js.org/</a></p>
+        <ul>
+
+          <li><em>Framework</em> para desarrollo de aplicaciones reactivas en el <em>front-end</em>.</li>
+          <li>Instalación mediante <code>npm</code>:
+          <pre><code class="no-highlight" data-trim data-noescape>
+            npm install @cycle/run @cycle/dom
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Idea general</h3>
+        <ul>
+          <li>En <em>Cycle.js</em> una aplicación es una función <code>main()</code> que recibe uno o varios observables (<em>sources</em>) y devuelve uno o varios observables (<em>sinks</em>).</li>
+          <pre><code class="language-javascript" data-trim data-noescape>
+            function main(sources) {
+                const sinks = { .... }; // Definir 'sinks' a partir de 'sources'
+                return sinks;
+            }
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Idea general</h3>
+        <p><img src="19/sourcesinks.svg"></p>
+      </section>
+      
+      <section>
+        <h3>¿Qué son los <em>sinks</em>?</h3>
+        <ul>
+          <li>Observables con información que nuestro programa <strong>emite</strong> al &laquo;mundo exterior&raquo;</li>
+          <li>Por ejemplo:
+            <ul>
+              <li>El DOM de la página web</li>
+              <li>Peticiones que queramos hacer al <em>back-end</em> de nuestra aplicación web</li>
+              <li>Peticiones a APIs externas</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>¿Qué son los <em>sources</em>?</h3>
+        <ul>
+          <li>Observables con información que nuestro programa <strong>recibe</strong> del &laquo;mundo exterior&raquo;</li>
+          <li>Por ejemplo:
+            <ul>
+              <li>Eventos de la interfaz (esto es, del DOM)</li>
+              <li>Información que recibimos del <em>back-end</em> de nuestra aplicación</li>
+              <li>Respuestas de APIs externas</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>¿Y cuál es el papel de <em>Cycle.js</em>?</h3>
+        <ul>
+          <li>Implementa una serie de <strong>drivers</strong>, que se suscriben a los <em>sinks</em> emitidos por la aplicación para realizar las acciones imperativas que sean oportunas:
+          <ul>
+            <li>Actualización del DOM de la página web</li>
+            <li>Envío de peticiones al servidor</li>
+          </ul>
+          </li>
+          <li>Los drivers también transforman los eventos del exterior en observables, que son los <em>sources</em> de nuestra aplicación.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3><em>Cycle.js</em> + <em>RxJS</em></h3>
+        <ul>
+          <li><em>Cycle.js</em> necesita apoyarse en una biblioteca de observables.</li>
+          <li>Por defecto, se basa en <a href="https://github.com/staltz/xstream">xstream</a>, una biblioteca específica para Cycle.js.</li>
+          <li>No obstante, es posible combinar <em>Cycle.js</em> con otras bibliotecas, tales como RxJS.</li>
+        </ul> 
+      </section>
+      
+      <section>
+        <h3>Adaptador RxJS</h3>
+        <p>Fichero: <code>rxjs-adapter.js</code></p>
+        <pre><code class="language-javascript" data-trim data-noescape>
+import { setAdapt } from '@cycle/run/lib/adapt';
+import { Subject } from 'rxjs'
+
+setAdapt(xstr => {
+    const result = new Subject();
+    xstr.addListener({
+        next: i => result.next(i),
+        error: err => result.error(err),
+        complete: () => result.complete(),
+    });
+    return result;
+});          
+        </code></pre>
+        <ul>
+          <li>Invoca a la función <code>setAdapt</code> de <em>Cycle.js</em>, que recibe una función que convierte observables de <em>xstream</em> en observables de <em>RxJS</em>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Adaptador RxJS</h3>
+        <ul>
+          <li>Podemos incorporar el adaptador en nuestro proyecto importando el fichero <code>rxjs-adapter.js</code> desde nuestra aplicación:
+          <pre><code class="language-javascript" data-trim data-noescape>
+import './rxjs-adapter.js'            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+    
+    </div>
+
+    
+    
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>

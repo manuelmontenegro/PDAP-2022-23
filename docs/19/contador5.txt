@@ -1,0 +1,27 @@
+
+
+---a---b---c-d-----
+title = accion$
+a := +1
+b := +1
+c := -1
+d := +1
+
+> startWith(0)
+
+e--a---b---c-d-----
+e := 0
+a := +1
+b := +1
+c := -1
+d := +1
+
+> scan((ac, x) => ac + x)
+
+e--a---b---c-d-----
+title = contador$
+e := 0
+a := 1
+b := 2
+c := 1
+d := 2

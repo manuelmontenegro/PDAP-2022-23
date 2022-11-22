@@ -1,0 +1,26 @@
+
+
+---a---b---c-------
+title = incrementar$
+a := +1
+b := +1
+c := +1
+
+-----a----b----c--
+title = decrementar$
+a := -1
+b := -1
+c := -1
+
+> merge
+
+---a-b-c--de---f--
+title = accion$
+a := +1
+b := -1
+c := +1
+d := -1
+e := +1
+f := -1
+
+

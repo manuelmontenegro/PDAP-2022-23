@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 717.00001 170"
+   width="717"
+   height="170"
+   version="1.1"
+   id="svg11701"
+   sodipodi:docname="contador1.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs11705" />
+  <sodipodi:namedview
+     id="namedview11703"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.3882353"
+     inkscape:cx="341.44068"
+     inkscape:cy="85"
+     inkscape:window-width="3840"
+     inkscape:window-height="1531"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g11699" />
+  <rect
+     x="0"
+     y="0"
+     width="682.30939"
+     height="170"
+     fill="#ffffff"
+     id="rect11631" />
+  <g
+     transform="translate(25,25)"
+     id="g11699">
+    <g
+       id="g11667">
+      <text
+         x="0"
+         y="25"
+         fill="#000000"
+         font-family="Arial, Helvetica, sans-serif"
+         font-size="18px"
+         font-weight="normal"
+         font-style="normal"
+         dominant-baseline="middle"
+         id="text11633">evtIncrementar$</text>
+      <g
+         transform="translate(160)"
+         id="g11665">
+        <g
+           id="g11639">
+          <line
+             x1="0"
+             y1="25"
+             x2="530"
+             y2="25"
+             stroke="#000000"
+             stroke-width="2"
+             id="line11635" />
+          <polyline
+             points="520,19.226497308103742 530,25 520,30.773502691896258"
+             fill="none"
+             stroke="#000000"
+             stroke-width="2"
+             stroke-linecap="square"
+             id="polyline11637" />
+        </g>
+        <g
+           transform="translate(460)"
+           id="g11645">
+          <circle
+             cx="20"
+             cy="25"
+             fill="#aec2eb"
+             stroke="#000000"
+             stroke-width="2"
+             id="ellipse11641"
+             r="19" />
+          <text
+             x="0"
+             y="0"
+             fill="#000000"
+             font-family="Arial, Helvetica, sans-serif"
+             font-size="18px"
+             font-weight="normal"
+             font-style="normal"
+             dominant-baseline="middle"
+             text-anchor="middle"
+             transform="translate(20,25)"
+             id="text11643">ev4</text>
+        </g>
+        <g
+           transform="translate(310)"
+           id="g11651">
+          <circle
+             cx="20"
+             cy="25"
+             fill="#aeebe5"
+             stroke="#000000"
+             stroke-width="2"
+             id="ellipse11647"
+             r="19" />
+          <text
+             x="0"
+             y="0"
+             fill="#000000"
+             font-family="Arial, Helvetica, sans-serif"
+             font-size="18px"
+             font-weight="normal"
+             font-style="normal"
+             dominant-baseline="middle"
+             text-anchor="middle"
+             transform="translate(20,25)"
+             id="text11649">ev3</text>
+        </g>
+        <g
+           transform="translate(190)"
+           id="g11657">
+          <circle
+             cx="20"
+             cy="25"
+             fill="#aeebeb"
+             stroke="#000000"
+             stroke-width="2"
+             id="ellipse11653"
+             r="19" />
+          <text
+             x="0"
+             y="0"
+             fill="#000000"
+             font-family="Arial, Helvetica, sans-serif"
+             font-size="18px"
+             font-weight="normal"
+             font-style="normal"
+             dominant-baseline="middle"
+             text-anchor="middle"
+             transform="translate(20,25)"
+             id="text11655">ev2</text>
+        </g>
+        <g
+           transform="translate(70)"
+           id="g11663">
+          <circle
+             cx="20"
+             cy="25"
+             fill="#ebc0ae"
+             stroke="#000000"
+             stroke-width="2"
+             id="ellipse11659"
+             r="19" />
+          <text
+             x="0"
+             y="0"
+             fill="#000000"
+             font-family="Arial, Helvetica, sans-serif"
+             font-size="18px"
+             font-weight="normal"
+             font-style="normal"
+             dominant-baseline="middle"
+             text-anchor="middle"
+             transform="translate(20,25)"
+             id="text11661">ev1</text>
+        </g>
+      </g>
+    </g>
+    <g
+       transform="translate(0,70)"
+       id="g11697">
+      <text
+         x="0"
+         y="25"
+         fill="#000000"
+         font-family="Arial, Helvetica, sans-serif"
+         font-size="18px"
+         font-weight="normal"
+         font-style="normal"
+         dominant-baseline="middle"
+         id="text11669">evtDecrementar$</text>
+      <g
+         transform="translate(160)"
+         id="g11695">
+        <g
+           id="g11675">
+          <line
+             x1="0"
+             y1="25"
+             x2="500"
+             y2="25"
+             stroke="#000000"
+             stroke-width="2"
+             id="line11671" />
+          <polyline
+             points="490,19.226497308103742 500,25 490,30.773502691896258"
+             fill="none"
+             stroke="#000000"
+             stroke-width="2"
+             stroke-linecap="square"
+             id="polyline11673" />
+        </g>
+        <g
+           transform="translate(430)"
+           id="g11681">
+          <circle
+             cx="20"
+             cy="25"
+             fill="#b0aeeb"
+             stroke="#000000"
+             stroke-width="2"
+             id="ellipse11677"
+             r="19" />
+          <text
+             x="0"
+             y="0"
+             fill="#000000"
+             font-family="Arial, Helvetica, sans-serif"
+             font-size="18px"
+             font-weight="normal"
+             font-style="normal"
+             dominant-baseline="middle"
+             text-anchor="middle"
+             transform="translate(20,25)"
+             id="text11679">ev7</text>
+        </g>
+        <g
+           transform="translate(190)"
+           id="g11687">
+          <circle
+             cx="20"
+             cy="25"
+             fill="#ebe2ae"
+             stroke="#000000"
+             stroke-width="2"
+             id="ellipse11683"
+             r="19" />
+          <text
+             x="0"
+             y="0"
+             fill="#000000"
+             font-family="Arial, Helvetica, sans-serif"
+             font-size="18px"
+             font-weight="normal"
+             font-style="normal"
+             dominant-baseline="middle"
+             text-anchor="middle"
+             transform="translate(20,25)"
+             id="text11685">ev6</text>
+        </g>
+        <g
+           transform="translate(10)"
+           id="g11693">
+          <circle
+             cx="20"
+             cy="25"
+             fill="#daaeeb"
+             stroke="#000000"
+             stroke-width="2"
+             id="ellipse11689"
+             r="19" />
+          <text
+             x="0"
+             y="0"
+             fill="#000000"
+             font-family="Arial, Helvetica, sans-serif"
+             font-size="18px"
+             font-weight="normal"
+             font-style="normal"
+             dominant-baseline="middle"
+             text-anchor="middle"
+             transform="translate(20,25)"
+             id="text11691">ev5</text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

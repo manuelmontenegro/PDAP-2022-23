@@ -1,0 +1,15 @@
+
+
+---a------b----c--
+title = evtDecrementar$
+a := ev5
+b := ev6
+c := ev7
+
+> map(evt => -1)
+
+---a------b----c--
+title = decrementar$
+a := -1
+b := -1
+c := -1

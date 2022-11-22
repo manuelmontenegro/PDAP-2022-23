@@ -1,0 +1,17 @@
+
+
+---a---b---c----d--
+title = evtIncrementar$
+a := ev1
+b := ev2
+c := ev3
+d := ev4
+
+> map(evt => 1)
+
+---a---b---c----d--
+title = incrementar$
+a := +1
+b := +1
+c := +1
+d := +1

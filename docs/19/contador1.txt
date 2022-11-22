@@ -1,0 +1,14 @@
+
+
+---a---b---c----d--
+title = evtIncrementar$
+a := ev1
+b := ev2
+c := ev3
+d := ev4
+
+-e-----f-------g--
+title = evtDecrementar$
+e := ev5
+f := ev6
+g := ev7

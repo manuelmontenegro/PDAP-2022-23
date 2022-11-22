@@ -1,0 +1,28 @@
+[styles.a]
+fill_color = #C0C0FF
+
+[styles.b]
+fill_color = #C0FFC0
+
+---a---a---a-a-----
+title = source1$
+a := 
+
+-a------a---a-----
+title = source2$
+a := 
+
+-a------a---a----a
+title = source3$
+a := 
+
+>  main()
+
+---b---b---b--b
+title = sink1$
+b := 
+
+--b---bb------b
+title = sink2$
+b := 
+
