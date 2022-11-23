@@ -39,30 +39,40 @@
       </section>
 
         
-      
-      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
-          <ol class="contenidos">
-            <li></li>
-          </ol>
-      </section>
-      
       <section>
-        <h3>En la semana anterior...</h3>
+        <h3>En la semana anterior</h3>
         <ul>
           <li>Presentamos algunos ejemplos sencillos de interfaces de usuario web en el <em>front-end</em> con JavaScript y RxJS.</li>
-          <li>Los eventos de la interfaz de usuario a lo largo del tiempo se representaban mediante observables.</li>
-          <li>A partir de esos observables, construíamos otros observables que representan el estado del programa.</li>
-          <li>Por último, nos subcribíamos al observable que define el estado del programa para actualizar la interfaz gráfica.</li>
+          <li class="fragment">Los eventos de la interfaz de usuario se representaban mediante observables.</li>
+          <li class="fragment">A partir de esos observables, construíamos otros observables que representan el estado del programa.</li>
+          <li class="fragment">Por último, nos suscribíamos al observable que define el estado del programa para actualizar la interfaz gráfica.</li>
         </ul>
       </section>
       
       <section>
-        <h3>En la semana anterior...</h3>
+        <h3>En la semana anterior</h3>
         <p><img src="19/ModeloAnterior.svg"></p>
+      </section>
+
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Ejemplo de partida: contador</li>
+            <li>Cycle.js</li>
+            <li>El <em>source</em> DOM</li>
+            <li>El <em>sink</em> DOM</li>
+            <li>Creación del DOM virtual</li>
+          </ol>
+      </section>
+      
+      
+    <section>
+      <section>
+        <h2>Ejemplo de partida: contador</h2>
       </section>
       
       <section>
-        <h3>Ejemplo: contador</h3>
+        <h3>Documento HTML</h3>
         <pre><code class="language-html" data-trim data-noescape>
     &lt;body&gt;
         &lt;button class="incrementar"&gt;+&lt;/button&gt;
@@ -77,7 +87,7 @@
       <section>
         <h3>Ejemplo: contador</h3>
         <ul>
-          <li>Mediante <code>fromEvent</code> obtenemos observables que representan los eventos en cada botón.
+          <li>Mediante <code>fromEvent</code>, obtenemos observables que emiten los eventos de pulsación en cada botón.
           <pre><code class="language-javascript" data-trim data-noescape>
 const incrementarDOM = document.querySelector('.incrementar');
 const decrementarDOM = document.querySelector('.decrementar');
@@ -85,7 +95,7 @@ const decrementarDOM = document.querySelector('.decrementar');
 const evtIncrementar$ = fromEvent(incrementarDOM, 'click');
 const evtDecrementar$ = fromEvent(decrementarDOM, 'click');
           </code></pre></li>
-          <img src="19/contador1.svg">          
+          <img src="19/contador1.svg" class="fragment">          
         </ul>
       </section>
       
@@ -96,7 +106,7 @@ const evtDecrementar$ = fromEvent(decrementarDOM, 'click');
           <li>Cada pulsación del botón <code>+</code> se traduce a la acción <code>+1</code>.</li>
           <li>Cada pulsación del botón <code>-</code> se traduce a la acción <code>-1</code>.</li>          
         </ul>
-        <pre><code class="language-javascript" data-trim data-noescape>
+        <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
 const incrementar$ = evtIncrementar$.pipe(map(evt => 1));
 const decrementar$ = evtDecrementar$.pipe(map(evt => -1));
         </code></pre>
@@ -105,8 +115,8 @@ const decrementar$ = evtDecrementar$.pipe(map(evt => -1));
       
       <section>
         <h3>Ejemplo: contador</h3>
-        <p><img src="19/contador2.svg" width="60%"/></p>
-        <p><img src="19/contador3.svg" width="60%"/></p>
+        <p class="fragment"><img src="19/contador2.svg" width="60%"/></p>
+        <p class="fragment"><img src="19/contador3.svg" width="60%"/></p>
       </section>
       
       <section>
@@ -118,7 +128,7 @@ const accion$ = merge(incrementar$, decrementar$);
           </code></pre>
           </li>
         </ul>
-        <p><img src="19/contador4.svg"></p>
+        <p class="fragment"><img src="19/contador4.svg"></p>
       </section>
       
       
@@ -149,12 +159,11 @@ const contador$ = accion$.pipe(
         <pre style="font-size:50%"><code class="language-javascript" data-trim data-noescape>
 const contadorDOM = document.querySelector('.contador');
         
-// Cada vez que cambia el contador, actualizamos su valor en el DOM.
-contador$.subscribe(contador => contadorDOM.innerHTML = contador);
-
-// Cada vez que cambia el contador, comprobamos si hemos de deshabilitar o
+<div class="fragment">// Cada vez que cambia el contador, actualizamos su valor en el DOM.
+contador$.subscribe(contador => contadorDOM.innerHTML = contador);</div>
+<div class="fragment">// Cada vez que cambia el contador, comprobamos si hemos de deshabilitar o
 // habilitar el botón de decremento.
-contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
+contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));</div>
           
         </code></pre>
       </section>
@@ -163,11 +172,11 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
         <h3>Problemas</h3>
           <p>Problemas de la actualización de la interfaz de usuario:</p>
           <ul>
-            <li>No todo cambio de estado necesita actualizar la interfaz.<br/>
-            <p style="font-style:italic; color:blue">Por ejemplo, no es necesario cambiar siempre el atributo <code>disabled</code> del botón <code>-</code>.</p>
+            <li class="fragment">No todo cambio de estado necesita actualizar la interfaz.<br/>
+            <p style="font-style:italic; color:blue" class="fragment">Por ejemplo, no es necesario cambiar siempre la propiedad <code>disabled</code> del botón <code>-</code>.</p>
             </li>
-            <li>La actualización de la interfaz puede ser mucho más compleja que la de los ejemplos vistos ahora.<br/>
-            <p style="font-style:italic; color:blue">Por ejemplo, si tenemos que visualizar una tabla a partir del contenido de un array.</p>
+            <li class="fragment">La actualización de la interfaz puede ser mucho más compleja que la de los ejemplos vistos ahora.<br/>
+            <p style="font-style:italic; color:blue" class="fragment">Por ejemplo, si tenemos que visualizar una tabla a partir del contenido de un array.</p>
             </li>
           </ul>
           </li>
@@ -176,10 +185,10 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
       <section>
         <h3>Alternativa</h3>
         <ul>
-          <li>Podemos indicar, de una manera más declarativa, cómo se actualiza la interfaz.</li>          
-          <li>Para ello, definimos un observable que indique cómo representar el DOM de la página web a partir del estado.</li>
+          <li>Podemos indicar, de una manera más declarativa, cómo actualizar la interfaz.</li>          
+          <li>Para ello, definimos un observable que emita el estado del DOM a lo largo del tiempo de ejecución del programa.</li>
         </ul>
-        <p><img src="19/EstadoDOM.svg"></p>
+        <p class="fragment"><img src="19/EstadoDOM.svg"></p>
       </section>
       
       <section>
@@ -204,18 +213,24 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
               )
           );
         </code></pre>
-        <p style="font-style:italic">¡Ojo! No es código real.</p>
+        <p style="font-style:italic" class="fragment">¡Ojo! No es código real.</p>
       </section>
       
       <section>
         <h3>¿Y qué ganamos con esto?</h3>
         <ul>
           <li>Podemos subscribirnos al observable <code>DOM$</code> para actualizar la interfaz.</li>
-          <li>Cada vez que ese observable emite un valor, comparamos el DOM emitido con el DOM actualmente existente, y actualizamos <strong>solamente</strong> las partes del DOM que hayan cambiado.</li>
+          <li class="fragment">Cada vez que ese observable emite un valor, comparamos el DOM emitido con el DOM actualmente existente, y actualizamos <strong>solamente</strong> las partes del DOM que hayan cambiado.</li>
         </ul>
-        <p class="info_box">Existen bibliotecas que hacen todo esto 🥳</p>
+        <p class="info_box fragment">Existen bibliotecas que hacen todo esto 🥳</p>
       </section>
       
+    </section>
+    <section>
+      
+      <section>
+        <h2>Cycle.js</h2>
+      </section>
       
       <section>
         <h3>Cycle.js</h3>
@@ -223,8 +238,9 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
         <p><a href="https://cycle.js.org/">https://cycle.js.org/</a></p>
         <ul>
 
-          <li><em>Framework</em> para desarrollo de aplicaciones reactivas en el <em>front-end</em>.</li>
-          <li>Instalación mediante <code>npm</code>:
+        
+          <li class="fragment"><em>Framework</em> para desarrollo de aplicaciones reactivas en el <em>front-end</em>.</li>
+          <li class="fragment">Instalación mediante <code>npm</code>:
           <pre><code class="no-highlight" data-trim data-noescape>
             npm install @cycle/run @cycle/dom
           </code></pre>
@@ -254,7 +270,7 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
         <h3>¿Qué son los <em>sinks</em>?</h3>
         <ul>
           <li>Observables con información que nuestro programa <strong>emite</strong> al &laquo;mundo exterior&raquo;</li>
-          <li>Por ejemplo:
+          <li class="fragment">Por ejemplo:
             <ul>
               <li>El DOM de la página web</li>
               <li>Peticiones que queramos hacer al <em>back-end</em> de nuestra aplicación web</li>
@@ -269,7 +285,7 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
         <h3>¿Qué son los <em>sources</em>?</h3>
         <ul>
           <li>Observables con información que nuestro programa <strong>recibe</strong> del &laquo;mundo exterior&raquo;</li>
-          <li>Por ejemplo:
+          <li class="fragment">Por ejemplo:
             <ul>
               <li>Eventos de la interfaz (esto es, del DOM)</li>
               <li>Información que recibimos del <em>back-end</em> de nuestra aplicación</li>
@@ -296,8 +312,8 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
         <h3><em>Cycle.js</em> + <em>RxJS</em></h3>
         <ul>
           <li><em>Cycle.js</em> necesita apoyarse en una biblioteca de observables.</li>
-          <li>Por defecto, se basa en <a href="https://github.com/staltz/xstream">xstream</a>, una biblioteca específica para Cycle.js.</li>
-          <li>No obstante, es posible combinar <em>Cycle.js</em> con otras bibliotecas, tales como RxJS.</li>
+          <li class="fragment">Por defecto, se basa en <a href="https://github.com/staltz/xstream">xstream</a>, una biblioteca específica para Cycle.js.</li>
+          <li class="fragment">No obstante, es posible combinar <em>Cycle.js</em> con otras bibliotecas, tales como RxJS.</li>
         </ul> 
       </section>
       
@@ -306,7 +322,7 @@ contador$.subscribe(contador => decrementarDOM.disabled = (contador === 0));
         <p>Fichero: <code>rxjs-adapter.js</code></p>
         <pre><code class="language-javascript" data-trim data-noescape>
 import { setAdapt } from '@cycle/run/lib/adapt';
-import { Subject } from 'rxjs'
+import { Subject } from 'rxjs';
 
 setAdapt(xstr => {
     const result = new Subject();
@@ -377,17 +393,24 @@ import './rxjs-adapter.js'
             import { makeDOMDriver } from '@cycle/dom'
 
             function main(sources) { ... }
-            ...
+
             run(main, { DOM: makeDOMDriver('#app') });
           </code></pre>
           </li>
-          <li>El driver devuelto por <code>makeDOMDriver</code> se encarga de:
+          <li class="fragment">El driver devuelto por <code>makeDOMDriver</code> se encarga de:
           <ul>
-            <li>Conectar los eventos del <code>&lt;div id="app"&gt;</code> del documento HTML con los <em>sources</em> que recibe <code>main</code>.</li>
-            <li>Renderizar el DOM devuelto por <code>main()</code> y colocarlo dentro del <code>&lt;div id="app"&gt;</code>.</li>
+            <li class="fragment">Conectar los eventos del <code>&lt;div id="app"&gt;</code> del documento HTML con los <em>sources</em> que recibe <code>main</code>.</li>
+            <li class="fragment">Renderizar el DOM devuelto por <code>main()</code> y colocarlo dentro del <code>&lt;div id="app"&gt;</code>.</li>
           </ul>
           </li>
         </ul>
+      </section>
+
+    </section>
+    <section>
+
+      <section>
+        <h2>El <em>source</em> DOM</h2>
       </section>
       
       <section>
@@ -398,12 +421,12 @@ import './rxjs-adapter.js'
             <li>En nuestro caso, el elemento raíz es <code>&lt;div id="app"&gt;</code>.</li>
           </ul>
           </li>
-          <li>La clase <code>DOMSource</code> tiene dos métodos:
+          <li class="fragment">La clase <code>DOMSource</code> tiene dos métodos:
           <ul>
-            <li><code>select(<em>selector</em>)</code><br/>
+            <li class="fragment"><code>select(<em>selector</em>)</code><br/>
             Devuelve otro objeto DOMSource con los hijos de <code>this</code> que encajen con selector pasado como parámetro.
             </li>
-            <li><code>events(<em>tipoEvento</em>, <em>opciones</em>)</code><br/>
+            <li class="fragment"><code>events(<em>tipoEvento</em>, <em>opciones</em>)</code><br/>
             Devuelve un observable con los eventos del tipo pasado como parámetro que se producen en el elemento del DOM representado por <code>this</code>.
             </li>
           </ul>
@@ -417,10 +440,10 @@ import './rxjs-adapter.js'
           <li>Similar a los selectores que se utilizan en CSS.</li>
           <li>Ejemplos:
           <ul>
-            <li><code>div</code><br/>
+            <li class="fragment"><code>div</code><br/>
             Encaja con todos los elementos <code>&lt;div&gt;</code>.
             </li>
-            <li><code>div.myclass</code><br/>
+            <li class="fragment"><code>div.myclass</code><br/>
             Encaja con todos los elementos <code>&lt;div&gt;</code> que tengan la clase <code>myclass</code>.
             </li>
           </ul>
@@ -433,13 +456,13 @@ import './rxjs-adapter.js'
         <ul>
           <li>Más ejemplos de selectores:
           <ul>
-            <li><code>.myclass</code><br/>
+            <li class="fragment"><code>.myclass</code><br/>
             Encaja con todos los elementos que tengan la clase <code>myclass</code>.            
             </li>
-            <li><code>#myid</code><br/>
+            <li class="fragment"><code>#myid</code><br/>
             Encaja con el elemento que tenga <code>myid</code> como identificador.
             </li>
-            <li><code>p#myid</code><br/>
+            <li class="fragment"><code>p#myid</code><br/>
             Encaja con el elemento <code>&lt;p&gt;</code> que tenga <code>myid</code> como identificador.
             </li>
           </ul>
@@ -452,12 +475,12 @@ import './rxjs-adapter.js'
         <ul>
           <li>Más ejemplos de selectores:
           <ul>
-            <li><code>input[type='text']</code><br/>
+            <li class="fragment"><code>input[type='text']</code><br/>
             Encaja con todos los elementos <code>&lt;input&gt;</code> que tengan el atributo <code>type</code> con el valor <code>text</code>.
             </li>
           </ul>
           </li>
-          <li>Más información:
+          <li class="fragment">Más información:
           <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors">CSS Selectors</a>
           </li>
         </ul>
@@ -476,7 +499,7 @@ function run(sources) {
     // ...
 }
         </code></pre>
-        <ul>
+        <ul class="fragment">
           <li><code>evtIncrementar$</code> es un observable que emite los eventos producidos por los clicks elementos <code>&lt;button&gt;</code> de la clase <code>incrementar</code>.</li>
           <li>Similarmente con <code>evtDecrementar$</code>.</li>
         </ul>
@@ -493,7 +516,7 @@ const decrementar$ = evtDecrementar$.pipe(map(evt => -1));
 const accion$ = merge(incrementar$, decrementar$);
           </code></pre>
           </li>
-          <li>Definimos un observable <code>contador$</code> que emitirá los valores del contador:
+          <li class="fragment">Definimos un observable <code>contador$</code> que emitirá los valores del contador:
 <pre><code class="language-javascript" data-trim data-noescape>
 const contador$ = accion$.pipe(
     startWith(0),
@@ -503,7 +526,14 @@ const contador$ = accion$.pipe(
           </li>
         </ul>
       </section>
+
+    </section>
+    <section>
       
+      <section>
+        <h2>El <em>sink</em> DOM</h2>
+      </section>
+
       
       <section>
         <h3>El <em>sink</em> DOM</h3>
@@ -556,8 +586,8 @@ function main(sources) {
         <h3>El DOM es virtual</h3>
         <ul>
           <li>Los árboles DOM creados por la función <code>h()</code> no contienen nodos DOM reales, sino <strong>nodos virtuales</strong>.</li>
-          <li>El DOM virtual se crea en memoria, y sirve para poder realizar rápidamente comparaciones entre el estado actual de la interfaz y el estado anterior.</li>
-          <li>Es <em>Cycle.js</em> (a través de la biblioteca <a href="https://github.com/snabbdom/snabbdom">Snabbdom</a>) quien se encarga de actualizar el DOM &laquo;real&raquo; del documento HTML a partir de la información del DOM virtual.</li>
+          <li class="fragment">El DOM virtual se crea en memoria, y sirve para poder realizar rápidamente comparaciones entre el estado actual de la interfaz y el estado anterior.</li>
+          <li class="fragment">Es <em>Cycle.js</em> (a través de la biblioteca <a href="https://github.com/snabbdom/snabbdom">Snabbdom</a>) quien se encarga de actualizar el DOM &laquo;real&raquo; del documento HTML a partir de las diferencias entre este último y el DOM virtual.</li>
         </ul>
       </section>
 
@@ -582,7 +612,7 @@ function main(sources) {
             &lt;div&gt;Hola&lt;/div&gt;
           </code></pre>
         </div>
-        <div style="display:flex">
+        <div style="display:flex" class="fragment">
           <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
             h('div.myclass', {}, 'Hola')
           </code></pre>
@@ -590,7 +620,7 @@ function main(sources) {
             &lt;div class="myclass"&gt;Hola&lt;/div&gt;
           </code></pre>
         </div>
-        <div style="display:flex">
+        <div style="display:flex" class="fragment">
           <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
             h('div#principal', {}, 'Hola')
           </code></pre>
@@ -598,7 +628,7 @@ function main(sources) {
             &lt;div id="principal"&gt;Hola&lt;/div&gt;
           </code></pre>
         </div>
-        <div style="display:flex">
+        <div style="display:flex" class="fragment">
           <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
             h('div#principal', {}, 
                 ['Hola,', 
@@ -645,7 +675,7 @@ function main(sources) {
             &lt;p class="active other"&gt;Hola&lt;/p&gt;
           </code></pre>
         </div>
-        <div style="display:flex">
+        <div style="display:flex" class="fragment">
           <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
             h('p', 
               { style: { margin-top: '3em' } },
@@ -655,7 +685,7 @@ function main(sources) {
             &lt;p style="margin-top:3em"&gt;Hola&lt;/p&gt;
           </code></pre>
         </div>
-        <div style="display:flex">
+        <div style="display:flex" class="fragment">
           <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
             h('input.edad', 
               { attrs: { type: 'text' } },
@@ -666,7 +696,7 @@ function main(sources) {
             &lt;input class="edad" type="text"/&gt;
           </code></pre>
         </div>
-        <div style="display:flex">
+        <div style="display:flex" class="fragment">
           <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
             h('button', 
               { dataset: { index: '1' } },
@@ -773,7 +803,15 @@ function main(sources) {
 }  
 </code></pre>        
       </section>
-      
+
+    </section>
+    <section>
+
+
+      <section>
+        <h2>Creación del DOM virtual</h2>
+      </section>
+
       <section>
         <h3>Creación del DOM</h3>
         <ul>
@@ -807,8 +845,8 @@ function main(sources) {
 }          
         </code></pre>
         
-        <ul>
-          <li>Por ejemplo <code>button('.incrementar', '-')</code> equivale a <code>h('button.incrementar', {}, '-')</code>.</li>
+        <ul class="fragment">
+          <li>Por ejemplo, <code>button('.incrementar', '-')</code> equivale a <code>h('button.incrementar', {}, '-')</code>.</li>
         </ul>
       </section>
       
@@ -830,8 +868,8 @@ const dom$ = contador$.pipe(
 );
 </code></pre>
         <ul>
-          <li>Integra fragmentos de código XHTML dentro de JavaScript.</li>
-          <li>Requiere una herramienta de compilación de JSX a código JavaScript (<a href="https://babeljs.io/">Babel</a>).</li>
+          <li class="fragment">Integra fragmentos de código XHTML dentro de JavaScript.</li>
+          <li class="fragment">Requiere una herramienta de compilación de JSX a código JavaScript (<a href="https://babeljs.io/">Babel</a>).</li>
         </ul>
         <ul>
 
@@ -841,8 +879,79 @@ const dom$ = contador$.pipe(
       
       <section>
         <h3>Sintaxis JSX</h3>
+        <ul>
+          <li>Para evaluar una expresión JavaScript dentro de XHTML, se introduce entre llaves: <code>{ ... }</code>.
+          <pre><code class="language-html" data-trim data-noescape>
+            &lt;div&gt;Hola, {<span class="hl"> nombre </span>}&lt;/div&gt;
+          </code></pre>
+          </li>
+          <li class="fragment">Las clases de un elemento se deben introducir mediante un objeto cuyos atributos son los nombres de las clases:
+          <ul class="fragment">
+            <li>En lugar de:
+            <pre><code class="language-html" data-trim data-noescape>
+              &lt;div class="abierto verde"&gt;...&lt;/div&gt;
+            </code></pre>
+            debe ser:
+            <pre><code class="language-html" data-trim data-noescape>
+              &lt;div class={{ abierto: true, verde: true }}&gt;...&lt;/div&gt;
+            </code></pre>
+            </li>
+          </ul>
+          </li>
+        </ul>
       </section>
+      
+      <section>
+        <h3>Sintaxis JSX</h3>
+        <ul>
+          <li>Igualmente para los atributos (<code>attr</code>), estilos (<code>style</code>) y datos personalizados (<code>dataset</code>):
+          <ul>
+            <li class="fragment">En lugar de
+            <pre><code class="language-html" data-trim data-noescape>
+              &lt;img width="50%" src="Nadie.png"/&gt;
+            </code></pre>
+            debe ser
+            <pre><code class="language-html" data-trim data-noescape>
+              &lt;img attrs={{ width: '50%', src: 'Nadie.png'}}/&gt;
+            </code></pre>
+            </li>
+            <li class="fragment">En lugar de
+            <pre><code class="language-html" data-trim data-noescape>
+              &lt;input type="text" data-index="0"/&gt;
+            </code></pre>
+            debe ser
+            <pre><code class="language-html" data-trim data-noescape>
+            &lt;input attrs={{ type: 'text' }} dataset={{ index: '0' }}/&gt;
+            </code></pre>
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+    </section>
 
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:70%">
+                <ul>
+                    <li>Cycle.js
+                        <br>
+                        <a href="https://cycle.js.org/getting-started.html">Cycle.js guide</a><br>
+                        <span style="font-size:50%">https://cycle.js.org/getting-started.html</span>
+                    </li>
+
+                    <li>
+                      Sergi Mansilla<br/>
+                      <a href="https://ucm.on.worldcat.org/oclc/1345473207">Reactive Programming with RxJS 5</a><br/>
+                        <span style="font-size:50%">https://ucm.on.worldcat.org/oclc/1345473207</span>
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="19/logo_cyclejs.svg" style="width:50%; border:none"><br/>
+                <img src="https://coverart.oclc.org/ImageWebSvc/oclc/+-+2578290986_140.jpg?SearchOrder=+-+IG,OT,OS,AV,FA,GO&DefaultImage=N&client&allowDefault=true" style="width:50%; border:1px solid black">
+            </div>
+        </section>        
       
     
     </div>
