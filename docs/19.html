@@ -334,6 +334,516 @@ import './rxjs-adapter.js'
         </ul>
       </section>
       
+      <section>
+        <h3>Implementación del contador</h3>
+        <p>Partimos del siguiente documento HTML:</p>
+        <pre><code class="language-javascript" data-trim data-noescape>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Contador con incremento y decremento&lt;/title&gt;
+        &lt;meta charset="utf8"&gt;
+        &lt;link rel="stylesheet" href="index.css"/&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id="app"&gt;&lt;/div&gt;
+        &lt;script src="main.js"&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;          
+        </code></pre>
+        El elemento <code>&lt;div&gt;</code> contendrá el DOM generado por nuestra aplicación.
+      </section>
+      
+      <section>
+        <h3>Implementación del contador</h3>
+        <ul>
+          <li>Una aplicación es una función que transforma <em>sources</em> en <em>sinks</em>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            function main(sources) { <span class="arrow_box_left">Recibe sources</span>
+              // ...
+              return ...;   <span class="arrow_box_left">Devuelve sinks</span>
+            }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>La función <code>run()</code> de <em>Cycle.js</em></h3>
+        <ul>
+          <li>La función <code>run()</code> de <em>Cycle.js</em> es la encargada conectar estos <em>sources</em> y <em>sinks</em> con los drivers correspondientes:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            import { run } from '@cycle/run'
+            import { makeDOMDriver } from '@cycle/dom'
+
+            function main(sources) { ... }
+            ...
+            run(main, { DOM: makeDOMDriver('#app') });
+          </code></pre>
+          </li>
+          <li>El driver devuelto por <code>makeDOMDriver</code> se encarga de:
+          <ul>
+            <li>Conectar los eventos del <code>&lt;div id="app"&gt;</code> del documento HTML con los <em>sources</em> que recibe <code>main</code>.</li>
+            <li>Renderizar el DOM devuelto por <code>main()</code> y colocarlo dentro del <code>&lt;div id="app"&gt;</code>.</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El parámetro <code>sources</code></h3>
+        <ul>
+          <li>Es un objeto que contiene un atributo <code>DOM</code>, de la clase <code>DOMSource</code>, que representa el elemento raíz del driver.
+          <ul>
+            <li>En nuestro caso, el elemento raíz es <code>&lt;div id="app"&gt;</code>.</li>
+          </ul>
+          </li>
+          <li>La clase <code>DOMSource</code> tiene dos métodos:
+          <ul>
+            <li><code>select(<em>selector</em>)</code><br/>
+            Devuelve otro objeto DOMSource con los hijos de <code>this</code> que encajen con selector pasado como parámetro.
+            </li>
+            <li><code>events(<em>tipoEvento</em>, <em>opciones</em>)</code><br/>
+            Devuelve un observable con los eventos del tipo pasado como parámetro que se producen en el elemento del DOM representado por <code>this</code>.
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Sintaxis de selectores HTML</h3>
+        <ul>
+          <li>Similar a los selectores que se utilizan en CSS.</li>
+          <li>Ejemplos:
+          <ul>
+            <li><code>div</code><br/>
+            Encaja con todos los elementos <code>&lt;div&gt;</code>.
+            </li>
+            <li><code>div.myclass</code><br/>
+            Encaja con todos los elementos <code>&lt;div&gt;</code> que tengan la clase <code>myclass</code>.
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Sintaxis de selectores HTML</h3>
+        <ul>
+          <li>Más ejemplos de selectores:
+          <ul>
+            <li><code>.myclass</code><br/>
+            Encaja con todos los elementos que tengan la clase <code>myclass</code>.            
+            </li>
+            <li><code>#myid</code><br/>
+            Encaja con el elemento que tenga <code>myid</code> como identificador.
+            </li>
+            <li><code>p#myid</code><br/>
+            Encaja con el elemento <code>&lt;p&gt;</code> que tenga <code>myid</code> como identificador.
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Sintaxis de selectores HTML</h3>
+        <ul>
+          <li>Más ejemplos de selectores:
+          <ul>
+            <li><code>input[type='text']</code><br/>
+            Encaja con todos los elementos <code>&lt;input&gt;</code> que tengan el atributo <code>type</code> con el valor <code>text</code>.
+            </li>
+          </ul>
+          </li>
+          <li>Más información:
+          <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors">CSS Selectors</a>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+function run(sources) {    
+    const evtIncrementar$ = 
+        sources.DOM.select('button.incrementar').events('click');
+        
+    const evtDecrementar$ = 
+        sources.DOM.select('button.decrementar').events('click');  
+    // ...
+}
+        </code></pre>
+        <ul>
+          <li><code>evtIncrementar$</code> es un observable que emite los eventos producidos por los clicks elementos <code>&lt;button&gt;</code> de la clase <code>incrementar</code>.</li>
+          <li>Similarmente con <code>evtDecrementar$</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>Al igual que antes, transformamos los eventos en acciones más cercanas a la lógica del contador:
+          <pre><code class="language-javascript" data-trim data-noescape>
+const incrementar$ = evtIncrementar$.pipe(map(evt => +1));
+const decrementar$ = evtDecrementar$.pipe(map(evt => -1));
+
+const accion$ = merge(incrementar$, decrementar$);
+          </code></pre>
+          </li>
+          <li>Definimos un observable <code>contador$</code> que emitirá los valores del contador:
+<pre><code class="language-javascript" data-trim data-noescape>
+const contador$ = accion$.pipe(
+    startWith(0),
+    scan((ac, x) => ac + x)
+);  
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>El <em>sink</em> DOM</h3>
+        <ul>
+          <li>Tenemos un único <em>sink</em>, llamado <code>DOM</code>, que contendrá un observable que emite el DOM correspondiente a la interfaz:
+<pre><code class="language-javascript" data-trim data-noescape>
+            function main(sources) {
+              ...
+              const dom$ = contador$.pipe(
+                  map(contador => /* construir DOM virtual a partir del 
+                                     valor actual del contador */)
+              );
+              
+              return { DOM: dom$ };
+            }  
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul style="width:95%">
+          <li>En nuestro caso:
+<pre><code class="language-javascript" data-trim data-noescape>
+import { makeDOMDriver, h } from '@cycle/dom'  
+</code></pre>          
+<pre><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    ...
+    const dom$ = contador$.pipe(
+        map(contador =>
+            h('div', {}, [
+                h('button.incrementar', {}, '+'),
+                h('div.contador', {}, contador.toString()),
+                h('button.decrementar', 
+                    { attrs: { disabled: contador === 0 } }, '-')
+            ])
+        )
+    );
+    return { DOM: dom$ };
+}
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El DOM es virtual</h3>
+        <ul>
+          <li>Los árboles DOM creados por la función <code>h()</code> no contienen nodos DOM reales, sino <strong>nodos virtuales</strong>.</li>
+          <li>El DOM virtual se crea en memoria, y sirve para poder realizar rápidamente comparaciones entre el estado actual de la interfaz y el estado anterior.</li>
+          <li>Es <em>Cycle.js</em> (a través de la biblioteca <a href="https://github.com/snabbdom/snabbdom">Snabbdom</a>) quien se encarga de actualizar el DOM &laquo;real&raquo; del documento HTML a partir de la información del DOM virtual.</li>
+        </ul>
+      </section>
+
+      
+      <section>
+        <h3>La función <code>h()</code></h3>
+        <p><code>h(<em>selector</em>, <em>opciones</em>, <em>contenido</em>)</code></p>
+        <ul>
+          <li>Sirve para crear un nodo DOM virtual.</li>
+          <li>El <code><em>selector</em></code> indica la etiqueta del nodo a crear y, si procede, su clase e identificador.</li>
+          <li>El <code><em>contenido</em></code> puede ser una cadena de texto o una lista.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplos</h3>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('div', {}, 'Hola')
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;div&gt;Hola&lt;/div&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('div.myclass', {}, 'Hola')
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;div class="myclass"&gt;Hola&lt;/div&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('div#principal', {}, 'Hola')
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;div id="principal"&gt;Hola&lt;/div&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('div#principal', {}, 
+                ['Hola,', 
+                 h('p.saludo', {}, 'Mundo')
+                ]
+            )
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;div id="principal"&gt;
+                Hola,
+                &lt;p class="saludo"&gt;Mundo&lt;/p&gt;
+            &lt;/div&gt;
+          </code></pre>
+        </div>        
+      </section>
+      
+      <section>
+        <h3>La función <code>h()</code></h3>
+        <p><code>h(<em>selector</em>, <em>opciones</em>, <em>contenido</em>)</code></p>
+        <ul>
+          <li>El parámetro <code><em>opciones</em></code> es un objeto que puede contener varios atributos:
+          <ul>
+            <li><code>class</code>, para indicar las clases CSS del nodo.</li>
+            <li><code>attrs</code>, para indicar los atributos pasados a la etiqueta.</li>
+            <li><code>props</code>, para indicar los atributos del nodo virtual creado.</li>
+            <li><code>dataset</code>, para indicar atributos personalizados (<code>data-*</code>).</li>
+            <li><code>style</code>, para indicar estilos CSS en el nodo.</li>
+          </ul>
+          </li>
+        </ul>        
+      </section>
+      
+      
+      <section>
+        <h3>Ejemplos</h3>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('p', 
+              { class: { active: true, 
+                         other: true } },
+              'Hola')
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;p class="active other"&gt;Hola&lt;/p&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('p', 
+              { style: { margin-top: '3em' } },
+              'Hola')
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;p style="margin-top:3em"&gt;Hola&lt;/p&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('input.edad', 
+              { attrs: { type: 'text' } },
+              []
+            )
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;input class="edad" type="text"/&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('button', 
+              { dataset: { index: '1' } },
+              'Eliminar'
+            )
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;button data-index="1"&gt;
+              Eliminar
+            &lt;/button&gt;
+          </code></pre>
+        </div>
+      </section>
+      
+      
+      <section>
+        <h3>¡Cuidado con <code>attrs</code> y <code>dataset</code>!</h3>
+        <ul>
+          <li>Si el valor asociado a un atributo es <em><a href="https://developer.mozilla.org/en-US/docs/Glossary/Falsy">falsy</a></em> (<code>0</code>, <code>null</code>, <code>false</code>, <code>''</code>, etc.), la propiedad no se genera en el documento:</li>
+        </ul>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('button', 
+              { attrs: { disabled: false } },
+              'Eliminar'
+            )
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;button&gt;
+              Eliminar
+            &lt;/button&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('button', 
+              { attrs: { disabled: true } },
+              'Eliminar'
+            )
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;button disabled='true'&gt;
+              Eliminar
+            &lt;/button&gt;
+          </code></pre>
+        </div>
+      </section>
+        
+      <section>
+        <h3>¡Cuidado con <code>attrs</code> y <code>dataset</code>!</h3>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('button', 
+              { dataset: { index: 0 } },
+              'Eliminar'
+            )
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;button&gt;
+              Eliminar
+            &lt;/button&gt;
+          </code></pre>
+        </div>
+        <div style="display:flex">
+          <pre style="width:45%"><code class="language-javascript" data-trim data-noescape>
+            h('button', 
+              { dataset: { index: '0' } },
+              'Eliminar'
+            )
+          </code></pre>
+          <pre style="width:45%"><code class="language-html" data-trim data-noescape>
+            &lt;button data-index='0'&gt;
+              Eliminar
+            &lt;/button&gt;
+          </code></pre>
+        </div>
+      </section>
+      
+      
+      <section>
+        <h3>Código completo de <code>main()</code></h3>
+        
+<pre style="font-size:45%"><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    const evtIncrementar$ = sources.DOM.select('button.incrementar').events('click');
+    const evtDecrementar$ = sources.DOM.select('button.decrementar').events('click');
+
+    const accion$ = merge(evtIncrementar$.pipe(map(evt => +1)), 
+                          evtDecrementar$.pipe(map(evt => -1)));
+
+    const contador$ = accion$.pipe(startWith(0), scan((ac, x) => ac + x));
+
+    const dom$ = contador$.pipe(
+        map(contador =>
+            h('div', {}, [
+                h('button.incrementar', {}, '+'),
+                h('div.contador', {}, contador.toString()),
+                h('button.decrementar', { props: { disabled: contador === 0 } }, '-')
+            ])
+        )
+    );
+    
+    return { DOM: dom$ };
+}  
+</code></pre>        
+      </section>
+      
+      <section>
+        <h3>Creación del DOM</h3>
+        <ul>
+          <li>Hasta ahora hemos utilizado la función <code>h()</code> para construir el DOM virtual, pero existen otras alternativas:
+          </li>
+        </ul>
+          <ol>
+            <li>Funciones de utilidad del módulo <code>@cycle/dom</code></li>
+            <li>Mezclar JavaScript con XHTML: <strong>JSX</strong></li>
+          </ol>
+      </section>
+      
+      <section>
+        <h3>Funciones de utilidad en <code>@cycle/dom</code></h3>
+        <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+import { button, div, makeDOMDriver } from '@cycle/dom'
+...
+function main(sources) {
+  ...
+  const dom$ = contador$.pipe(
+      map(contador =>
+          div([
+              button('.incrementar','+'),
+              div('.contador', contador.toString()),
+              button('.decrementar', 
+                  { props: { disabled: contador === 0 } }, '-')
+          ])
+      )
+  );
+  ...
+}          
+        </code></pre>
+        
+        <ul>
+          <li>Por ejemplo <code>button('.incrementar', '-')</code> equivale a <code>h('button.incrementar', {}, '-')</code>.</li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>JSX</h3>
+<pre style="font-size:50%"><code class="language-jsx" data-trim data-noescape>
+import { jsx } from 'snabbdom'
+
+const dom$ = contador$.pipe(
+    map(contador =&gt;
+        &lt;div&gt;
+            &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+            &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+            &lt;button class={{ decrementar: true }} 
+                    attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+        &lt;/div&gt;
+    )
+);
+</code></pre>
+        <ul>
+          <li>Integra fragmentos de código XHTML dentro de JavaScript.</li>
+          <li>Requiere una herramienta de compilación de JSX a código JavaScript (<a href="https://babeljs.io/">Babel</a>).</li>
+        </ul>
+        <ul>
+
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Sintaxis JSX</h3>
+      </section>
+
+      
     
     </div>
 
