@@ -1,0 +1,20 @@
+[styles.a]
+fill_color = #C0C0FF
+
+[styles.b]
+fill_color = #C0FFC0
+
+---a---a---a-a-----
+title = source
+a := 
+
+>  Componente()
+
+---b---b---b--b
+title = DOM$
+b := 
+
+--b---bb------b
+title = model$
+b := 
+

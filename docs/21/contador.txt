@@ -1,0 +1,24 @@
+[styles.a]
+fill_color = #C0C0FF
+
+[styles.b]
+fill_color = #C0FFC0
+
+---a---a---a--a
+title = source
+a := 
+
+>  Contador()
+
+b--b---b---b--b
+title = DOM$
+b := 
+
+c--d---e---f--g
+title = model$
+c := 0
+d := 1
+e := 2
+f := 1
+g := 0
+

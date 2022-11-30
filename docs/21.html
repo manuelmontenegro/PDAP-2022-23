@@ -1,0 +1,580 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Componentes en Cycle.js</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Componentes en Cycle.js</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Creación de un componente</li>
+            <li>Uso de un componente</li>
+            <li>Aislamiento de componentes</li>
+            <li>La función <code style="border:0px;color:white">isolate()</code></li>
+          </ol>
+      </section>
+      
+    <section>
+      <section>
+        <h2>Creación de un componente</h2>
+      </section>
+      
+      <section>
+        <h3>Componentes en <em>Cycle.js</em></h3>
+        <ul>
+          <li>Un componente es un fragmento de interfaz gráfica diseñado para ser <strong>reutilizable</strong>.</li>
+          <li>Durante esta semana hemos implementado una aplicación web sencilla que implementaba un contador.
+          <p style="text-align:center"><img src="21/Contador1.png"></p>          
+          </li>
+          <li>A continuación, vamos a convertir este contador en un componente.</li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Arquitectura <em>Cycle.js</em></h3>
+        <ul>
+          <li>Recordemos que una aplicación <em>Cycle.js</em> es una función <code>main()</code> que transforma <em>sources</em> en <em>sinks</em>.</li>
+        </ul>
+        <p><img src="21/sourcesinks.svg" width="50%"></p>
+      </section>
+      
+      <section>
+        <h3>Componente <em>Cycle.js</em></h3>
+        <ul>
+          <li>Un componente también es una función que transforma <em>sources</em> en <em>sinks</em>.</li>
+        </ul>
+        <p><img src="21/componente.svg"></p>
+      </section>
+      
+      <section>
+        <h3><em>Sources</em> y <em>sinks</em> de un componente</h3>
+        <ul>
+          <li>Un componente puede tener varios <em>sources</em>:
+          <ul class="fragment">
+            <li>Un <em>source</em> <code>DOM</code>, que permite obtener los eventos de la interfaz de usuario.</li>
+            <li>Otros <em>sources</em> que definen las propiedades de ese componente.</li>
+          </ul>
+          </li>
+          <li class="fragment">Con respecto a los <em>sinks</em>, un componente puede tener:
+          <ul class="fragment">
+            <li>Un <em>sink</em> <code>DOM</code>, que emite el fragmento de DOM virtual correspondiente a ese componente.</li>
+            <li>Otros <em>sinks</em> que emiten el modelo de ese componente.
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>En nuestro ejemplo tendremos:
+          <ul>
+            <li class="fragment">Un <em>source</em> (<code>DOM</code>), con el que obtenemos los eventos de pulsación en los botones <code>+</code> y <code>-</code>.</li>
+            <li class="fragment">Un <em>sink</em> (<code>DOM</code>), con el fragmento de DOM correspondiente al contador.</li>
+            <li class="fragment">Un <em>sink</em> (<code>value</code>), con el valor del contador.</li>            
+          </ul>
+          </li>
+        </ul>
+        <p class="fragment"><img src="21/contador.svg" style="margin:0px; width:40%" ></p>
+      </section>
+      
+      <section>
+        <h3>Recordatorio: código del contador</h3>
+        <ul style="width:90%">
+          <li>Función <code>intent()</code>:
+          <pre style="font-size:30%"><code class="language-javascript" data-trim data-noescape>
+function intent(sources) {
+    const evtIncrementar$ = sources.DOM.select('button.incrementar').events('click');
+    const evtDecrementar$ = sources.DOM.select('button.decrementar').events('click');
+
+    const incrementar$ = evtIncrementar$.pipe(map(evt => +1));
+    const decrementar$ = evtDecrementar$.pipe(map(evt => -1));
+
+    return merge(incrementar$, decrementar$);
+}            
+          </code></pre>
+          </li>
+          <li>Función <code>model()</code>:
+          <pre style="font-size:30%"><code class="language-javascript" data-trim data-noescape>
+function model(accion$) {
+    return accion$.pipe(
+        scan((estado, accion) => reducer(estado, accion), 0),
+        startWith(0)
+    );
+}            
+
+function reducer(estado, accion) {
+    return estado + accion;
+}
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Recordatorio: código del contador</h3>
+        <ul style="width:90%">
+          <li>Función <code>view()</code>:
+<pre style="font-size:30%"><code class="language-javascript" data-trim data-noescape>
+function view(estado$, context) {
+  return estado$.pipe(
+      map(contador =>
+          &lt;div&gt;
+              &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+              &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+              &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+          &lt;/div&gt;
+      )
+  );
+}
+</code></pre>
+          </li>
+          <li>Función <code>main()</code>:</li>
+          <pre style="font-size:30%"><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    return { DOM: view(model(intent(sources))) };
+}            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Convertir el contador en un componente</h3>
+        <ul>
+          <li class="fragment">Basta con cambiar el nombre de la función <code>main</code> por el nombre del componente, y devolver, además del <code>DOM</code>, otro <em>sink</em> <code>value</code> con el valor del contador:
+          <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
+function Contador(sources) {
+  const state$ = model(intent(sources));
+  return { DOM: view(state$), value: state$ };
+}                        
+          </code></pre>
+          </li>
+          <li class="fragment">Por convenio, las funciones que denotan componentes comienzan por letra mayúscula.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Convertir el contador en un módulo JavaScript</h3>
+        <ul>
+          <li>Podemos añadir <code>export default</code> a la definición de función para que pueda utilizarse desde otros módulos:
+          <pre><code class="language-javascript" data-trim data-noescape>
+<span class="hl">export default</span> function Contador(sources) {
+  ...
+}                        
+          </code></pre>
+          </li>
+          <li>De este modo, podemos importar el componente desde cualquier otro módulo del proyecto:
+          <pre><code class="language-javascript" data-trim data-noescape>
+import Contador from './Contador.jsx';
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+    
+    </section>
+    <section>
+      <section>
+        <h2>Uso de un componente</h2>
+      </section>
+
+      
+      <section>
+        <h3>Uso del contador</h3>
+        <pre style="font-size:50%"><code class="language-javascript" data-trim data-noescape>
+// Fichero main.js
+...
+import Contador from './contador.jsx'
+
+function main(sources) {
+    const { DOM: contadorDOM$, value: contadorValue$ } = Contador(sources);
+
+    const dom$ = combineLatest(contadorDOM$, contadorValue$).pipe(
+        map(([contadorDOM, contadorValue]) => 
+            &lt;div&gt;
+                {contadorDOM}
+                &lt;p&gt;El valor del contador es {contadorValue}&lt;/p&gt;
+            &lt;/div&gt;
+        )        
+    );
+
+    return { DOM: dom$ };
+}
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Uso del contador</h3>
+        <p><img src="21/UsoContador.png"></p>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>Aislamiento de componentes</h2>
+      </section>
+
+
+      <section>
+        <h3>Ejemplo: dos contadores</h3>
+        <ul>
+          <li>Partiendo del ejemplo anterior, supongamos que queremos utilizar dos contadores en nuestra página, y mostrar la suma de sus valores.</li>                    
+        </ul>
+        <p><img src="21/ContadorSuma.png" width="50%"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: dos contadores</h3>
+<pre style="font-size:45%"><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    const { DOM: contador1DOM$, value: contador1Value$ } = Contador(sources);
+    const { DOM: contador2DOM$, value: contador2Value$ } = Contador(sources);
+
+    const suma$ = combineLatest([contador1Value$, contador2Value$]).pipe(
+        map(([x, y]) => x + y)
+    );
+
+    const dom$ = combineLatest([contador1DOM$, contador2DOM$, suma$]).pipe(
+        map(([contador1DOM, contador2DOM, contadorValue]) => 
+            &lt;div&gt;
+                {contador1DOM}
+                {contador2DOM}
+                &lt;p&gt;La suma de ambos contadores es {contadorValue}&lt;/p&gt;
+            &lt;/div&gt;
+        )        
+    );
+
+    return { DOM: dom$ };
+}  
+</code></pre>        
+      </section>
+      
+      <section>
+        <h3>Resultado</h3>
+        <p><img src="21/ContadoresUnisono.png" width="50%"></p>
+        <ul>
+          <li>¡Ambos contadores se incrementan y decrementan simultáneamente!</li>
+          <li>Si hacemos clic en el botón <code>+</code> de uno de ellos, se incrementan ambos.</li>
+          <li>El mismo comportamiento con el botón <code>-</code>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Explicación</h3>
+        <ul style="width:95%">
+          <li>Este es el DOM generado por la aplicación:
+          <pre style="font-size:40%"><code class="language-html" data-trim data-noescape>
+&lt;div&gt;
+    &lt;div&gt;
+        &lt;button class="incrementar"&gt;+&lt;/button&gt;
+        &lt;div class="contador"&gt;1&lt;/div&gt;
+        &lt;button class="decrementar"&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;button class="incrementar"&gt;+&lt;/button&gt;
+        &lt;div class="contador"&gt;1&lt;/div&gt;
+        &lt;button class="decrementar"&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;p&gt;La suma de ambos contadores es 1&lt;/p&gt;
+&lt;/div&gt;            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Explicación</h3>
+          <pre style="font-size:40%"><code class="language-html" data-trim data-noescape>
+&lt;div&gt;
+    &lt;div&gt;
+        &lt;button <span class="hl">class="incrementar"</span>&gt;+&lt;/button&gt;
+        &lt;div class="contador"&gt;1&lt;/div&gt;
+        &lt;button class="decrementar"&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;button <span class="hl">class="incrementar"</span>&gt;+&lt;/button&gt;
+        &lt;div class="contador"&gt;1&lt;/div&gt;
+        &lt;button class="decrementar"&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;p&gt;La suma de ambos contadores es 1&lt;/p&gt;
+&lt;/div&gt;            
+          </code></pre>
+          <ul>
+            <li class="fragment">Para capturar los eventos sobre el botón <code>+</code>, utilizamos el selector <code>.incrementar</code>, pero hay dos botones que encajan con ese selector.</li>
+            <li class="fragment">Similarmente con los selectores <code>.decrementar</code> y <code>.contador</code>.</li>
+          </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Explicación</h3>
+        <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+function intent(sources) {
+    const evtIncrementar$ = sources.DOM.select('<span class="hl">button.incrementar</span>').events('click');
+    // ...
+}
+          
+        </code></pre>
+        <ul>
+          <li>Por tanto, cuando se pulsa el botón <code>+</code> en <em>uno</em> de los contadores, los observables <code>evtIncrementar$</code> de <em>todos</em> ellos emiten un evento.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Solución</h3>
+        <ul>
+          <li class="fragment">Asociar al DOM de cada componente un identificador único, al que llamaremos <strong>contexto</strong>.</li>
+          <li class="fragment">El DOM generado por la aplicación ha de ser el siguiente:
+          <pre style="font-size:40%"><code class="language-html" data-trim data-noescape>
+&lt;div&gt;
+    &lt;div <span class="hl">id="cont1"</span>&gt;  <span class="arrow_box_left">Contexto del primer contador</span>
+        &lt;button class="incrementar"&gt;+&lt;/button&gt;
+        &lt;div class="contador"&gt;1&lt;/div&gt;
+        &lt;button class="decrementar"&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div <span class="hl">id="cont2"</span>&gt;  <span class="arrow_box_left">Contexto del segundo contador</span>
+        &lt;button class="incrementar"&gt;+&lt;/button&gt;
+        &lt;div class="contador"&gt;1&lt;/div&gt;
+        &lt;button class="decrementar"&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;p&gt;La suma de ambos contadores es 1&lt;/p&gt;
+&lt;/div&gt;            
+          </code></pre></li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Solución</h3>
+        <ul>
+          <li>Cada vez que se crea un componente, se indica su contexto correspondiente.</li>
+          <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    const { DOM: contador1DOM$, value: contador1Value$ } = Contador(sources, <span class="hl">'cont1'</span>);
+    const { DOM: contador2DOM$, value: contador2Value$ } = Contador(sources, <span class="hl">'cont2'</span>);
+    ...
+}            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Contador con contexto</h3>
+        <ul>
+          <li>La función <code>Contador</code> recibe un contexto como parámetro, y restringe <code>sources.DOM</code> antes de pasárselo a la función <code>intent()</code>:
+        <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+export default function Contador(sources, context) {
+    <span class="hl">const sourcesRestricted = { ...sources, DOM: sources.DOM.select(`#${context}`) };</span>
+    const value$ = model(intent(<span class="hl">sourcesRestricted</span>));
+    return { DOM: view(value$, context), value: value$ };
+}          
+        </code></pre></li>
+          <li class="fragment">Aplicamos el selector <code>#<em>context</em></code>, que selecciona el elemento del DOM que tenga <code>context</code> como identificador.</li>
+          <li class="fragment">De este modo, <em>source</em> recibido por la función <code>intent()</code> corresponde al DOM del componente, en lugar de corresponder a la página entera.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Contador con contexto</h3>
+        <ul>
+          <li>La llamada <code>select('button.incrementar')</code> que realiza la función <code>intent()</code> se realiza sobre un documento <code>sources.DOM</code> que solo contiene el DOM del componente.
+        <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+function intent(sources) {  <span class="arrow_box_left">Solo recibe el &lt;div&gt; del componente</span>
+
+    const evtIncrementar$ = sources.DOM.select('<span class="hl">button.incrementar</span>').events('click');
+    // ...
+}
+        </code></pre>        </li>
+        <li class="fragment">Por tanto, cada contador captura solamente los eventos de su DOM, y no los del otro contador.</li>
+        </ul>
+        
+        
+      </section>
+      
+      <section>
+        <h3>Contador con contexto</h3>
+        <ul>
+          <li>También hay que modificar la función <code>view</code>, que ahora recibe el contexto como parámetro,
+          <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+export default function Contador(sources, context) {
+    const sourcesRestricted = { ...sources, DOM: sources.DOM.select(`#${context}`) };
+    const value$ = model(intent(sourcesRestricted));
+    return { DOM: view(value$, <span class="hl">context</span>), value: value$ };
+}          
+            
+          </code></pre>
+          y lo añade como identificador del componente:
+<pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+function view(estado$, <span class="hl">context</span>) {
+    return estado$.pipe(
+        map(contador =>
+            &lt;div <span class="hl">attrs={{id: context}}</span>&gt;
+              ...
+            &lt;/div&gt;
+        )
+    );
+}
+  
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+
+    </section>
+    <section>
+      
+      <section>
+        <h2>La función <code>isolate()</code></h2>
+      </section>
+      
+      <section>
+        <h3>Alternativa: <code>isolate()</code></h3>
+        <ul>
+          <li>Hemos añadido un atributo <code>id</code> único al DOM de un componente para que las distintas instancias de ese componente no interfieran entre sí.</li>
+          <li>Sin embargo, este mecanismo puede implementarse de manera genérica, para que pueda aplicarse a cada componente.</li>
+          <li>La biblioteca <code>@cycle/isolate</code> proporciona este mecanismo, pero no funciona correctamente con RxJS.</li>
+          <li>No obstante, puede implementarse de manera sencilla para que funcione con RxJS.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Función <code>isolate()</code></h3>
+        <p>Módulo <code>isolate.js</code></p>
+        <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+import { map } from 'rxjs';
+
+export default function isolate(Component, context) {
+    return sources => {
+        const sourcesRestricted = {...sources, DOM: sources.DOM.select(`#${context}`)};
+        const sinks = Component(sourcesRestricted);
+        const newDOM$ = sinks.DOM.pipe(map(dom => {
+            dom.sel += `#${context}`;
+            return dom;
+        }));
+        return {...sinks, DOM: newDOM$};
+    }
+}
+
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Uso de la función <code>isolate()</code></h3>
+        <pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    const { DOM: contador1DOM$, value: contador1Value$ } = <span class="hl">isolate(Contador, 'c1')</span>(sources);
+    const { DOM: contador2DOM$, value: contador2Value$ } = <span class="hl">isolate(Contador, 'c2')</span>(sources);
+    ...
+}          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Contextos autogenerados</h3>
+        <ul>
+          <li>Es posible modificar <code>isolate</code> para que genere un nuevo contexto cada vez que es llamada, si el programador no ha especificado uno:
+<pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+var contextCounter = 0;
+
+export default function isolate(Component, context) {
+    if (context === undefined) {
+        context = `ctx${contextCounter++}`;
+    }
+    return sources => {
+        const sourcesRestricted = {...sources, DOM: sources.DOM.select(`#${context}`)};
+        const sinks = Component(sourcesRestricted);
+        const newDOM$ = sinks.DOM.pipe(map(dom => {
+            dom.sel += `#${context}`;
+            return dom;
+        }));
+        return {...sinks, DOM: newDOM$};
+    }
+}  
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Contextos autogenerados</h3>
+<pre style="font-size:40%"><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    const { DOM: contador1DOM$, value: contador1Value$ } = <span class="hl">isolate(Contador)</span>(sources);
+    const { DOM: contador2DOM$, value: contador2Value$ } = <span class="hl">isolate(Contador)</span>(sources);
+    ...
+}            
+</code></pre>        
+      </section>
+    </section>
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:70%">
+                <ul>
+                    <li>Cycle.js
+                        <br>
+                        <a href="https://cycle.js.org/components.html">Cycle.js guide: components</a><br>
+                        <span style="font-size:50%">https://cycle.js.org/components.html</span>
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="19/logo_cyclejs.svg" style="width:50%; border:none"><br/>                
+            </div>
+        </section>        
+            
+    </div>
+
+    
+    
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
