@@ -1,0 +1,17 @@
+
+[styles.c]
+fill_color = #FFD0D0
+
+[styles.d]
+fill_color = #D0FFFF
+
+
+-c------c---c---c-
+title = accion$
+c := 
+
+> model()
+
+-d----d-----d--d--
+title = estado$
+d := 

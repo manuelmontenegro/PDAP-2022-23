@@ -1,0 +1,475 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>MVI y State reducers</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Arquitectura Model-View-Intent y State Reducers</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>Arquitectura MVI</li>
+            <li>State reducers</li>
+          </ol>
+      </section>
+    
+    <section>
+      <section>
+        <h2>Arquitectura Model-View-Intent</h2>
+      </section>
+      
+      <section>
+        <h3>Arquitectura Cycle.js</h3>
+        <p><img src="20/main.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <p style="margin:0px"><img src="20/Contador.png" style="margin:0px"></p>
+        <pre style="font-size:35%"><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    const evtIncrementar$ = sources.DOM.select('button.incrementar').events('click');
+    const evtDecrementar$ = sources.DOM.select('button.decrementar').events('click');
+
+    const accion$ = merge(evtIncrementar$.pipe(map(evt => +1)), 
+                          evtDecrementar$.pipe(map(evt => -1)));
+
+    const contador$ = accion$.pipe(
+        scan((ac, x) => ac + x, 0),
+        startWith(0)
+    );
+
+    const dom$ = contador$.pipe(
+        map(contador =>
+          &lt;div&gt;
+              &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+              &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+              &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+          &lt;/div&gt;
+        )
+    );
+    
+    return { DOM: dom$ };
+}                  </code></pre>
+      </section>
+      
+      <section>
+        <h3>Arquitectura Model-View-Intent</h3>
+        <ul>
+          <li>Un programa es una función <code>main()</code> que recibe uno o varios observables que representan los eventos del mundo exterior, y devuelve un observable con el DOM del documento HTML.</li>
+          <li class="fragment">La arquitectura <em>Model-View-Intent</em> descompone la función <code>main()</code> en tres funciones:
+          <ul>
+            <li><code>intent()</code></li>
+            <li><code>model()</code></li>
+            <li><code>view()</code></li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Función <code>intent()</code></h3>
+        <ul>
+        <li class="fragment">Recibe uno o varios observables que representan eventos del mundo exterior (ratón, teclado, respuestas del <em>back-end</em>).</li>
+        <li class="fragment">Devuelve un observable que representa <strong>acciones de usuario</strong>, más cercanas a la lógica del programa.</li>
+        </ul>
+        <p class="fragment"><img src="20/intent.svg" width="50%"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>En el ejemplo del contador, tenemos dos acciones lógicas:
+          <ul>
+            <li>Incrementar, representada mediante el número <code>+1</code></li>
+            <li>Decrementar, representada mediante el número <code>-1</code></li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre style="font-size:35%"><code class="language-javascript" data-trim data-noescape data-line-numbers="2-6">
+function main(sources) {
+    const evtIncrementar$ = sources.DOM.select('button.incrementar').events('click');
+    const evtDecrementar$ = sources.DOM.select('button.decrementar').events('click');
+
+    const accion$ = merge(evtIncrementar$.pipe(map(evt => +1)), 
+                          evtDecrementar$.pipe(map(evt => -1)));
+
+    const contador$ = accion$.pipe(
+        scan((ac, x) => ac + x, 0),
+        startWith(0)
+    );
+
+    const dom$ = contador$.pipe(
+        map(contador =>
+          &lt;div&gt;
+              &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+              &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+              &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+          &lt;/div&gt;
+        )
+    );
+    
+    return { DOM: dom$ };
+}                  </code></pre>
+        
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>Podemos refactorizar el método <code>main()</code> para encapsular la definición de <code>accion$</code> en una función <code>intent()</code>:</li>
+          <pre style="font-size:40%" class="fragment"><code class="language-javascript" data-trim data-noescape>
+function intent(sources) {
+    const evtIncrementar$ = sources.DOM.select('button.incrementar').events('click');
+    const evtDecrementar$ = sources.DOM.select('button.decrementar').events('click');
+
+    const incrementar$ = evtIncrementar$.pipe(map(evt => +1));
+    const decrementar$ = evtDecrementar$.pipe(map(evt => -1));
+
+    return merge(incrementar$, decrementar$);
+}            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre style="font-size:35%"><code class="language-javascript" data-trim data-noescape data-line-numbers="2">
+function main(sources) {
+    const accion$ = intent(sources);
+    
+    const contador$ = accion$.pipe(
+        scan((ac, x) => ac + x, 0),
+        startWith(0)
+    );
+
+    const dom$ = contador$.pipe(
+        map(contador =>
+          &lt;div&gt;
+              &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+              &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+              &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+          &lt;/div&gt;
+        )
+    );
+    
+    return { DOM: dom$ };
+}                  </code></pre>
+        
+      </section>
+      
+      <section>
+        <h3>Función <code>model()</code></h3>
+        <ul>
+          <li class="fragment">Devuelve un observable que emite el estado del programa (el <em>modelo</em>) a lo largo del tiempo.</li>
+          <li class="fragment">Este estado depende del observable de acciones devuelto por <code>intent()</code>.</li>
+        </ul>
+        <p class="fragment"><img src="20/model.svg" width="50%"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>En nuestro ejemplo, el modelo de la aplicación es el valor del contador:</li>
+          <pre style="font-size:35%" class="fragment"><code class="language-javascript" data-trim data-noescape data-line-numbers="4-7">
+function main(sources) {
+    const accion$ = intent(sources);
+
+    const contador$ = accion$.pipe(
+        scan((ac, x) => ac + x, 0),
+        startWith(0)
+    );
+
+    const dom$ = contador$.pipe(
+        map(contador =>
+            &lt;div&gt;
+                &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+                &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+                &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+            &lt;/div&gt;
+        )
+    );
+    
+    return { DOM: dom$ };
+}            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>Refactorizamos de nuevo la función <code>main()</code> para extraer la función <code>model()</code>, que devuelve un observable con el valor del contador:</li>
+          <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
+function model(accion$) {
+    return accion$.pipe(
+        scan((ac, x) => ac + x, 0),
+        startWith(0)
+    );
+}            
+          </code></pre>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre style="font-size:35%"><code class="language-javascript" data-trim data-noescape data-line-numbers="3">
+function main(sources) {
+    const accion$ = intent(sources);
+    const estado$ = model(accion$);
+
+    const dom$ = estado$.pipe(
+        map(contador =>
+            &lt;div&gt;
+                &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+                &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+                &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+            &lt;/div&gt;
+        )
+    );
+    
+    return { DOM: dom$ };
+}          
+        </code></pre>
+      </section>
+      
+      
+      <section>
+        <h3>Función <code>view()</code></h3>
+        <ul>
+          <li class="fragment">Produce el DOM a partir del estado del programa.</li>
+          <li class="fragment">Para ello, recibe un observable con el estado.</li>
+          <li class="fragment">En la mayoría de casos, el observable DOM resultante se obtiene aplicando <code>map()</code> al observable de entrada.</li>
+        </ul>
+        <p class="fragment"><img src="20/view.svg" width="50%"></p>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre style="font-size:35%"><code class="language-javascript" data-trim data-noescape data-line-numbers="5-13">
+function main(sources) {
+    const accion$ = intent(sources);
+    const estado$ = model(accion$);
+
+    const dom$ = estado$.pipe(
+        map(contador =>
+            &lt;div&gt;
+                &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+                &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+                &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+            &lt;/div&gt;
+        )
+    );
+    
+    return { DOM: dom$ };
+}          
+        </code></pre>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul style="width:95%">
+          <li>Refactorizamos extrayendo una función <code>view()</code>:
+          <pre style="font-size:35%"><code class="language-javascript" data-trim data-noescape>
+function view(estado$) {
+    return estado$.pipe(
+        map(contador =>
+            &lt;div&gt;
+                &lt;button class={{ incrementar: true }}&gt;+&lt;/button&gt;
+                &lt;div class={{ contador: true }}&gt;{contador}&lt;/div&gt;
+                &lt;button class={{ decrementar: true }} attrs={{ disabled: contador === 0 }}&gt;-&lt;/button&gt;
+            &lt;/div&gt;
+        )
+    );
+}
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul style="width:95%">
+          <li>La función <code>main()</code> queda del siguiente modo:
+          <pre><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    const accion$ = intent(sources);
+    const estado$ = model(accion$);
+    const dom$ = view(estado$);
+    
+    return { DOM: dom$ };
+}            
+          </code></pre>
+          </li>
+          <li class="fragment">o, equivalentemente,
+<pre><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+    return { DOM: view(model(intent(sources))) };
+}  
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+    </section>
+      
+    <section>
+      <section>
+        <h2>State reducers</h2>
+      </section>
+      
+      
+      <section>
+        <h3><em>State reducers</em></h3>
+        <ul>
+          <li>En el ejemplo anterior, hemos representado el estado de nuestra aplicación mediante un observable:
+          <p style="text-align:center"><img src="20/state.svg"></p>
+          </li>
+          <li class="fragment">En la mayoría de casos, cada evento emitido por este observable depende de:
+          <ul>
+            <li>El estado anterior</li>
+            <li>La acción emitida por el observable <code>accion$</code></li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+function model(accion$) {
+    return accion$.pipe(
+        scan((ac, x) => ac + x, 0),       // ac = estado actual
+                                          // x  = acción recibida
+        startWith(0)
+    );
+}          
+        </code></pre>
+        <p class="fragment"><img src="20/counterState.svg"></p>
+      </section>
+      
+      <section>
+        <h3><em>State reducers</em></h3>
+        <ul>
+          <li>Una <strong>función reductora de estado</strong> (<em>state reducer</em>) es una función pura que, a partir de un estado actual y una acción lógica, devuelve el estado resultante tras aplicar la acción.</li>
+        </ul>
+        <p><img src="20/StateReducer.svg"></p>
+      </section>
+      
+      <section>
+        <h3><em>State reducers</em></h3>
+        <ul>
+          <li>Podemos implementar un <em>state reducer</em> como una función en JavaScript:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            function reducer(state, action) {
+                return ...; <span class="arrow_box_left">Devuelve estado siguiente</span>
+            }
+          </code></pre>
+          </li>
+          <li class="fragment">De este modo, el estado de la aplicación puede definirse mediante el siguiente observable:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const state$ = action$.pipe(
+                scan((state, action) => reducer(state, action), initialState),
+                startWith(initialState)
+            );
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ejemplo: contador</h3>
+        <ul>
+          <li>En nuestro ejemplo, la función reductora del contador es muy sencilla:
+          <pre><code class="language-javascript" data-trim data-noescape>
+// estado = valor actual del contador
+// accion = +1 o -1, según se quiera incrementar o decrementar
+function reducer(estado, accion) {
+    return estado + accion;
+}            
+          </code></pre>          
+          </li>
+          <li class="fragment">Función <code>model()</code>:
+<pre><code class="language-javascript" data-trim data-noescape>
+function model(accion$) {
+    return accion$.pipe(
+        scan((estado, accion) => reducer(estado, accion), 0),
+        startWith(0)
+    );
+}  
+</code></pre>          
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Ventajas de un <em>state reducer</em></h3>
+        <ul style="list-style:none;padding:0;margin:0">
+          <li class="hands_up">La función <code>reducer()</code> es <strong>pura</strong>; no tiene efectos laterales.
+          </li>
+          <li class="hands_up">Desacopla el cálculo del estado de las operaciones relativas a observables.</li>
+          <li class="hands_up">Al ser una función pura, es más fácil aplicar <em>unit testing</em> sobre ella.</li>
+          </li>
+        </ul>
+      </section>
+    </section>
+      
+    </div>
+
+    
+    
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>

@@ -1,0 +1,39 @@
+[styles.a]
+fill_color = #C0C0FF
+
+[styles.b]
+fill_color = #C0FFC0
+
+[styles.c]
+fill_color = #FFD0D0
+
+[styles.d]
+fill_color = #D0FFFF
+
+---a---a---a-a-----
+title = evento1$
+a := 
+
+---a-a---a---a-----
+title = evento2$
+a := 
+
+> intent()
+
+-c------c---c---c-
+title = accion$
+c := 
+
+> model()
+
+-d----d-----d--d--
+title = estado$
+d := 
+
+>  view()
+
+---b---b---b--b
+title = dom$
+b := 
+
+

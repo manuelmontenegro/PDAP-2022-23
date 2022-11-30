@@ -1,0 +1,20 @@
+[styles.a]
+fill_color = #C0C0FF
+
+[styles.c]
+fill_color = #FFD0D0
+
+---a---a---a-a-----
+title = evento1$
+a := 
+
+---a-a---a---a-----
+title = evento2$
+a := 
+
+> intent()
+
+-c------c---c---c-
+title = accion$
+c := 
+

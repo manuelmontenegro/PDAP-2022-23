@@ -1,0 +1,19 @@
+[styles.b]
+fill_color = #C0FFC0
+
+
+[styles.d]
+fill_color = #D0FFFF
+
+
+-d----d-----d--d--
+title = estado$
+d := 
+
+>  view()
+
+---b---b---b--b
+title = dom$
+b := 
+
+

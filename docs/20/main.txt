@@ -1,0 +1,25 @@
+[styles.a]
+fill_color = #C0C0FF
+
+[styles.b]
+fill_color = #C0FFC0
+
+---a---a---a-a-----
+title = evento1$
+a := 
+
+-a------a---a-----
+title = evento2$
+a := 
+
+-a------a---a----a
+title = evento3$
+a := 
+
+>  main()
+
+---b---b---b--b
+title = dom$
+b := 
+
+
