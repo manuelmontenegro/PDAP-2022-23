@@ -1,0 +1,18 @@
+[styles.x]
+fill_color = #C0FFC0
+
+a = ----x-|
+x := 
+
+b = ---x-|
+x := 
+
+c = ------x-|
+x := 
+
+d = --x-|
+x := 
+
+---a---b---c--d--
+title = source.HTTP
+

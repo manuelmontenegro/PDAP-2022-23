@@ -1,0 +1,581 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Comunicación con el servidor en Cycle.js</title>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito" />
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/pdap.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/nnfx-light.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+      
+      <section data-background-image="img/RedBackground.jpg">
+        <div style="background-color:white;height:1em"></div>
+        <h1 style="color:white;font-size:240%">Comunicación con el servidor en Cycle.js</h1>
+        <div style="background-color:white;height:1em"></div>
+
+        <div style="display:flex;justify-content:space-around;align-items:center;text-align:right">
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span>Manuel Montenegro Montes</span><br>
+          <span><a href="montenegro@fdi.ucm.es" style="color:#ff9999">montenegro@fdi.ucm.es</a></span><br>           </div>
+          
+          <div style="font-size:60%;text-align:center;background-color:rgba(0,0,0,0.9);padding:10px;color:white;margin-top:1em;border-radius:10px">
+          <span><b>Programación Declarativa Aplicada</b></span><br>
+          <span>Máster en Ingeniería Informática</span><br>
+          <span>Facultad de Informática</span><br>
+          <span>Universidad Complutense de Madrid</span><br>
+          </div>            
+        </div>
+
+      </section>
+
+        
+      
+      <section data-background-image="img/RedBackground.jpg" data-background-transition="fade">
+          <ol class="contenidos">
+            <li>El driver <span style="font-family:monospace">HTTP</span></li>
+            <li>Envío de peticiones</li>
+            <li>Recepción de respuestas</li>
+            <li>Ejemplo</li>
+          </ol>
+      </section>
+
+    <section>
+      <section>
+        <h2>El driver <code>HTTP</code></h2>
+      </section>
+      
+      <section>
+        <h3>Recordatorio</h3>
+        <ul>
+          <li>Un programa en <em>Cycle.js</em> es una función <code>main()</code> que transforma <em>sources</em> en <em>sinks</em>.</li>
+        </ul>
+        <p><img src="22/sourcesinks.svg" width="60%"></p>
+      </section>
+      
+      <section>
+        <h3>Comunicación con el mundo exterior</h3>
+        <ul>
+          <li>Hasta ahora, los <em>sources</em> y <em>sinks</em> de una aplicación tenían un significado particular:
+          <ul>
+            <li><em>sources</em>: eventos del DOM (<code>click</code>, <code>input</code>, etc.)</li>
+            <li><em>sinks</em>: DOM generado por la aplicación</li>
+          </ul>
+          </li>
+          <li>A continuación vamos a estudiar otros tipos de <em>sources</em> y <em>sinks</em>.
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Comunicación con el servidor</h3>
+        <ul>
+          <li>Idealmente, podría encapsularse una petición al servidor en una función de JavaScript.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const infoEmpleado = obtenerInfoEmpleado(id);
+          </code></pre>
+          </li>
+          <li>Pero esto plantea varios problemas:
+          <ul>
+            <li><strong>Las llamadas al servidor no son funciones puras.</strong>
+            <ul>
+              <li>Las peticiones dependen del estado del servidor (BD, etc.)</li>
+              <li>Las llamadas al servidor pueden provocar efectos laterales.</li>
+            </ul>
+            <li><strong>Las llamadas al servidor no son síncronas.</strong>
+            <ul>
+              <li>El resultado de la función debe ser una promesa, o un observable.</li>
+            </ul>
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Comunicación con el servidor</h3>
+        <ul>
+          <li>Por este motivo, las aplicaciones en <em>Cycle.js</em> tratan al servidor como un agente del &laquo;mundo exterior&raquo;, y se comunican con él mediante <em>sources</em> y <em>sinks</em>.</li>
+          <li>Una aplicación puede utilizar sus <em>sinks</em> para <strong>enviar</strong> peticiones al servidor.</li>
+          <li>Una aplicación puede utilizar sus <em>sources</em> para <strong>recibir</strong> respuestas a las peticiones del servidor.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Comunicación con el servidor</h3>
+        <p><img src="22/CicloServidor.svg"/></p>
+      </section>
+      
+      <section>
+        <h3>Recordatorio: drivers en Cycle.js</h3>
+        <ul>
+          <li>En <em>Cycle.js</em>, los drivers son las funciones que:
+          <ul>
+            <li>Se suscriben a los <em>sinks</em> emitidos por nuestra aplicación.</li>
+            <li>Realizan los efectos laterales que sean pertinentes.</li>
+            <li>Devuelven <em>sources</em> a nuestra aplicación.</li>
+          </ul>
+          </li>
+          <li>Ya conocemos el driver <code>DOM</code>, que se encarga de capturar los eventos del DOM y de renderizarlo:
+          <pre><code class="language-javascript" data-trim data-noescape>
+function main() { ... }
+
+const drivers = {
+    DOM: makeDOMDriver('#app')
+}            
+run(main, drivers);
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El driver <code>HTTP</code></h3>
+        <ul>
+          <li>Es un driver que se encarga de realizar peticiones HTTP/HTTPS a uno o varios servidores externos.</li>
+          <li>Se crea mediante la función <code>makeHTTPDriver</code>, definida en la biblioteca <code>@cycle/http</code>.</li>
+          <li>Incorporación al proyecto:
+          <pre><code class="no-highlight" data-trim data-noescape>
+            npm install @cycle/http
+          </code></pre>
+          </li>
+          <li>Creación del driver:
+          <pre><code class="language-javascript" data-trim data-noescape>
+import { makeHTTPDriver } from '@cycle/http'
+...          
+const drivers = {
+    DOM: makeDOMDriver('#app'),
+    HTTP: <span class="hl">makeHTTPDriver()</span>
+}            
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>El driver <code>HTTP</code></h3>
+        <ul>
+          <li>Con el driver ya incorporado, nuestra aplicación creará un observable con las peticiones que se deseen realizar, y se devolverá como <em>sink</em>:
+          <pre><code class="language-javascript" data-trim data-noescape>
+function main(sources) {
+  ...
+  const dom$ = ...;
+  const request$ = ...;
+  
+  return { DOM: dom$, <span class="hl">HTTP: request$</span> };
+}            
+          </code></pre>
+          </li>
+          
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Categorías</h3>
+        <ul>
+          <li>Las peticiones al servidor pueden estar agrupadas en <strong>categorías</strong>.</li>
+          <li>Cada petición al servidor puede ir asociada a una categoría, que es una cadena de texto.</li>
+          <li>El driver adjuntará, a cada respuesta del servidor, la categoría de la petición correspondiente.</li>
+          <li>De este modo, nuestra aplicación puede seleccionar las respuestas HTTP que pertenzcan a una determinada categoría.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Categorías</h3>
+        <p><img src="22/CicloServidorCategorias.svg"></p>
+      </section>
+      
+    </section>    
+    <section>
+      
+      <section>
+        <h2>Envío de peticiones</h2>
+      </section>
+      
+      <section>
+        <h3>El <em>sink</em> HTTP</h3>
+        <p><img src="22/sinkHTTP.svg"></p>
+        <ul>
+          <li>El <em>sink</em> HTTP emitido por nuestra aplicación es un observable cuyos valores emitidos pueden ser
+          <ul>
+            <li>cadenas de texto, representando URLs, o bien</li>
+            <li>objetos con detalles sobre la petición.</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Atributos de una petición</h3>
+        <p>Los objetos emitidos pueden tener los siguientes atributos:</p>
+        <ul>
+          <li><code>url</code> <em>(string)</em><br/>
+          URL de la petición
+          <li><code>method</code> <em>(string)</em><br/>
+          Tipo de petición: <code>GET</code>, <code>POST</code>, <code>PUT</code>, etc.
+          </li>
+          <li><code>category</code> <em>(string)</em><br/>
+          Categoría correspondiente a la petición
+          </li>
+          <li><code>query</code> <em>(objeto)</em><br/>
+          Valores enviados en la <em>query string</em> de las peticiones GET/POST
+          </li>
+        </ul>
+        
+      </section>
+      <section>
+        <h3>Ejemplo</h3>
+        <pre><code class="language-javascript" data-trim data-noescape>
+          const num$ = sources.DOM
+                          .select('.cuadro_texto').events('input')
+                          .pipe(map(evt => Number(evt.target.value)));
+          const boton$ = sources.DOM.select('.boton').events('click');
+                          
+          const request$ = boton$.pipe(
+            withLatestFrom(num$),
+            map(([_ num]) => ({
+              url: 'https://servidor.com/obtener_usuario',
+              method: 'GET',
+              query: { id: num, tipo: 'alumno' },
+              category: 'obtencion_usuario'
+            }))   
+          );
+          
+          return { dom: DOM$, HTTP: request$ };
+        </code></pre>
+        <ul>
+          <li>Cada vez que se pulsa un botón, se realiza una petición GET al servidor con la siguiente URL:
+          <pre><code class="no-highlight" data-trim data-noescape>
+https://servidor.com/obtener_usuario?id=<span class="hl">num</span>&tipo=alumno            
+          </code></pre>
+          donde <code>num</code> es el valor contenido en el cuadro de texto.
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Otros atributos de la petición</h3>
+        <ul>
+          <li><code>send</code> <em>(objeto o string)</em><br/>
+          Cuerpo de la petición (para peticiones <code>POST</code>)
+          </li>
+          <li><code>headers</code> <em>(objeto)</em><br/>
+          Cabeceras de la petición HTTP (<code>Content-Type</code>, <code>Accept</code>, <code>Authentication</code>, etc.)
+          </li>
+        </ul>
+        <p>Más información:</p>
+        <ul>
+          <li><a href="https://cycle.js.org/api/http.html">Cycle.js HTTP</a></li>
+          <li><a href="https://github.com/ladjs/superagent">Superagent</a></li>
+        </ul>
+      </section>
+
+    </section>    
+    <section>
+      
+      <section>
+        <h2>Recepción de respuestas</h2>
+      </section>
+      
+      <section>
+        <h3>Respuestas del servidor</h3>
+        <ul>
+          <li>Se obtienen a través de los <em>sources</em> de la aplicación.
+          <pre><code class="language-javascript" data-trim data-noescape>
+            function main(sources) {
+              // Obtiene todas las respuestas HTTP
+              const response$ = sources.HTTP.select();
+              ...
+            }
+          </code></pre>
+          o bien
+          <pre><code class="language-javascript" data-trim data-noescape>
+            function main(sources) {
+              // Obtiene todas las respuestas HTTP de una determinada
+              // categoría
+              const response$ = sources.HTTP.select('mi_categoria');
+              ...
+            }
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Filtrado de respuestas</h3>
+        <ul>
+          <li>Además del método <code>select()</code>, que permite filtrar las respuestas por categoría, podemos utilizar el método <code>filter()</code>, que permite filtrar respuestas en función de las peticiones que las originaron:
+          <pre><code class="language-javascript" data-trim data-noescape>
+            const response$ = 
+              sources.HTTP
+                .filter(request => request.url.startsWith('https://servidor.com'));
+          </code></pre>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Observable de respuestas</h3>
+        <ul>
+          <li>Hasta ahora hemos dibujado los observables provenientes del <em>source</em> <code>HTTP</code> como observables que emiten las distintas respuestas del servidor.
+          <p style="text-align:center"><img src="22/sourceHTTP.svg"></p>
+          </li>
+          <li>Pero esto no es así realmente. Los observables obtenidos a partir del source son observables de <strong>orden superior</strong>.</li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Observable de respuestas</h3>
+        <ul>
+          <li>Dado el siguiente observable de peticiones HTTP,
+          <p style=""><img src="22/peticionesHTTP.svg"></p>
+          </li>
+          <li>Se produce un observable de respuestas como el siguiente:
+          <p style=""><img src="22/respuestasHTTP.svg"></p>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Observable de respuestas</h3>
+          <p style="text-align:left"><img src="22/peticionesHTTP.svg" style="margin:0px"></p>
+          <p style="text-align:left"><img src="22/respuestasHTTP.svg" style="margin:0px"></p>
+          <ul>
+            <li>Cada observable interno comienza en el momento en el que se realiza la petición.</li>
+            <li>Cuando llega la respuesta correspondiente del servidor, el observable interno la emite.</li>
+          </ul>
+      </section>
+      
+      <section>
+        <h3>Observable de respuestas</h3>
+        <p style="text-align:center"><img src="22/respuestasHTTP.svg" style="margin:0px"></p>
+        <ul>
+          <li>Para poder acceder a las respuestas de cada petición hay que aplanarl el observable.</li>
+          <li>Recordemos que hay varias formas de aplanar un observable de orden superior:
+          <ul>
+            <li><code>concatAll</code></li>
+            <li><code>mergeAll</code></li>
+            <li><code>switchAll</code></li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      
+      <section>
+        <h3>Recordatorio: <code>concatAll</code></h3>
+        <ul>
+          <li>El observable aplanado solo emite los eventos de un observable cuando ha finalizado de emitir los del observable anterior.</li>
+        </ul>
+        <p><img src="22/concatAll.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Recordatorio: <code>mergeAll</code></h3>
+        <ul>
+          <li>El observable aplanado emite los eventos tal y como van llegando a los observables internos.</li>
+        </ul>
+        <p><img src="22/mergeAll.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Recordatorio: <code>switchAll</code></h3>
+        <ul>
+          <li>El observable aplanado cancela la suscripción anterior cada vez que se encuentra con un nuevo observable.</li>
+        </ul>
+        <p><img src="22/switchAll.svg"></p>
+      </section>
+      
+      <section>
+        <h3>Contenido del observable de respuestas</h3>
+        <p style="text-align:center"><img src="22/respuestasHTTP.svg" style="margin:0px"></p>
+        <ul>
+          <li>Cada respuesta es un objeto con varios atributos. Entre ellos:
+          <ul>
+            <li><code>text</code> <em>(string)</em><br/>
+            Cuerpo de la respuesta. Si es un JSON hay que aplicar la función <code>JSON.parse()</code>.</li>
+            <li><code>statusCode</code> <em>(numero)</em><br/>
+            Código HTTP devuelto por el servidor (<code>200</code> si no ha habido ningún error)
+            </li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+      <section>
+        <h3>Contenido del observable de respuestas</h3>
+        <ul>
+          <li>Otros atributos:
+          <ul>
+            <li><code>type</code> <em>(string)</em><br/>
+            Tipo MIME de la respuesta (por ejemplo, <code>application/json</code>)</li>
+                        <li><code>header</code> <em>(objeto)</em><br/>
+            Cabeceras de la respuesta</li>
+            <li><code>request</code> <em>(objeto)</em><br/>
+            Objeto petición que originó la respuesta</li>
+          </ul>
+          </li>
+        </ul>
+      </section>
+      
+    </section>
+    <section>
+      <section>
+        <h2>Ejemplo</h2>
+      </section>
+      
+      <section>
+        <h3>Buscador de proyectos en <em>GitHub</em></h3>
+        <p><img src="22/buscadorGithub.png" style="border:1px solid black; padding:1em"></p>
+      </section>
+      
+      <section>
+        <h3>Captura de eventos</h3>
+        <ul>
+          <li>Capturamos los eventos de modificación del cuadro de texto y los eventos de pulsación en el botón <em>Mostrar</em>.</li>
+          <pre><code class="language-javascript" data-trim data-noescape>
+const nombre$ = sources.DOM
+                  .select('.nombre')
+                  .events('input')
+                  .pipe(map(evt => evt.target.value));
+                  
+const boton$ = sources.DOM.select('.botonBuscar').events('click');
+          </code></pre>
+          <li>A partir de ellos, definimos una acción lógica, representada mediante una cadena de texto, que representa el nombre a buscar.
+          <pre><code class="language-javascript" data-trim data-noescape>
+    const comandoBuscar$ = boton$.pipe(
+                             withLatestFrom(nombre$),
+                             map(([_, nombre]) => nombre)
+                           );
+          </code></pre>
+          </li>
+        </ul>
+        
+      </section>
+      
+      <section>
+        <h3>Emisión de peticiones</h3>
+        <ul>
+          <li>Por cada acción lógica de búsqueda, lanzamos una petición a <em>GitHub</em>.
+<pre><code class="language-javascript" data-trim data-noescape>
+const peticion$ = comandoBuscar$.pipe(
+    map(nombre => ({
+        url: 'https://api.github.com/search/repositories',
+        method: 'GET',
+        query: {
+            q: `${nombre} in:name`,   <span class="arrow_box_left">Término a buscar en el nombre</span>
+            per_page: 5               <span class="arrow_box_left">Obtener cinco resultados</span>
+        },
+        category: 'busquedaPorNombre'
+    }))
+);
+...
+
+return { DOM: ..., HTTP: peticion$ };
+</code></pre>
+<p>Por ejemplo, si el nombre es <code>rxjs</code>:</p>
+<pre><code class="no-highlight" data-trim data-noescape>
+https://api.github.com/search/repositories?q=rxjs%20in:name&per_page=5
+</code></pre>
+          </li>
+        </ul>        
+      </section>
+      
+      <section>
+        <h3>Recepción de respuestas</h3>
+<pre><code class="language-javascript" data-trim data-noescape>
+const resultado$ = sources.HTTP.select('busquedaPorNombre').pipe(
+    switchAll(),    <span class="arrow_box_left">Aplanamos observable</span>
+    map(response => JSON.parse(response.text)), <span class="arrow_box_left">Transformamos a JSO&#8203;N</span>
+    map(json => json.items.map(item => ({ <span class="arrow_box_left">Obtenemos atributos relevantes</span>
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        owner: item.owner.login,
+        url: item.html_url }))),
+    startWith([])   <span class="arrow_box_left">La tabla de búsqueda comienza vacía</span>
+); 
+</code></pre>        
+      </section>
+      
+      <section>
+        <h3>Renderizado de tabla</h3>
+<pre style="font-size:45%"><code class="language-javascript" data-trim data-noescape>
+  const dom$ = resultado$.pipe(
+    map(repos =>
+      &lt;div&gt;
+        Búsqueda por nombre:&lt;input attrs={{ type: 'text' }} class={{ nombre: true }} /&gt;
+        &lt;button class={{ botonBuscar: true }}&gt;Buscar&lt;/button&gt;
+        &lt;table class={{ resultados: true }}&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Usuario&lt;/th&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Descripción&lt;/th&gt;
+          &lt;/tr&gt;
+          {
+            repos.map(repo =&gt;
+              &lt;tr&gt;
+                &lt;td&gt;{repo.owner}&lt;/td&gt;
+                &lt;td&gt;&lt;a attrs={{ href: repo.url }}&gt;{repo.name}&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;{repo.description}&lt;/td&gt;
+              &lt;/tr&gt;
+            )
+          }
+        &lt;/table&gt;
+      &lt;/div&gt;
+    ));  
+</code></pre>
+<pre style="font-size:45%"><code class="language-javascript" data-trim data-noescape>
+  return { DOM: dom$, HTTP: peticion$ };
+</code></pre>
+      </section>
+    </section>    
+        <section>
+            <h2>Bibliografía</h2>
+            <div style="float:left; width:70%">
+                <ul>
+                    <li>Cycle.js
+                        <br>
+                        <a href="https://cycle.js.org/api/http.html">Cycle.js HTML</a><br>
+                        <span style="font-size:50%">https://cycle.js.org/api/http.html</span>
+                    </li>
+                    <li>
+                      Sergi Mansilla<br/>
+                      <a href="https://ucm.on.worldcat.org/oclc/1345473207">Reactive Programming with RxJS 5</a><br/>
+                        <span style="font-size:50%">https://ucm.on.worldcat.org/oclc/1345473207</span>
+                    </li>
+                </ul>                
+            </div>
+            <div style="float:right; width: 30%">
+                <img src="19/logo_cyclejs.svg" style="width:50%; border:none"><br/>                
+                <img src="https://coverart.oclc.org/ImageWebSvc/oclc/+-+2578290986_140.jpg?SearchOrder=+-+IG,OT,OS,AV,FA,GO&DefaultImage=N&client&allowDefault=true" style="width:50%; border:1px solid black">
+            </div>
+        </section>    
+    </div>
+
+    
+    
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealHighlight, RevealNotes ]
+			});
+      Reveal.configure({ pdfSeparateFragments: false });
+		</script>
+	</body>
+</html>
