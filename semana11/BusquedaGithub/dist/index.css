@@ -1,0 +1,15 @@
+
+table.resultados {
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table.resultados th, table.resultados td {
+    border: 1px solid black;
+    padding: 0px 10px;
+}
+
+table.resultados th {
+    color: white;
+    background-color: cornflowerblue;
+}
