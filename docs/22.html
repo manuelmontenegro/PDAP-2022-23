@@ -67,11 +67,11 @@
         <ul>
           <li>Hasta ahora, los <em>sources</em> y <em>sinks</em> de una aplicación tenían un significado particular:
           <ul>
-            <li><em>sources</em>: eventos del DOM (<code>click</code>, <code>input</code>, etc.)</li>
-            <li><em>sinks</em>: DOM generado por la aplicación</li>
+            <li class="fragment"><em>sources</em>: eventos del DOM (<code>click</code>, <code>input</code>, etc.)</li>
+            <li class="fragment"><em>sinks</em>: DOM generado por la aplicación</li>
           </ul>
           </li>
-          <li>A continuación vamos a estudiar otros tipos de <em>sources</em> y <em>sinks</em>.
+          <li class="fragment">A continuación vamos a estudiar otros tipos de <em>sources</em> y <em>sinks</em>.
           </li>
         </ul>
       </section>
@@ -84,14 +84,14 @@
             const infoEmpleado = obtenerInfoEmpleado(id);
           </code></pre>
           </li>
-          <li>Pero esto plantea varios problemas:
+          <li class="fragment">Pero esto plantea varios problemas:
           <ul>
-            <li><strong>Las llamadas al servidor no son funciones puras.</strong>
+            <li class="fragment"><strong>Las llamadas al servidor no son funciones puras.</strong>
             <ul>
               <li>Las peticiones dependen del estado del servidor (BD, etc.)</li>
               <li>Las llamadas al servidor pueden provocar efectos laterales.</li>
             </ul>
-            <li><strong>Las llamadas al servidor no son síncronas.</strong>
+            <li class="fragment"><strong>Las llamadas al servidor no son síncronas.</strong>
             <ul>
               <li>El resultado de la función debe ser una promesa, o un observable.</li>
             </ul>
@@ -105,8 +105,8 @@
         <h3>Comunicación con el servidor</h3>
         <ul>
           <li>Por este motivo, las aplicaciones en <em>Cycle.js</em> tratan al servidor como un agente del &laquo;mundo exterior&raquo;, y se comunican con él mediante <em>sources</em> y <em>sinks</em>.</li>
-          <li>Una aplicación puede utilizar sus <em>sinks</em> para <strong>enviar</strong> peticiones al servidor.</li>
-          <li>Una aplicación puede utilizar sus <em>sources</em> para <strong>recibir</strong> respuestas a las peticiones del servidor.</li>
+          <li class="fragment">Una aplicación puede utilizar sus <em>sinks</em> para <strong>enviar</strong> peticiones al servidor.</li>
+          <li class="fragment">Una aplicación puede utilizar sus <em>sources</em> para <strong>recibir</strong> respuestas a las peticiones del servidor.</li>
         </ul>
       </section>
       
@@ -125,7 +125,7 @@
             <li>Devuelven <em>sources</em> a nuestra aplicación.</li>
           </ul>
           </li>
-          <li>Ya conocemos el driver <code>DOM</code>, que se encarga de capturar los eventos del DOM y de renderizarlo:
+          <li class="fragment">Ya conocemos el driver <code>DOM</code>, que se encarga de capturar los eventos del DOM y de renderizarlo:
           <pre><code class="language-javascript" data-trim data-noescape>
 function main() { ... }
 
@@ -141,14 +141,14 @@ run(main, drivers);
       <section>
         <h3>El driver <code>HTTP</code></h3>
         <ul>
-          <li>Es un driver que se encarga de realizar peticiones HTTP/HTTPS a uno o varios servidores externos.</li>
-          <li>Se crea mediante la función <code>makeHTTPDriver</code>, definida en la biblioteca <code>@cycle/http</code>.</li>
-          <li>Incorporación al proyecto:
+          <li class="fragment">Es un driver que se encarga de realizar peticiones HTTP/HTTPS a uno o varios servidores externos.</li>
+          <li class="fragment">Se crea mediante la función <code>makeHTTPDriver</code>, definida en la biblioteca <code>@cycle/http</code>.</li>
+          <li class="fragment">Incorporación al proyecto:
           <pre><code class="no-highlight" data-trim data-noescape>
             npm install @cycle/http
           </code></pre>
           </li>
-          <li>Creación del driver:
+          <li class="fragment">Creación del driver:
           <pre><code class="language-javascript" data-trim data-noescape>
 import { makeHTTPDriver } from '@cycle/http'
 ...          
@@ -242,7 +242,7 @@ function main(sources) {
                           
           const request$ = boton$.pipe(
             withLatestFrom(num$),
-            map(([_ num]) => ({
+            map(([_, num]) => ({
               url: 'https://servidor.com/obtener_usuario',
               method: 'GET',
               query: { id: num, tipo: 'alumno' },
@@ -297,6 +297,7 @@ https://servidor.com/obtener_usuario?id=<span class="hl">num</span>&tipo=alumno
               ...
             }
           </code></pre>
+          <div class="fragment">
           o bien
           <pre><code class="language-javascript" data-trim data-noescape>
             function main(sources) {
@@ -306,6 +307,7 @@ https://servidor.com/obtener_usuario?id=<span class="hl">num</span>&tipo=alumno
               ...
             }
           </code></pre>
+          </div>
           </li>
         </ul>
       </section>
@@ -329,7 +331,7 @@ https://servidor.com/obtener_usuario?id=<span class="hl">num</span>&tipo=alumno
           <li>Hasta ahora hemos dibujado los observables provenientes del <em>source</em> <code>HTTP</code> como observables que emiten las distintas respuestas del servidor.
           <p style="text-align:center"><img src="22/sourceHTTP.svg"></p>
           </li>
-          <li>Pero esto no es así realmente. Los observables obtenidos a partir del source son observables de <strong>orden superior</strong>.</li>
+          <li class="fragment">Pero esto no es así realmente. Los observables obtenidos a partir del source son observables de <strong>orden superior</strong>.</li>
         </ul>
       </section>
       
@@ -339,7 +341,7 @@ https://servidor.com/obtener_usuario?id=<span class="hl">num</span>&tipo=alumno
           <li>Dado el siguiente observable de peticiones HTTP,
           <p style=""><img src="22/peticionesHTTP.svg"></p>
           </li>
-          <li>Se produce un observable de respuestas como el siguiente:
+          <li class="fragment">Se produce un observable de respuestas como el siguiente:
           <p style=""><img src="22/respuestasHTTP.svg"></p>
           </li>
         </ul>
