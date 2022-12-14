@@ -100,7 +100,7 @@
       <section>
         <h3>Vista del contador (sin JSX)</h3>
         <ul>
-          <li>La función <code>createComponent</code> de <em>React</em> permite crear nodos en el DOM virtual de la página:
+          <li>La función <code>createElement</code> de <em>React</em> permite crear nodos en el DOM virtual de la página:
           <pre><code class="language-javascript" data-trim data-noescape>
             import React from 'react'
             
@@ -126,8 +126,8 @@
       </section>
       
       <section>
-        <h3>La función <code>createComponent</code></h3>
-        <p><code>createComponent(tag, props, contenido)</code></p>
+        <h3>La función <code>createElement</code></h3>
+        <p><code>createElement(tag, props, contenido)</code></p>
         <ul class="fragment">
           <li><code>tag</code>: etiqueta HTML del nodo a crear.</li>
           <li><code>props</code>: objeto con los atributos HTML de ese nodo, o <code>null</code> si no tiene atributos.
@@ -140,11 +140,11 @@
       </section>
       
       <section>
-        <h3>La función <code>createComponent</code></h3>
+        <h3>La función <code>createElement</code></h3>
         <div class="fragment">
         <p>Ejemplo:</p>
         <pre><code class="language-javascript" data-trim data-noescape>
-          React.createComponent('a', { href: 'https://www.google.com' }, 'Enlace')
+          React.createElement('a', { href: 'https://www.google.com' }, 'Enlace')
         </code></pre>
         <pre><code class="language-html" data-trim data-noescape>
           &lt;a href="https://www.google.com"&gt;Enlace&lt;/a&gt;
@@ -153,9 +153,9 @@
         <div class="fragment">
         <p>Ejemplo:</p>
         <pre><code class="language-javascript" data-trim data-noescape>
-          React.createComponent('div', { className: 'marco', id: 'menu' },
+          React.createElement('div', { className: 'marco', id: 'menu' },
               'Pulsa aquí:',
-              React.createComponent('button', null, 'Hola')
+              React.createElement('button', null, 'Hola')
           );
         </code></pre>
         <pre><code class="language-html" data-trim data-noescape>
@@ -191,7 +191,7 @@
       <section>
         <h3>Renderizar el DOM virtual</h3>
         <ul>
-          <li>La biblioteca <code>react-dom</code> exporta la función <code>createRoot</code>, que permite renderizar el DOM virtual que hayamos creado mediante <code>createComponent()</code>.</li>
+          <li>La biblioteca <code>react-dom</code> exporta la función <code>createRoot</code>, que permite renderizar el DOM virtual que hayamos creado mediante <code>createElement()</code>.</li>
           <li>La función <code>createRoot</code> recibe como parámetro una referencia al nodo DOM del elemento raíz.</li>
           
           <pre class="fragment"><code class="language-javascript" data-trim data-noescape>
